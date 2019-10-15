@@ -1,0 +1,32 @@
+{
+  "name": "baha2rmirzazadeh/phpguard",
+  "description": "A security library for PHP. It can be used by different frameworks or pure PHP",
+  "keywords": [
+    "php",
+    "security",
+    "cyber",
+    "cipher",
+    "encryption",
+    "decryption",
+    "hash",
+    "hashing"
+  ],
+  "type": "library",
+  "license": "MIT",
+  "homepage": "https://github.com/Baha2rM98/PHPGuard",
+  "authors": [
+    {
+      "name": "Bahador Mirzazadeh",
+      "email": "baha2r.mirzazadeh98@gmail.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": "7.2.19"
+  },
+  "autoload": {
+    "psr-0": {
+      "PHPGuard": ""
+    }
+  }
+}
