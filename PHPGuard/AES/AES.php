@@ -11,7 +11,19 @@
 namespace PHPGuard\AES;
 
 
-class AES
+use PHPGuard\Core\Decryption;
+use PHPGuard\Core\Encryption;
+
+class AES extends AssetReader implements Encryption, Decryption
 {
+    public function encryption()
+    {
+        // TODO: Implement decryption() method.
+    }
+
+    public function decryption()
+    {
+        // TODO: Implement encryption() method.
+    }
 
 }
