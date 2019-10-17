@@ -11,18 +11,62 @@
 namespace PHPGuard\AES;
 
 
-use PHPGuard\Core\Reader;
+use RuntimeException;
+use PHPGuard\Core\AES128Assets\AssetPath;
 
-class AssetReader implements Reader
+abstract class AssetReader
 {
-    public function readKey()
+
+    /**
+     * Decodes binary values to unsigned chars
+     * @param array $bytes Input byte array
+     * @return string returns decoded byte array $bytes
+     */
+    private static function compute($bytes)
     {
-        // TODO: Implement readKey() method.
+        $m = -1;
+        $s = 51;
+        $buff = array();
+        for ($i = 1; $i <= count($bytes); $i++)
+            $buff[] = (($bytes[$i] * $m) + $s);
+        return implode(array_map("chr", $buff));
     }
 
-    public function readIV()
+
+    /**
+     * Converts binary file key to unsigned chars
+     * @return string returns key value
+     * @throws RuntimeException throws exception if key file is not found
+     */
+    protected static function readKey()
     {
-        // TODO: Implement readIV() method.
+        $path = AssetPath::getAbsolutePath() . "/k";
+        if (!is_file($path) || !file_exists($path))
+            throw new RuntimeException("File not found!");
+        $size = filesize($path);
+        $handle = fopen($path, "rb");
+        $binary = fread($handle, $size);
+        fclose($handle);
+        $barr = unpack("c*", $binary);
+        return self::compute($barr);
     }
 
+
+    /**
+     * Convert binary file initial vector to unsigned chars
+     * @return string returns initial vector value
+     * @throws RuntimeException throws exception if initial vector file is not found
+     */
+    protected static function readIV()
+    {
+        $path = AssetPath::getAbsolutePath() . "/iv";
+        if (!is_file($path) || !file_exists($path))
+            throw new RuntimeException("File not found!");
+        $size = filesize($path);
+        $handle = fopen($path, "rb");
+        $binary = fread($handle, $size);
+        fclose($handle);
+        $barr = unpack("c*", $binary);
+        return self::compute($barr);
+    }
 }
