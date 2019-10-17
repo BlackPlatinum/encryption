@@ -22,7 +22,7 @@ abstract class AssetReader
      * @param array $bytes Input byte array
      * @return string returns decoded byte array $bytes
      */
-    private static function compute($bytes)
+    private function compute($bytes)
     {
         $m = -1;
         $s = 51;
@@ -38,7 +38,7 @@ abstract class AssetReader
      * @return string returns key value
      * @throws RuntimeException throws exception if key file is not found
      */
-    protected static function readKey()
+    protected function readKey()
     {
         $path = AssetPath::getAbsolutePath() . "/k";
         if (!is_file($path) || !file_exists($path))
@@ -48,7 +48,7 @@ abstract class AssetReader
         $binary = fread($handle, $size);
         fclose($handle);
         $barr = unpack("c*", $binary);
-        return self::compute($barr);
+        return $this->compute($barr);
     }
 
 
@@ -57,7 +57,7 @@ abstract class AssetReader
      * @return string returns initial vector value
      * @throws RuntimeException throws exception if initial vector file is not found
      */
-    protected static function readIV()
+    protected function readIV()
     {
         $path = AssetPath::getAbsolutePath() . "/iv";
         if (!is_file($path) || !file_exists($path))
@@ -67,6 +67,6 @@ abstract class AssetReader
         $binary = fread($handle, $size);
         fclose($handle);
         $barr = unpack("c*", $binary);
-        return self::compute($barr);
+        return $this->compute($barr);
     }
 }
