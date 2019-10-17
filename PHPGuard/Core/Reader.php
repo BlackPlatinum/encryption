@@ -13,5 +13,8 @@ namespace PHPGuard\Core;
 
 interface Reader
 {
+    public function readKey();
+
+    public function readIV();
 
 }
