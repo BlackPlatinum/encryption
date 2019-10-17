@@ -15,7 +15,7 @@ abstract class AssetPath
 {
 
     /**
-     * Find find absolute path of assets directory
+     * Find absolute path of assets directory
      * @return string returns absolute path of assets directory
      */
     public static function getAbsolutePath()
