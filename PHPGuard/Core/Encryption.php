@@ -13,5 +13,5 @@ namespace PHPGuard\Core;
 
 interface Encryption
 {
-    public function encryption();
+    public function encryption($data);
 }
