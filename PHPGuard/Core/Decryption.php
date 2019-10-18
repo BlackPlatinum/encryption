@@ -13,7 +13,7 @@ namespace PHPGuard\Core;
 
 interface Decryption
 {
-    public function decrypt($cipher, $unserialize = true);
+    public function decrypt($cipher, $unserialize = true, $dynamicIV = false);
 
-    public function decryptString($cipher);
+    public function decryptString($cipher, $dynamicIV = false);
 }

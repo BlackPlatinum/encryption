@@ -13,7 +13,7 @@ namespace PHPGuard\Core;
 
 interface Encryption
 {
-    public function encrypt($data, $serialize = true);
+    public function encrypt($data, $serialize = true, $dynamicIV = false);
 
-    public function encryptString($value);
+    public function encryptString($value, $dynamicIV = false);
 }
