@@ -139,4 +139,14 @@ class AES extends AssetReader implements Encryption, Decryption
             return $this->decryptString(base64_decode($cipher));
         return unserialize(json_decode($this->decryptString(base64_decode($cipher))));
     }
+
+
+    /**
+     * Returns supported cryptography algorithms by this class
+     * @return array return name of supported cryptography algorithms by this class
+     */
+    public function supported()
+    {
+        return ["AES-128-CBC", "AES-256-CBC"];
+    }
 }
