@@ -12,13 +12,13 @@ namespace PHPGuard\Core;
 
 
 use RuntimeException;
-use PHPGuard\Core\AES128Assets\AssetPath;
+
 
 abstract class AssetReader
 {
 
     /**
-     * PHPGuard\Core\AES128Assets\AssetPath trait is active now
+     * PHPGuard\Core\AssetPath trait retrieved
      */
     use AssetPath;
 
@@ -45,7 +45,7 @@ abstract class AssetReader
      */
     protected function readKey128()
     {
-        $path = $this->getAbsolutePath() . "/k";
+        $path = $this->getAbsolutePath() . "/AES128Assets/k";
         if (!is_file($path) || !file_exists($path))
             throw new RuntimeException("File not found!");
         $size = filesize($path);
@@ -64,7 +64,7 @@ abstract class AssetReader
      */
     protected function readIV128()
     {
-        $path = $this->getAbsolutePath() . "/iv";
+        $path = $this->getAbsolutePath() . "/AES128Assets/iv";
         if (!is_file($path) || !file_exists($path))
             throw new RuntimeException("File not found!");
         $size = filesize($path);
