@@ -55,4 +55,23 @@ trait AES128AssetReader
         $barr = unpack("c*", $binary);
         return $this->compute($barr);
     }
+
+
+    /**
+     * Convert binary file initial vector to unsigned chars
+     * @return string returns initial vector value
+     * @throws RuntimeException throws exception if initial vector file is not found
+     */
+    protected function readIV()
+    {
+        $path = $this->getAbsolutePath() . "/iv";
+        if (!is_file($path) || !file_exists($path))
+            throw new RuntimeException("File not found!");
+        $size = filesize($path);
+        $handle = fopen($path, "rb");
+        $binary = fread($handle, $size);
+        fclose($handle);
+        $barr = unpack("c*", $binary);
+        return $this->compute($barr);
+    }
 }
