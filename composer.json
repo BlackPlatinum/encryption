@@ -1,6 +1,6 @@
 {
   "name": "baha2rmirzazadeh/phpguard",
-  "description": "A security library for PHP. It can be used by different frameworks or pure PHP",
+  "description": "A security cryptography library for PHP. It can be used by different frameworks or pure PHP",
   "keywords": [
     "php",
     "security",
