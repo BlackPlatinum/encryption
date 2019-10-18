@@ -101,7 +101,7 @@ class AES implements Encryption, Decryption
      * Decrypts the given cipher
      * @param string $cipher the cipher that will be decrypted
      * @return false|string return decrypted cipher, false on failure
-     * @throws EncryptionException throws exception if validate method returns false or can not decrypt the the $cipher
+     * @throws DecryptionException throws exception if validate method returns false or can not decrypt the the $cipher
      */
     public function decryptString($cipher)
     {
@@ -113,13 +113,35 @@ class AES implements Encryption, Decryption
         return $plain;
     }
 
-    public function encrypt($data, $serialize = true, $dynamicIV = false)
+
+    /**
+     * Encrypts the given data
+     * @param mixed $data the data that will be encrypted
+     * @param bool $serialize [recommended true], if $serialize is false and $data is string is correct
+     * but if $serialize is false and $data is not string you get error
+     * @return string return encrypted value, false on failure
+     * @throws EncryptionException throws exception if validate method returns false or can not decrypt the the $cipher
+     */
+    public function encrypt($data, $serialize = true)
     {
-        // TODO: Implement encrypt() method.
+        if ($serialize === false)
+            return $this->encryptString($data);
+        return $this->encryptString(base64_encode(json_encode($data)));
     }
 
-    public function decrypt($cipher, $unserialize = true, $dynamicIV = false)
+
+    /**
+     * Decrypts the given cipher
+     * @param string $cipher the cipher that will be decrypted
+     * @param bool $unserialize [recommended true], if $unserialize is false you achieve base_64 code and must be handled by
+     * user
+     * @return mixed return encrypted value, false on failure
+     * @throws DecryptionException throws exception if validate method returns false or can not decrypt the the $cipher
+     */
+    public function decrypt($cipher, $unserialize = true)
     {
-        // TODO: Implement decrypt() method.
+        if ($unserialize === false)
+            return $this->decryptString($cipher);
+        return json_decode(base64_decode($this->decryptString($cipher)));
     }
 }
