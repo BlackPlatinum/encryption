@@ -13,5 +13,5 @@ namespace PHPGuard\Core;
 
 interface Decryption
 {
-    public function decryption();
+    public function decryption($data);
 }
