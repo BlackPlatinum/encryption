@@ -74,4 +74,42 @@ abstract class AssetReader
         $barr = unpack("c*", $binary);
         return $this->compute($barr);
     }
+
+
+    /**
+     * Converts binary file key to unsigned chars
+     * @return string returns key value
+     * @throws RuntimeException throws exception if key file is not found
+     */
+    protected function readKey256()
+    {
+        $path = $this->getAbsolutePath() . "/AES256Assets/k";
+        if (!is_file($path) || !file_exists($path))
+            throw new RuntimeException("File not found!");
+        $size = filesize($path);
+        $handle = fopen($path, "rb");
+        $binary = fread($handle, $size);
+        fclose($handle);
+        $barr = unpack("c*", $binary);
+        return $this->compute($barr);
+    }
+
+
+    /**
+     * Convert binary file initial vector to unsigned chars
+     * @return string returns initial vector value
+     * @throws RuntimeException throws exception if initial vector file is not found
+     */
+    protected function readIV256()
+    {
+        $path = $this->getAbsolutePath() . "/AES256Assets/iv";
+        if (!is_file($path) || !file_exists($path))
+            throw new RuntimeException("File not found!");
+        $size = filesize($path);
+        $handle = fopen($path, "rb");
+        $binary = fread($handle, $size);
+        fclose($handle);
+        $barr = unpack("c*", $binary);
+        return $this->compute($barr);
+    }
 }
