@@ -14,7 +14,7 @@ namespace PHPGuard\Core;
 use RuntimeException;
 use PHPGuard\Core\AES128Assets\AssetPath;
 
-trait AES128AssetReader
+abstract class AssetReader
 {
 
     /**
@@ -43,7 +43,7 @@ trait AES128AssetReader
      * @return string returns key value
      * @throws RuntimeException throws exception if key file is not found
      */
-    protected function readKey()
+    protected function readKey128()
     {
         $path = $this->getAbsolutePath() . "/k";
         if (!is_file($path) || !file_exists($path))
@@ -62,7 +62,7 @@ trait AES128AssetReader
      * @return string returns initial vector value
      * @throws RuntimeException throws exception if initial vector file is not found
      */
-    protected function readIV()
+    protected function readIV128()
     {
         $path = $this->getAbsolutePath() . "/iv";
         if (!is_file($path) || !file_exists($path))
