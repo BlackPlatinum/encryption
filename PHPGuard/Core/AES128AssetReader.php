@@ -18,7 +18,7 @@ abstract class AES128AssetReader
 {
 
     /**
-     * AssetsPath trait is active now
+     * PHPGuard\Core\AES128Assets\AssetPath trait is active now
      */
     use AssetPath;
 
