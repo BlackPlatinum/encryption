@@ -8,7 +8,7 @@
  * This trait find absolute path of assets directory
  **/
 
-namespace PHPGuard\Core\AES128Assets;
+namespace PHPGuard\Core;
 
 
 trait AssetPath
