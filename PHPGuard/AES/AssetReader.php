@@ -18,6 +18,11 @@ abstract class AssetReader
 {
 
     /**
+     * AssetsPath trait is active now
+     */
+    use AssetPath;
+
+    /**
      * Decodes binary values to unsigned chars
      * @param array $bytes Input byte array
      * @return string returns decoded byte array $bytes
@@ -40,7 +45,7 @@ abstract class AssetReader
      */
     protected function readKey()
     {
-        $path = AssetPath::getAbsolutePath() . "/k";
+        $path = $this->getAbsolutePath() . "/k";
         if (!is_file($path) || !file_exists($path))
             throw new RuntimeException("File not found!");
         $size = filesize($path);
@@ -59,7 +64,7 @@ abstract class AssetReader
      */
     protected function readIV()
     {
-        $path = AssetPath::getAbsolutePath() . "/iv";
+        $path = $this->getAbsolutePath() . "/iv";
         if (!is_file($path) || !file_exists($path))
             throw new RuntimeException("File not found!");
         $size = filesize($path);
