@@ -6,12 +6,14 @@
  * Date: 16/Oct/2019
  *
  * Base encryption interface
-**/
+ **/
 
 namespace PHPGuard\Core;
 
 
 interface Encryption
 {
-    public function encryption($data);
+    public function encrypt($data, $serialize = true);
+
+    public function encryptString($data);
 }
