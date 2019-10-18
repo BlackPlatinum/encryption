@@ -8,13 +8,13 @@
  * Main Reader class to read encryption key and initial vector from file
  **/
 
-namespace PHPGuard\AES;
+namespace PHPGuard\Core;
 
 
 use RuntimeException;
 use PHPGuard\Core\AES128Assets\AssetPath;
 
-abstract class AssetReader
+abstract class AES128AssetReader
 {
 
     /**
