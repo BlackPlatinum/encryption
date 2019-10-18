@@ -14,7 +14,7 @@ namespace PHPGuard\Core;
 use RuntimeException;
 use PHPGuard\Core\AES128Assets\AssetPath;
 
-abstract class AES128AssetReader
+trait AES128AssetReader
 {
 
     /**
