@@ -23,7 +23,8 @@
   ],
   "require": {
     "php": "^7.1",
-    "ext-openssl": "*"
+    "ext-openssl": "*",
+    "ext-json": "*"
   },
   "autoload": {
     "psr-0": {
