@@ -15,16 +15,11 @@ use PHPGuard\Core\Encryption;
 use PHPGuard\Core\Decryption;
 use PHPGuard\Exception\EncryptionException;
 use PHPGuard\Exception\DecryptionException;
-use PHPGuard\Core\AES128AssetReader;
+use PHPGuard\Core\AssetReader;
 
 
-class AES implements Encryption, Decryption
+class AES extends AssetReader implements Encryption, Decryption
 {
-
-    /**
-     * PHPGuard\Core\AES128AssetReader retrieved
-     **/
-    use AES128AssetReader;
 
     // store key
     private $KEY;
@@ -48,10 +43,10 @@ class AES implements Encryption, Decryption
     {
         $this->method = $method;
         $this->dynamicIV = $dynamicIV;
-        $this->KEY = $this->readKey();
+        $this->KEY = parent::readKey128();
         if ($this->dynamicIV === true)
             $this->ivGenerator();
-        else $this->IV = $this->readIV();
+        else $this->IV = parent::readIV128();
     }
 
 
@@ -93,7 +88,7 @@ class AES implements Encryption, Decryption
         $cipher = openssl_encrypt($value, "AES-128-CBC", $this->KEY, 0, $this->IV);
         if ($cipher === false)
             throw new EncryptionException("Could not encrypt the data!");
-        return $cipher;
+        return base64_encode($cipher);
     }
 
 
@@ -107,7 +102,7 @@ class AES implements Encryption, Decryption
     {
         if (!$this->validate())
             throw new EncryptionException("Cipher method wrong!");
-        $plain = openssl_decrypt($cipher, "AES-128-CBC", $this->KEY, 0, $this->IV);
+        $plain = openssl_decrypt(base64_decode($cipher), "AES-128-CBC", $this->KEY, 0, $this->IV);
         if ($plain === false)
             throw new DecryptionException("Could not decrypt the data!");
         return $plain;
@@ -117,7 +112,7 @@ class AES implements Encryption, Decryption
     /**
      * Encrypts the given data
      * @param mixed $data the data that will be encrypted
-     * @param bool $serialize [recommended true], if $serialize is false and $data is string is correct
+     * @param bool $serialize [recommended true], if $serialize is false and $data is string is correct,
      * but if $serialize is false and $data is not string you get error
      * @return string return encrypted value, false on failure
      * @throws EncryptionException throws exception if validate method returns false or can not decrypt the the $cipher
@@ -126,14 +121,14 @@ class AES implements Encryption, Decryption
     {
         if ($serialize === false)
             return $this->encryptString($data);
-        return $this->encryptString(base64_encode(json_encode($data)));
+        return base64_encode($this->encryptString(json_encode(serialize($data))));
     }
 
 
     /**
      * Decrypts the given cipher
      * @param string $cipher the cipher that will be decrypted
-     * @param bool $unserialize [recommended true], if $unserialize is false you achieve base_64 code and must be handled by
+     * @param bool $unserialize [recommended true], if $unserialize is false you achieve unserialized json decoded value and must be handled by
      * user
      * @return mixed return encrypted value, false on failure
      * @throws DecryptionException throws exception if validate method returns false or can not decrypt the the $cipher
@@ -141,7 +136,7 @@ class AES implements Encryption, Decryption
     public function decrypt($cipher, $unserialize = true)
     {
         if ($unserialize === false)
-            return $this->decryptString($cipher);
-        return json_decode(base64_decode($this->decryptString($cipher)));
+            return $this->decryptString(base64_decode($cipher));
+        return unserialize(json_decode($this->decryptString(base64_decode($cipher))));
     }
 }
