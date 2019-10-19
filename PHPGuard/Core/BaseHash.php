@@ -13,5 +13,15 @@ namespace PHPGuard\Core;
 
 interface BaseHash
 {
-    public static function hash($data, $method, $raw_output = false, $serialize = false);
+    public static function md5($data, $serialize = false);
+
+    public static function sha1($data, $serialize = false);
+
+    public static function sha224($data, $serialize = false);
+
+    public static function sha256($data, $serialize = false);
+
+    public static function sha384($data, $serialize = false);
+
+    public static function sha512($data, $serialize = false);
 }
