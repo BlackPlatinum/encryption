@@ -4,7 +4,7 @@ A security cryptography library for PHP. It can be used by different frameworks 
 
 Features
 --------
-For now it just supports AES-128, more algorithms will be added soon.
+Supports: AES-128-CBC, AES-256-CBC, MD5, SHA1, SHA224, SHA256, SHA384, SHA512
 
 Installation
 ------------
@@ -31,6 +31,12 @@ $aes = new AES("AES-128-CBC", true);
 $c = $aes->encryptString("Hello! I am plaintext :)");
 print $c . "\n";
 print $aes->decryptString($c);
+
+
+use PHPGuard\Hash\Hash;
+
+print Hash::sha224([1, 3, 4, 5, 7], true);
+print Hash::sha512("Hello PHPGuard!");
 ```
 
 ### Classes and Methods description
