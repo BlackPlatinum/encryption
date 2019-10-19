@@ -14,13 +14,8 @@ namespace PHPGuard\Core;
 use RuntimeException;
 
 
-abstract class AssetReader
+abstract class AssetReader extends AssetPath
 {
-
-    /**
-     * PHPGuard\Core\AssetPath trait retrieved
-     */
-    use AssetPath;
 
     /**
      * Decodes binary values to unsigned chars
