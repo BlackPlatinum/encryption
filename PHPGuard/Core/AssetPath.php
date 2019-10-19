@@ -11,7 +11,7 @@
 namespace PHPGuard\Core;
 
 
-trait AssetPath
+abstract class AssetPath
 {
 
     /**
