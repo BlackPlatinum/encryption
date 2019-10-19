@@ -16,10 +16,17 @@ use PHPGuard\Core\Decryption;
 use PHPGuard\Exception\EncryptionException;
 use PHPGuard\Exception\DecryptionException;
 use PHPGuard\Core\AssetReader;
+use RuntimeException;
 
 
 class AES extends AssetReader implements Encryption, Decryption
 {
+
+    // Algorithm name
+    private const AES128 = "AES-128-CBC";
+
+    // Algorithm name
+    private const AES256 = "AES-256-CBC";
 
     // store key
     private $KEY;
@@ -30,23 +37,48 @@ class AES extends AssetReader implements Encryption, Decryption
     // store method
     private $method;
 
-    // dynamicIV tag
-    private $dynamicIV;
+    // mode
+    private $options;
+
+    // determines which algorithm must use
+    private $flag_128 = false;
+
+    // determines which algorithm must use
+    private $flag_256 = false;
 
 
     /**
      * Main constructor initial basic values
-     * @param string $method cryptography method name
-     * @param boolean $dynamicIV dynamicIV mode
+     * @param string $method [optional] cryptography method name
+     * @param int $option [optional] $option = 0, use internal key and iv. $option = 1, use internal key but generates different
+     * ivs in each run
      */
-    public function __construct($method = "AES-128-CBC", $dynamicIV = false)
+    public function __construct($method = self::AES128, $option = 0)
     {
         $this->method = $method;
-        $this->dynamicIV = $dynamicIV;
-        $this->KEY = parent::readKey128();
-        if ($this->dynamicIV === true)
-            $this->ivGenerator();
-        else $this->IV = parent::readIV128();
+        $this->options = $option;
+        if ($this->options === 0) {
+            if ($this->method === self::AES128) {
+                $this->flag_128 = true;
+                $this->KEY = parent::readKey128();
+                $this->IV = parent::readIV128();
+            } else {
+                $this->flag_256 = true;
+                $this->KEY = parent::readKey256();
+                $this->IV = parent::readIV256();
+            }
+        }
+        if ($this->options === 1) {
+            if ($this->method === self::AES128) {
+                $this->flag_128 = true;
+                $this->KEY = parent::readKey128();
+                $this->ivGenerator();
+            } else {
+                $this->flag_256 = true;
+                $this->KEY = parent::readKey256();
+                $this->ivGenerator();
+            }
+        }
     }
 
 
@@ -56,21 +88,21 @@ class AES extends AssetReader implements Encryption, Decryption
      */
     private function validate()
     {
-        return $this->method === "AES-128-CBC" || $this->method === "AES-256-CBC";
+        return $this->method === self::AES128 || $this->method === self::AES256;
     }
 
 
     /**
-     * Generates initial vector if $dynamicIV is true
+     * Generates initial vector if $options equals to 1
      * @return null
      */
     private function ivGenerator()
     {
-        if ($this->method === "AES-128-CBC") {
-            $this->IV = openssl_random_pseudo_bytes(openssl_cipher_iv_length("AES-128-CBC"));
+        if ($this->flag_128) {
+            $this->IV = openssl_random_pseudo_bytes(openssl_cipher_iv_length(self::AES128));
             return;
         }
-        $this->IV = openssl_random_pseudo_bytes(openssl_cipher_iv_length("AES-256-CBC"));
+        $this->IV = openssl_random_pseudo_bytes(openssl_cipher_iv_length(self::AES256));
         return;
     }
 
@@ -85,7 +117,15 @@ class AES extends AssetReader implements Encryption, Decryption
     {
         if (!$this->validate())
             throw new EncryptionException("Cipher method wrong!");
-        $cipher = openssl_encrypt($value, "AES-128-CBC", $this->KEY, 0, $this->IV);
+        if (is_null($this->IV))
+            throw new RuntimeException("Undefined option!");
+        if ($this->flag_128) {
+            $cipher = openssl_encrypt($value, self::AES128, $this->KEY, 0, $this->IV);
+            if ($cipher === false)
+                throw new EncryptionException("Could not encrypt the data!");
+            return base64_encode($cipher);
+        }
+        $cipher = openssl_encrypt($value, self::AES256, $this->KEY, 0, $this->IV);
         if ($cipher === false)
             throw new EncryptionException("Could not encrypt the data!");
         return base64_encode($cipher);
@@ -102,7 +142,13 @@ class AES extends AssetReader implements Encryption, Decryption
     {
         if (!$this->validate())
             throw new EncryptionException("Cipher method wrong!");
-        $plain = openssl_decrypt(base64_decode($cipher), "AES-128-CBC", $this->KEY, 0, $this->IV);
+        if ($this->flag_128) {
+            $plain = openssl_decrypt(base64_decode($cipher), self::AES128, $this->KEY, 0, $this->IV);
+            if ($plain === false)
+                throw new DecryptionException("Could not decrypt the data!");
+            return $plain;
+        }
+        $plain = openssl_decrypt(base64_decode($cipher), self::AES256, $this->KEY, 0, $this->IV);
         if ($plain === false)
             throw new DecryptionException("Could not decrypt the data!");
         return $plain;
@@ -114,30 +160,30 @@ class AES extends AssetReader implements Encryption, Decryption
      * @param mixed $data the data that will be encrypted
      * @param bool $serialize [recommended true], if $serialize is false and $data is string is correct,
      * but if $serialize is false and $data is not string you get error
-     * @return string return encrypted value, false on failure
+     * @return false|string return encrypted value, false on failure
      * @throws EncryptionException throws exception if validate method returns false or can not decrypt the the $cipher
      */
     public function encrypt($data, $serialize = true)
     {
         if ($serialize === false)
             return $this->encryptString($data);
-        return base64_encode($this->encryptString(json_encode(serialize($data))));
+        return $this->encryptString(json_encode(serialize($data)));
     }
 
 
     /**
      * Decrypts the given cipher
      * @param string $cipher the cipher that will be decrypted
-     * @param bool $unserialize [recommended true], if $unserialize is false you achieve unserialized json decoded value and must be handled by
-     * user
+     * @param bool $unserialize [recommended true], if $unserialize is false you achieve unserialized json decoded value
+     * and must be handled by user
      * @return mixed return encrypted value, false on failure
      * @throws DecryptionException throws exception if validate method returns false or can not decrypt the the $cipher
      */
     public function decrypt($cipher, $unserialize = true)
     {
         if ($unserialize === false)
-            return $this->decryptString(base64_decode($cipher));
-        return unserialize(json_decode($this->decryptString(base64_decode($cipher))));
+            return $this->decryptString($cipher);
+        return unserialize(json_decode($this->decryptString($cipher)));
     }
 
 
@@ -145,8 +191,8 @@ class AES extends AssetReader implements Encryption, Decryption
      * Returns supported cryptography algorithms by this class
      * @return array return name of supported cryptography algorithms by this class
      */
-    public function supported()
+    public static function supported()
     {
-        return ["AES-128-CBC", "AES-256-CBC"];
+        return [self::AES128, self::AES256];
     }
 }
