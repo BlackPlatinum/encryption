@@ -11,14 +11,14 @@
 namespace PHPGuard\Core;
 
 
-abstract class AssetPath
+trait AssetPath
 {
 
     /**
      * Find absolute path of assets directory
      * @return string returns absolute path of assets directory
      */
-    protected function getAbsolutePath()
+    private function getAbsolutePath()
     {
         return __DIR__;
     }
