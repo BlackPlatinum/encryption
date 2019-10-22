@@ -11,6 +11,7 @@
 namespace PHPGuard\Console;
 
 
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use PHPGuard\Core\AssetPath;
 
@@ -40,29 +41,53 @@ class Commands extends Command
         parent::__construct($name);
     }
 
+
+    private function fileExists($file)
+    {
+        return file_exists($file);
+    }
+
     protected function changeMode()
     {
         $this->path = $this->getAbsolutePath() . "/AES128Assets/k";
+        if (!$this->fileExists($this->path))
+            throw new RuntimeException("File doesn't exist!");
         chmod($this->path, 0400);
         $this->path = $this->getAbsolutePath() . "/AES128Assets/iv";
+        if (!$this->fileExists($this->path))
+            throw new RuntimeException("File doesn't exist!");
         chmod($this->path, 0400);
         $this->path = $this->getAbsolutePath() . "/AES256Assets/k";
+        if (!$this->fileExists($this->path))
+            throw new RuntimeException("File doesn't exist!");
         chmod($this->path, 0400);
         $this->path = $this->getAbsolutePath() . "/AES256Assets/iv";
-        chmod($this->path, 0400);
+        if (!$this->fileExists($this->path))
+            throw new RuntimeException("File doesn't exist!");
+        $r = chmod($this->path, 0400);
+        return $r;
     }
 
 
-    protected function changeOwner()
+    protected function changeOwner($owner)
     {
         $this->path = $this->getAbsolutePath() . "/AES128Assets/k";
-        chown($this->path, "root");
+        if (!$this->fileExists($this->path))
+            throw new RuntimeException("File doesn't exist!");
+        chown($this->path, $owner);
         $this->path = $this->getAbsolutePath() . "/AES128Assets/iv";
-        chown($this->path, "root");
+        if (!$this->fileExists($this->path))
+            throw new RuntimeException("File doesn't exist!");
+        chown($this->path, $owner);
         $this->path = $this->getAbsolutePath() . "/AES256Assets/k";
-        chown($this->path, "root");
+        if (!$this->fileExists($this->path))
+            throw new RuntimeException("File doesn't exist!");
+        chown($this->path, $owner);
         $this->path = $this->getAbsolutePath() . "/AES256Assets/iv";
-        chown($this->path, "root");
+        if (!$this->fileExists($this->path))
+            throw new RuntimeException("File doesn't exist!");
+        $r = chown($this->path, $owner);
+        return $r;
     }
 
 
@@ -81,6 +106,7 @@ class Commands extends Command
         $handle = fopen($this->path, "w+b");
         fwrite($handle, $randoms);
         fclose($handle);
+        return $handle;
     }
 
 
@@ -99,23 +125,74 @@ class Commands extends Command
         $handle = fopen($this->path, "w+b");
         fwrite($handle, $randoms);
         fclose($handle);
+        return $handle;
     }
 
 
     protected function removeKeys()
     {
         $this->path = $this->getAbsolutePath() . "/AES128Assets/k";
+        if (!$this->fileExists($this->path))
+            throw new RuntimeException("File doesn't exist!");
         unlink($this->path);
         $this->path = $this->getAbsolutePath() . "/AES256Assets/k";
-        unlink($this->path);
+        if (!$this->fileExists($this->path))
+            throw new RuntimeException("File doesn't exist!");
+        $r = unlink($this->path);
+        return $r;
     }
 
 
     protected function removeIVs()
     {
         $this->path = $this->getAbsolutePath() . "/AES128Assets/iv";
+        if (!$this->fileExists($this->path))
+            throw new RuntimeException("File doesn't exist!");
         unlink($this->path);
         $this->path = $this->getAbsolutePath() . "/AES256Assets/iv";
-        unlink($this->path);
+        if (!$this->fileExists($this->path))
+            throw new RuntimeException("File doesn't exist!");
+        $r = unlink($this->path);
+        return $r;
+    }
+
+
+    protected function config($mode, $owner)
+    {
+        $mode = intval($mode, 8);
+        $this->path = $this->getAbsolutePath() . "/AES128Assets/k";
+        if (!$this->fileExists($this->path))
+            throw new RuntimeException("File doesn't exist!");
+        chmod($this->path, $mode);
+        $this->path = $this->getAbsolutePath() . "/AES128Assets/iv";
+        if (!$this->fileExists($this->path))
+            throw new RuntimeException("File doesn't exist!");
+        chmod($this->path, $mode);
+        $this->path = $this->getAbsolutePath() . "/AES256Assets/k";
+        if (!$this->fileExists($this->path))
+            throw new RuntimeException("File doesn't exist!");
+        chmod($this->path, $mode);
+        $this->path = $this->getAbsolutePath() . "/AES256Assets/iv";
+        if (!$this->fileExists($this->path))
+            throw new RuntimeException("File doesn't exist!");
+        chmod($this->path, $mode);
+
+        $this->path = $this->getAbsolutePath() . "/AES128Assets/k";
+        if (!$this->fileExists($this->path))
+            throw new RuntimeException("File doesn't exist!");
+        chown($this->path, $owner);
+        $this->path = $this->getAbsolutePath() . "/AES128Assets/iv";
+        if (!$this->fileExists($this->path))
+            throw new RuntimeException("File doesn't exist!");
+        chown($this->path, $owner);
+        $this->path = $this->getAbsolutePath() . "/AES256Assets/k";
+        if (!$this->fileExists($this->path))
+            throw new RuntimeException("File doesn't exist!");
+        chown($this->path, $owner);
+        $this->path = $this->getAbsolutePath() . "/AES256Assets/iv";
+        if (!$this->fileExists($this->path))
+            throw new RuntimeException("File doesn't exist!");
+        $r = chown($this->path, $owner);
+        return $r;
     }
 }
