@@ -1,2 +1,27 @@
+#!/usr/bin/env php
 <?php
 
+error_reporting(E_ALL & ~E_WARNING);
+
+require __DIR__ . "/vendor/autoload.php";
+
+use Symfony\Component\Console\Application;
+use PHPGuard\Console\Command\ChangeMode;
+use PHPGuard\Console\Command\ChangeOwner;
+use PHPGuard\Console\Command\Config;
+use PHPGuard\Console\Command\GenerateIV;
+use PHPGuard\Console\Command\GenerateKey;
+use PHPGuard\Console\Command\RemoveInitialVectors;
+use PHPGuard\Console\Command\RemoveKeys;
+
+$application = new Application("PHPGuard Library Console", "v1.0.0");
+
+// ... register commands
+$application->add(new ChangeMode());
+$application->add(new ChangeOwner());
+$application->add(new GenerateKey());
+$application->add(new GenerateIV());
+$application->add(new RemoveKeys());
+$application->add(new RemoveInitialVectors());
+$application->add(new Config());
+$application->run();
