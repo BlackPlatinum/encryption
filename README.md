@@ -6,6 +6,22 @@ Features
 --------
 Supports: AES-128-CBC, AES-256-CBC, MD5, SHA1, SHA224, SHA256, SHA384, SHA512
 
+#####PHPGuard Console App
+A command line interface designed for this library due to managing keys and initial vectors
+easily.
+
+#####Commands Example:
+######php guard
+
+######php guard conf:pconf 0400 root
+
+######php guard alter:owner
+
+`How to use console app?`
+
+For using console app just open up a terminal where `guard` is and type: `php guard`
+
+
 Installation
 ------------
 Use [Composer] to install the package:
@@ -14,7 +30,7 @@ Use [Composer] to install the package:
 $ composer require baha2rmirzazadeh/phpguard
 ```
 
-Example
+Examples
 -------
 
 ```php
