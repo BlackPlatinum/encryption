@@ -11,7 +11,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class RemoveKeys extends Commands
 {
-
     protected static $defaultName = "rm:key";
 
     public function __construct(string $name = null)

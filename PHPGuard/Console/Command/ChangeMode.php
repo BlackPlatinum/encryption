@@ -11,7 +11,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ChangeMode extends Commands
 {
-
     protected static $defaultName = "alter:mode";
 
     public function __construct(string $name = null)

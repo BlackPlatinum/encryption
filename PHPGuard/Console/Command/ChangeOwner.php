@@ -12,7 +12,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ChangeOwner extends Commands
 {
-
     protected static $defaultName = "alter:owner";
 
     public function __construct(string $name = null)
@@ -24,7 +23,7 @@ class ChangeOwner extends Commands
     protected function configure()
     {
         $this->setDescription("Sets owner of 'k' and 'iv' files to user root")
-            ->addArgument("owner name", InputArgument::REQUIRED, "owner name of file")
+            ->addArgument("owner", InputArgument::REQUIRED, "owner name of file")
             ->setHelp("<comment>\nThis command allows you to set 'k' and 'iv' files owners's to user root or default user of system.\nThis might be necessary due to security matter to alter owner of keys and ivs to root user in some special situations.\nYou maybe need to change to user root if you got permission denied error.\n</comment>");
         parent::configure();
     }
@@ -33,7 +32,7 @@ class ChangeOwner extends Commands
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln("");
-        $ans = parent::changeOwner($input->getArgument("owner name"));
+        $ans = parent::changeOwner($input->getArgument("owner"));
         if (!$ans)
             throw new RuntimeException("Permission denied!");
         $output->writeln("<info>'k' and 'iv' files owner's changed successfully!</info>");

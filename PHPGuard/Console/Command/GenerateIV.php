@@ -11,7 +11,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class GenerateIV extends Commands
 {
-
     protected static $defaultName = "gen:iv";
 
     public function __construct(string $name = null)
