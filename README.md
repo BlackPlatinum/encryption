@@ -15,9 +15,11 @@ Commands Example:
 
 * [php guard]
 
-* [php guard conf:pconf 0400 root]
+* [php guard config:reconfigure 0400 root]
 
 * [php guard alter:owner]
+
+* [php guard test:system]
 
 `How to use console app?`
 
