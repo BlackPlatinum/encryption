@@ -5,7 +5,7 @@ namespace PHPGuard\Console\Command;
 
 
 use PHPGuard\Console\Commands;
-use RuntimeException;
+use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -21,8 +21,8 @@ class ChangeMode extends Commands
 
     protected function configure()
     {
-        $this->setDescription("Sets mode of 'k' and 'iv' files to read only")
-            ->setHelp("<comment>\nThis command allows you to set 'k' and 'iv' files mode's to read only. This is necessary due to security issues.\nYou maybe need to change to user root if you got permission denied error.\n</comment>");
+        $this->setDescription("Sets mode of key and initial vectors files to read only")
+            ->setHelp("<comment>\nThis command allows you to set key and initial vectors files mode's to read only\nThis is necessary due to security issues\n</comment>");
         parent::configure();
     }
 
@@ -32,7 +32,7 @@ class ChangeMode extends Commands
         $output->writeln("");
         $ans = parent::changeMode();
         if (!$ans)
-            throw new RuntimeException("Permission denied!");
+            throw new RuntimeException("[RuntimeException]:\n\nOperation not permitted! You maybe need sudo access, try: sudo php guard alter:mode\nor maybe you need root permission, try: sudo -s then try php guard alter:mode");
         $output->writeln("<info>'k' and 'iv' files mode's changed successfully!</info>");
         $output->writeln("");
     }

@@ -5,13 +5,13 @@ namespace PHPGuard\Console\Command;
 
 
 use PHPGuard\Console\Commands;
-use RuntimeException;
+use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class RemoveInitialVectors extends Commands
 {
-    protected static $defaultName = "rm:iv";
+    protected static $defaultName = "remove:iv";
 
     public function __construct(string $name = null)
     {
@@ -21,8 +21,8 @@ class RemoveInitialVectors extends Commands
 
     protected function configure()
     {
-        $this->setDescription("Removes initial vector files in related directories.")
-            ->setHelp("<comment>\nThis command allows you to remove initial vector files.\nYou can generate new initial vectors with: php guard gen:iv\nYou maybe need to change to user root if you got permission denied error.\n</comment>");
+        $this->setDescription("Removes initial vector files in related directories")
+            ->setHelp("<comment>\nThis command allows you to remove initial vector files\nYou can generate new initial vector files with: php guard generate:iv\n</comment>");
         parent::configure();
     }
 
@@ -32,8 +32,8 @@ class RemoveInitialVectors extends Commands
         $output->writeln("");
         $ans = parent::removeIVs();
         if (!$ans)
-            throw new RuntimeException("Permission denied!");
-        $output->writeln("<info>Initial vectors removed successfully</info>");
+            throw new RuntimeException("[RuntimeException]:\n\nOperation not permitted! You maybe need sudo access, try: sudo php guard remove:iv\nor maybe you need root permission, try: sudo -s then try php guard remove:iv");
+        $output->writeln("<info>Initial vectors removed successfully!</info>");
         $output->writeln("");
     }
 }

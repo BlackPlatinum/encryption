@@ -5,13 +5,13 @@ namespace PHPGuard\Console\Command;
 
 
 use PHPGuard\Console\Commands;
-use RuntimeException;
+use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class GenerateKey extends Commands
 {
-    protected static $defaultName = "gen:key";
+    protected static $defaultName = "generate:key";
 
     public function __construct(string $name = null)
     {
@@ -21,8 +21,8 @@ class GenerateKey extends Commands
 
     protected function configure()
     {
-        $this->setDescription("Generates new key files in related directories.")
-            ->setHelp("<comment>\nThis command allows you to generate key files['k'] for your project.\nYou maybe need to change to user root if you got permission denied error.\n</comment>");
+        $this->setDescription("Generates new key files in related directories")
+            ->setHelp("<comment>\nThis command allows you to generate generate keys for your cryptography system\n</comment>");
         parent::configure();
     }
 
@@ -32,7 +32,7 @@ class GenerateKey extends Commands
         $output->writeln("");
         $ans = parent::generateKey();
         if (!$ans)
-            throw new RuntimeException("Permission denied!");
+            throw new RuntimeException("[RuntimeException]:\n\nOperation not permitted! You maybe need sudo access, try: sudo php guard generate:key\nor maybe you need root permission, try: sudo -s then try php guard generate:key");
         $output->writeln("<info>Keys generated successfully!</info>");
         $output->writeln("");
     }

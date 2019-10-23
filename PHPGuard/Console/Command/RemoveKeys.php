@@ -5,13 +5,13 @@ namespace PHPGuard\Console\Command;
 
 
 use PHPGuard\Console\Commands;
-use RuntimeException;
+use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class RemoveKeys extends Commands
 {
-    protected static $defaultName = "rm:key";
+    protected static $defaultName = "remove:key";
 
     public function __construct(string $name = null)
     {
@@ -21,8 +21,8 @@ class RemoveKeys extends Commands
 
     protected function configure()
     {
-        $this->setDescription("Removes key files in related directories.")
-            ->setHelp("<comment>\nThis command allows you to remove key files.\nYou can generate new keys with: php guard gen:key\nYou maybe need to change to user root if you got permission denied error.\n</comment>");
+        $this->setDescription("Removes key files in related directories")
+            ->setHelp("<comment>\nThis command allows you to remove key files\nYou can generate new keys with: php guard generate:key\n</comment>");
         parent::configure();
     }
 
@@ -32,8 +32,8 @@ class RemoveKeys extends Commands
         $output->writeln("");
         $ans = parent::removeKeys();
         if (!$ans)
-            throw new RuntimeException("Permission denied!");
-        $output->writeln("<info>Keys removed successfully</info>");
+            throw new RuntimeException("[RuntimeException]:\n\nOperation not permitted! You maybe need sudo access, try: sudo php guard remove:key\nor maybe you need root permission, try: sudo -s then try php guard remove:key");
+        $output->writeln("<info>Keys removed successfully!</info>");
         $output->writeln("");
     }
 }
