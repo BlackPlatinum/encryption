@@ -13,8 +13,9 @@ use PHPGuard\Console\Command\GenerateIV;
 use PHPGuard\Console\Command\GenerateKey;
 use PHPGuard\Console\Command\RemoveInitialVectors;
 use PHPGuard\Console\Command\RemoveKeys;
+use PHPGuard\Console\Command\Test;
 
-$application = new Application("PHPGuard Library Console", "v1.0.1");
+$application = new Application("PHPGuard Library Console", "v1.0.2");
 
 // ... register commands
 $application->add(new ChangeMode());
@@ -24,4 +25,5 @@ $application->add(new GenerateIV());
 $application->add(new RemoveKeys());
 $application->add(new RemoveInitialVectors());
 $application->add(new Config());
+$application->add(new Test());
 $application->run();
