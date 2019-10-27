@@ -159,13 +159,15 @@ class AES extends AssetReader implements Encryption, Decryption
      * Encrypts the given data
      * @param mixed $data the data that will be encrypted
      * @param bool $serialize [recommended true], if $serialize is false and $data is string is correct,
-     * but if $serialize is false and $data is not string you get error
+     * but if $serialize is false and $data is not string you get run time exception
      * @return false|string return encrypted value, false on failure
      * @throws EncryptionException throws exception if validate method returns false or can not decrypt the the $cipher
      */
     public function encrypt($data, $serialize = true)
     {
-        if ($serialize === false)
+        if ($serialize === false && !is_string($data))
+            throw new RuntimeException("Can not convert $data to string! change serialize to true");
+        if ($serialize === false && is_string($data))
             return $this->encryptString($data);
         return $this->encryptString(json_encode(serialize($data)));
     }
