@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author Baha2r
+ * @author  Baha2r
  * @license MIT
  * Date: 18/Oct/2019
  *
@@ -14,4 +14,5 @@ use RuntimeException;
 
 class DecryptionException extends RuntimeException
 {
+    //
 }
