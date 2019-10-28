@@ -3,7 +3,7 @@
 
 error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
 
-require __DIR__ . "/vendor/autoload.php";
+require __DIR__."/vendor/autoload.php";
 
 use Symfony\Component\Console\Application;
 use PHPGuard\Console\Command\ChangeMode;
@@ -14,8 +14,10 @@ use PHPGuard\Console\Command\GenerateKey;
 use PHPGuard\Console\Command\RemoveInitialVectors;
 use PHPGuard\Console\Command\RemoveKeys;
 use PHPGuard\Console\Command\Test;
+use PHPGuard\Console\Command\MoveKeys;
+use PHPGuard\Console\Command\MoveInitialVectors;
 
-$application = new Application("PHPGuard Library Console", "v1.0.2");
+$application = new Application("PHPGuard Library Console", "v1.0.3");
 
 // ... register commands
 $application->add(new ChangeMode());
@@ -26,4 +28,6 @@ $application->add(new RemoveKeys());
 $application->add(new RemoveInitialVectors());
 $application->add(new Config());
 $application->add(new Test());
+$application->add(new MoveKeys());
+$application->add(new MoveInitialVectors());
 $application->run();
