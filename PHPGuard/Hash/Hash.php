@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author Baha2r
+ * @author  Baha2r
  * @license MIT
  * Date: 16/Oct/2019
  *
@@ -38,10 +38,12 @@ abstract class Hash implements BaseHash
 
     /**
      * Make digested hash from a value by a specific hash algorithm
-     * @param string|mixed $data the data is being hashed
-     * @param string $method the hash algorithm
-     * @param bool $serialize [optional] if $serialize is true, $data can be any type but resources.
-     * it uses json encode to convert any types to string
+     *
+     * @param  string|mixed  $data       the data is being hashed
+     * @param  string        $method     the hash algorithm
+     * @param  bool          $serialize  [optional] if $serialize is true, $data can be any type but resources.
+     *                                   it uses json encode to convert any types to string
+     *
      * @return false|string return the digested hash value on success or false on failure
      * @throws HashException throws exception if could not hash the data
      */
@@ -50,24 +52,29 @@ abstract class Hash implements BaseHash
         $digest = null;
         if ($serialize === true) {
             $digest = openssl_digest(json_encode($data), $method);
-            if ($digest === false)
+            if ($digest === false) {
                 throw new HashException("Could not hash the data!");
+            }
             return $digest;
         }
-        if (!is_string($data))
+        if (!is_string($data)) {
             throw new HashException("$data have to be string or put second parameter true!");
+        }
         $digest = openssl_digest($data, $method);
-        if ($digest === false)
+        if ($digest === false) {
             throw new HashException("Could not hash the data!");
+        }
         return openssl_digest($data, $method);
     }
 
 
     /**
      * Make digested hash from a value by this specific hash algorithm
-     * @param string|mixed $data the data is being hashed
-     * @param bool $serialize [optional] if $serialize is true, $data can be any type but resources.
-     * it uses json encode to convert any types to string
+     *
+     * @param  string|mixed  $data       the data is being hashed
+     * @param  bool          $serialize  [optional] if $serialize is true, $data can be any type but resources.
+     *                                   it uses json encode to convert any types to string
+     *
      * @return false|string return the digested hash value on success or false on failure
      * @throws HashException throws exception if could not hash the data
      */
@@ -79,9 +86,11 @@ abstract class Hash implements BaseHash
 
     /**
      * Make digested hash from a value by this specific hash algorithm
-     * @param string|mixed $data the data is being hashed
-     * @param bool $serialize [optional] if $serialize is true, $data can be any type but resources.
-     * it uses json encode to convert any types to string
+     *
+     * @param  string|mixed  $data       the data is being hashed
+     * @param  bool          $serialize  [optional] if $serialize is true, $data can be any type but resources.
+     *                                   it uses json encode to convert any types to string
+     *
      * @return false|string return the digested hash value on success or false on failure
      * @throws HashException throws exception if could not hash the data
      */
@@ -93,9 +102,11 @@ abstract class Hash implements BaseHash
 
     /**
      * Make digested hash from a value by this specific hash algorithm
-     * @param string|mixed $data the data is being hashed
-     * @param bool $serialize [optional] if $serialize is true, $data can be any type but resources.
-     * it uses json encode to convert any types to string
+     *
+     * @param  string|mixed  $data       the data is being hashed
+     * @param  bool          $serialize  [optional] if $serialize is true, $data can be any type but resources.
+     *                                   it uses json encode to convert any types to string
+     *
      * @return false|string return the digested hash value on success or false on failure
      * @throws HashException throws exception if could not hash the data
      */
@@ -107,9 +118,11 @@ abstract class Hash implements BaseHash
 
     /**
      * Make digested hash from a value by this specific hash algorithm
-     * @param string|mixed $data the data is being hashed
-     * @param bool $serialize [optional] if $serialize is true, $data can be any type but resources.
-     * it uses json encode to convert any types to string
+     *
+     * @param  string|mixed  $data       the data is being hashed
+     * @param  bool          $serialize  [optional] if $serialize is true, $data can be any type but resources.
+     *                                   it uses json encode to convert any types to string
+     *
      * @return false|string return the digested hash value on success or false on failure
      * @throws HashException throws exception if could not hash the data
      */
@@ -121,9 +134,11 @@ abstract class Hash implements BaseHash
 
     /**
      * Make digested hash from a value by this specific hash algorithm
-     * @param string|mixed $data the data is being hashed
-     * @param bool $serialize [optional] if $serialize is true, $data can be any type but resources.
-     * it uses json encode to convert any types to string
+     *
+     * @param  string|mixed  $data       the data is being hashed
+     * @param  bool          $serialize  [optional] if $serialize is true, $data can be any type but resources.
+     *                                   it uses json encode to convert any types to string
+     *
      * @return false|string return the digested hash value on success or false on failure
      * @throws HashException throws exception if could not hash the data
      */
@@ -135,9 +150,11 @@ abstract class Hash implements BaseHash
 
     /**
      * Make digested hash from a value by this specific hash algorithm
-     * @param string|mixed $data the data is being hashed
-     * @param bool $serialize [optional] if $serialize is true, $data can be any type but resources.
-     * it uses json encode to convert any types to string
+     *
+     * @param  string|mixed  $data       the data is being hashed
+     * @param  bool          $serialize  [optional] if $serialize is true, $data can be any type but resources.
+     *                                   it uses json encode to convert any types to string
+     *
      * @return false|string return the digested hash value on success or false on failure
      * @throws HashException throws exception if could not hash the data
      */
