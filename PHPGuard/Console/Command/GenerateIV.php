@@ -22,7 +22,7 @@ class GenerateIV extends Commands
     protected function configure()
     {
         $this->setDescription("Generates new iv files in related directories")
-            ->setHelp("<comment>\nThis command allows you to generate initial vectors for your cryptography system\n</comment>");
+                ->setHelp("<comment>\nThis command allows you to generate initial vectors for your cryptography system\n</comment>");
         parent::configure();
     }
 
@@ -31,8 +31,9 @@ class GenerateIV extends Commands
     {
         $output->writeln("");
         $ans = parent::generateIv();
-        if (!$ans)
+        if (!$ans) {
             throw new RuntimeException("[RuntimeException]:\n\nOperation not permitted! You maybe need sudo access, try: sudo php guard generate:iv\nor maybe you need root permission, try: sudo -s then try php guard generate:iv");
+        }
         $output->writeln("<info>Initial vectors generated successfully!</info>");
         $output->writeln("");
     }

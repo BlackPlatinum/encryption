@@ -22,7 +22,7 @@ class RemoveInitialVectors extends Commands
     protected function configure()
     {
         $this->setDescription("Removes initial vector files in related directories")
-            ->setHelp("<comment>\nThis command allows you to remove initial vector files\nYou can generate new initial vector files with: php guard generate:iv\n</comment>");
+                ->setHelp("<comment>\nThis command allows you to remove initial vector files\nYou can generate new initial vector files with: php guard generate:iv\n</comment>");
         parent::configure();
     }
 
@@ -31,8 +31,9 @@ class RemoveInitialVectors extends Commands
     {
         $output->writeln("");
         $ans = parent::removeIVs();
-        if (!$ans)
+        if (!$ans) {
             throw new RuntimeException("[RuntimeException]:\n\nOperation not permitted! You maybe need sudo access, try: sudo php guard remove:iv\nor maybe you need root permission, try: sudo -s then try php guard remove:iv");
+        }
         $output->writeln("<info>Initial vectors removed successfully!</info>");
         $output->writeln("");
     }

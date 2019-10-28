@@ -22,7 +22,7 @@ class GenerateKey extends Commands
     protected function configure()
     {
         $this->setDescription("Generates new key files in related directories")
-            ->setHelp("<comment>\nThis command allows you to generate generate keys for your cryptography system\n</comment>");
+                ->setHelp("<comment>\nThis command allows you to generate keys for your cryptography system\n</comment>");
         parent::configure();
     }
 
@@ -31,8 +31,9 @@ class GenerateKey extends Commands
     {
         $output->writeln("");
         $ans = parent::generateKey();
-        if (!$ans)
+        if (!$ans) {
             throw new RuntimeException("[RuntimeException]:\n\nOperation not permitted! You maybe need sudo access, try: sudo php guard generate:key\nor maybe you need root permission, try: sudo -s then try php guard generate:key");
+        }
         $output->writeln("<info>Keys generated successfully!</info>");
         $output->writeln("");
     }

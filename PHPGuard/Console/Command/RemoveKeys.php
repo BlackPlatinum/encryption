@@ -22,7 +22,7 @@ class RemoveKeys extends Commands
     protected function configure()
     {
         $this->setDescription("Removes key files in related directories")
-            ->setHelp("<comment>\nThis command allows you to remove key files\nYou can generate new keys with: php guard generate:key\n</comment>");
+                ->setHelp("<comment>\nThis command allows you to remove key files\nYou can generate new keys with: php guard generate:key\n</comment>");
         parent::configure();
     }
 
@@ -31,8 +31,9 @@ class RemoveKeys extends Commands
     {
         $output->writeln("");
         $ans = parent::removeKeys();
-        if (!$ans)
+        if (!$ans) {
             throw new RuntimeException("[RuntimeException]:\n\nOperation not permitted! You maybe need sudo access, try: sudo php guard remove:key\nor maybe you need root permission, try: sudo -s then try php guard remove:key");
+        }
         $output->writeln("<info>Keys removed successfully!</info>");
         $output->writeln("");
     }

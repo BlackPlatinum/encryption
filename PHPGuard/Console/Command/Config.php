@@ -23,9 +23,9 @@ class Config extends Commands
     protected function configure()
     {
         $this->setDescription("Configures keys and initial vectors manually by user")
-            ->addArgument("mode", InputArgument::REQUIRED, "file's mode")
-            ->addArgument("owner", InputArgument::REQUIRED, "file's owner")
-            ->setHelp("<comment>\nThis command allows you to configure key and iv files manually\nThis is recommended if you want change mode and owner of key and iv files arbitrary\n</comment>");
+                ->addArgument("mode", InputArgument::REQUIRED, "file's mode")
+                ->addArgument("owner", InputArgument::REQUIRED, "file's owner")
+                ->setHelp("<comment>\nThis command allows you to configure key and iv files manually\nThis is recommended if you want change mode and owner of key and iv files arbitrary\n</comment>");
         parent::configure();
     }
 
@@ -34,8 +34,9 @@ class Config extends Commands
     {
         $output->writeln("");
         $ans = parent::config($input->getArgument("mode"), $input->getArgument("owner"));
-        if (!$ans)
-            throw new RuntimeException("[RuntimeException]:\n\nOperation not permitted! You maybe need sudo access, try: sudo php guard config:reconfigure\nor maybe you need root permission, try: sudo -s then try php guard config:reconfigure");
+        if (!$ans) {
+            throw new RuntimeException("[RuntimeException]:\n\nOperation not permitted! You maybe need sudo access or maybe you entered wrong username or file mode, try: sudo php guard config:reconfigure\nor maybe you need root permission, try: sudo -s then try php guard config:reconfigure");
+        }
         $output->writeln("<info>Keys and initial vectors configured successfully!</info>");
         $output->writeln("");
     }
