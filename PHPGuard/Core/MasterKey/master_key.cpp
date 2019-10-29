@@ -21,12 +21,13 @@ int main() {
 
 /**
  * Generates random master key
- * @return string return key as a string
+ * @return string return master key as a string
  */
 string generator() {
     const int BLOCK_SIZE = 32;
     int *buff = new int[BLOCK_SIZE];
     char *bytes = new char[BLOCK_SIZE];
+    srand(1);
     for (int i = 0; i < BLOCK_SIZE; i++) {
         buff[i] = (int) (2 * random());
     }
