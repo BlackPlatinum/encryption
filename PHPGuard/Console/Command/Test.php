@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Test extends Commands
 {
-    protected static $defaultName = "test:system";
+    protected static $defaultName = "test";
 
     public function __construct(string $name = null)
     {
