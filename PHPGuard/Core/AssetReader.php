@@ -11,6 +11,7 @@
 namespace PHPGuard\Core;
 
 
+use PHPGuard\Hash\Hash;
 use RuntimeException;
 
 
@@ -61,11 +62,13 @@ abstract class AssetReader
      */
     private function reader($path)
     {
+        $masterKey = Hash::sha512(shell_exec($this->getAbsolutePath()."/MasterKey/./a.out"));
         $size = filesize($path);
-        $handle = fopen($path, "rb");
-        $binary = fread($handle, $size);
+        $handle = fopen($path, "r");
+        $content = fread($handle, $size);
         fclose($handle);
-        $barr = unpack("c*", $binary);
+        $decrypted = openssl_decrypt($content, "AES-256-CBC", $masterKey, 0, " ~!@#$%^&*(K_*-.");
+        $barr = unpack("c*", $decrypted);
         return $this->arrayToString($barr);
     }
 
