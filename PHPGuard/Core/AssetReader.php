@@ -65,12 +65,13 @@ abstract class AssetReader
      */
     private function reader($path)
     {
-        $masterKey = Hash::sha512(shell_exec($this->getAbsolutePath()."/MasterKey/./a.out"));
+        $masterKey = substr(Hash::sha512(shell_exec($this->getAbsolutePath()."/MasterKey/./mk")), 73, 32);
+        $masterIV = substr(Hash::sha512(shell_exec($this->getAbsolutePath()."/MasterIV/./miv")), 87, 16);
         $size = filesize($path);
         $handle = fopen($path, "r");
         $content = fread($handle, $size);
         fclose($handle);
-        $decrypted = openssl_decrypt($content, "AES-256-CBC", $masterKey, 0, " ~!@#$%^&*(K_*-.");
+        $decrypted = openssl_decrypt($content, "AES-256-CBC", $masterKey, 0, $masterIV);
         return $decrypted;
     }
 
