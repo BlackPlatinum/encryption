@@ -32,7 +32,7 @@ class Test extends Commands
         $this->setDescription("Tests guard cryptography system")
                 ->addArgument("value", InputArgument::REQUIRED, "value that will be encrypted")
                 ->addArgument("algorithm", InputArgument::OPTIONAL, "cryptography algorithm", "AES128")
-                ->setHelp("<comment>\nThis command allows you to to test PHPGuard cryptography system to make you sure this is fully operational\n</comment>");
+                ->setHelp("<comment>\nThis command allows you to test PHPGuard cryptography system to make you sure this is fully operational\n</comment>");
         parent::configure();
     }
 
