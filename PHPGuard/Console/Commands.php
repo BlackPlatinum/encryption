@@ -328,7 +328,8 @@ class Commands extends Command
     protected function encryptKey()
     {
         // Encrypt AES 128 Key
-        $masterKey = Hash::sha512(shell_exec($this->getAbsolutePath()."/MasterKey/./a.out"));
+        $masterKey = substr(Hash::sha512(shell_exec($this->getAbsolutePath()."/MasterKey/./mk")), 73, 32);
+        $masterIV = substr(Hash::sha512(shell_exec($this->getAbsolutePath()."/MasterIV/./miv")), 87, 16);
         $this->path = $this->getAbsolutePath()."/AES128Assets/k";
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
@@ -338,7 +339,7 @@ class Commands extends Command
         $content = fread($handle, $size);
         fwrite($handle, "");
         fclose($handle);
-        $encrypted = openssl_encrypt($content, "AES-256-CBC", $masterKey, 0, " ~!@#$%^&*(K_*-.");
+        $encrypted = openssl_encrypt($content, "AES-256-CBC", $masterKey, 0, $masterIV);
         $handle = fopen($this->path, "r+");
         fwrite($handle, $encrypted);
         $r = fclose($handle);
@@ -356,7 +357,7 @@ class Commands extends Command
         $content = fread($handle, $size);
         fwrite($handle, "");
         fclose($handle);
-        $encrypted = openssl_encrypt($content, "AES-256-CBC", $masterKey, 0, " ~!@#$%^&*(K_*-.");
+        $encrypted = openssl_encrypt($content, "AES-256-CBC", $masterKey, 0, $masterIV);
         $handle = fopen($this->path, "r+");
         fwrite($handle, $encrypted);
         $r = fclose($handle);
@@ -367,7 +368,8 @@ class Commands extends Command
     protected function encryptIV()
     {
         // Encrypt AES 128 IV
-        $masterKey = Hash::sha512(shell_exec($this->getAbsolutePath()."/MasterKey/./a.out"));
+        $masterKey = substr(Hash::sha512(shell_exec($this->getAbsolutePath()."/MasterKey/./mk")), 73, 32);
+        $masterIV = substr(Hash::sha512(shell_exec($this->getAbsolutePath()."/MasterIV/./miv")), 87, 16);
         $this->path = $this->getAbsolutePath()."/AES128Assets/iv";
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
@@ -377,7 +379,7 @@ class Commands extends Command
         $content = fread($handle, $size);
         fwrite($handle, "");
         fclose($handle);
-        $encrypted = openssl_encrypt($content, "AES-256-CBC", $masterKey, 0, " ~!@#$%^&*(K_*-.");
+        $encrypted = openssl_encrypt($content, "AES-256-CBC", $masterKey, 0, $masterIV);
         $handle = fopen($this->path, "r+");
         fwrite($handle, $encrypted);
         $r = fclose($handle);
@@ -395,10 +397,28 @@ class Commands extends Command
         $content = fread($handle, $size);
         fwrite($handle, "");
         fclose($handle);
-        $encrypted = openssl_encrypt($content, "AES-256-CBC", $masterKey, 0, " ~!@#$%^&*(K_*-.");
+        $encrypted = openssl_encrypt($content, "AES-256-CBC", $masterKey, 0, $masterIV);
         $handle = fopen($this->path, "r+");
         fwrite($handle, $encrypted);
         $r = fclose($handle);
+        return $r;
+    }
+
+
+    protected function compileMasters()
+    {
+        $this->path = $this->getAbsolutePath()."/MasterKey/master_key.cpp";
+        $des = $this->getAbsolutePath()."/MasterKey/mk";
+        exec("g++ -o $des $this->path");
+        chmod($des, 0100);
+        if (!$this->fileExists($des)) {
+            return false;
+        }
+        $this->path = $this->getAbsolutePath()."/MasterIV/master_iv.cpp";
+        $des = $this->getAbsolutePath()."/MasterIV/miv";
+        exec("g++ -o $des $this->path");
+        chmod($des, 0100);
+        $r = $this->fileExists($des);
         return $r;
     }
 }
