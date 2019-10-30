@@ -16,8 +16,10 @@ use PHPGuard\Console\Command\RemoveKeys;
 use PHPGuard\Console\Command\Test;
 use PHPGuard\Console\Command\MoveKeys;
 use PHPGuard\Console\Command\MoveInitialVectors;
+use PHPGuard\Console\Command\EncryptKey;
+use PHPGuard\Console\Command\EncryptIV;
 
-$application = new Application("PHPGuard Library Console", "v1.0.3");
+$application = new Application("PHPGuard Library Console", "v1.0.4");
 
 // ... register commands
 $application->add(new ChangeMode());
@@ -30,4 +32,6 @@ $application->add(new Config());
 $application->add(new Test());
 $application->add(new MoveKeys());
 $application->add(new MoveInitialVectors());
+$application->add(new EncryptKey());
+$application->add(new EncryptIV());
 $application->run();
