@@ -11,7 +11,8 @@
 namespace PHPGuard\Console;
 
 
-use PHPGuard\AES\AES;
+use PHPGuard\Crypto\Crypto;
+use PHPGuard\Hash\Hash;
 use PHPGuard\Core\AssetPath;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Command\Command;
@@ -55,17 +56,26 @@ class Commands extends Command
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
         }
-        chmod($this->path, 0400);
+        $r = chmod($this->path, 0400);
+        if (!$r) {
+            return false;
+        }
         $this->path = $this->getAbsolutePath()."/AES128Assets/iv";
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
         }
-        chmod($this->path, 0400);
+        $r = chmod($this->path, 0400);
+        if (!$r) {
+            return false;
+        }
         $this->path = $this->getAbsolutePath()."/AES256Assets/k";
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
         }
-        chmod($this->path, 0400);
+        $r = chmod($this->path, 0400);
+        if (!$r) {
+            return false;
+        }
         $this->path = $this->getAbsolutePath()."/AES256Assets/iv";
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
@@ -81,17 +91,26 @@ class Commands extends Command
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
         }
-        chown($this->path, $owner);
+        $r = chown($this->path, $owner);
+        if (!$r) {
+            return false;
+        }
         $this->path = $this->getAbsolutePath()."/AES128Assets/iv";
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
         }
-        chown($this->path, $owner);
+        $r = chown($this->path, $owner);
+        if (!$r) {
+            return false;
+        }
         $this->path = $this->getAbsolutePath()."/AES256Assets/k";
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
         }
-        chown($this->path, $owner);
+        $r = chown($this->path, $owner);
+        if (!$r) {
+            return false;
+        }
         $this->path = $this->getAbsolutePath()."/AES256Assets/iv";
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
@@ -108,15 +127,18 @@ class Commands extends Command
         $randoms = openssl_random_pseudo_bytes(self::KEY128Len);
         $handle = fopen($this->path, "w+b");
         fwrite($handle, $randoms);
-        fclose($handle);
+        $r = fclose($handle);
+        if (!$r) {
+            return false;
+        }
 
         // Generates key file for AES-256-CBC
         $this->path = $path = $this->getAbsolutePath()."/AES256Assets/k";
         $randoms = openssl_random_pseudo_bytes(self::KEY256Len);
         $handle = fopen($this->path, "w+b");
         fwrite($handle, $randoms);
-        fclose($handle);
-        return $handle;
+        $r = fclose($handle);
+        return $r;
     }
 
 
@@ -127,15 +149,18 @@ class Commands extends Command
         $randoms = openssl_random_pseudo_bytes(openssl_cipher_iv_length(self::AES128));
         $handle = fopen($this->path, "w+b");
         fwrite($handle, $randoms);
-        fclose($handle);
+        $r = fclose($handle);
+        if (!$r) {
+            return false;
+        }
 
         // Generates iv file for AES-256-CBC
         $this->path = $this->getAbsolutePath()."/AES256Assets/iv";
         $randoms = openssl_random_pseudo_bytes(openssl_cipher_iv_length(self::AES256));
         $handle = fopen($this->path, "w+b");
         fwrite($handle, $randoms);
-        fclose($handle);
-        return $handle;
+        $r = fclose($handle);
+        return $r;
     }
 
 
@@ -145,7 +170,10 @@ class Commands extends Command
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
         }
-        unlink($this->path);
+        $r = unlink($this->path);
+        if (!$r) {
+            return false;
+        }
         $this->path = $this->getAbsolutePath()."/AES256Assets/k";
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
@@ -161,7 +189,10 @@ class Commands extends Command
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
         }
-        unlink($this->path);
+        $r = unlink($this->path);
+        if (!$r) {
+            return false;
+        }
         $this->path = $this->getAbsolutePath()."/AES256Assets/iv";
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
@@ -178,38 +209,59 @@ class Commands extends Command
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
         }
-        chmod($this->path, $mode);
+        $r = chmod($this->path, $mode);
+        if (!$r) {
+            return false;
+        }
         $this->path = $this->getAbsolutePath()."/AES128Assets/iv";
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
         }
-        chmod($this->path, $mode);
+        $r = chmod($this->path, $mode);
+        if (!$r) {
+            return false;
+        }
         $this->path = $this->getAbsolutePath()."/AES256Assets/k";
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
         }
-        chmod($this->path, $mode);
+        $r = chmod($this->path, $mode);
+        if (!$r) {
+            return false;
+        }
         $this->path = $this->getAbsolutePath()."/AES256Assets/iv";
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
         }
-        chmod($this->path, $mode);
+        $r = chmod($this->path, $mode);
+        if (!$r) {
+            return false;
+        }
 
         $this->path = $this->getAbsolutePath()."/AES128Assets/k";
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
         }
-        chown($this->path, $owner);
+        $r = chown($this->path, $owner);
+        if (!$r) {
+            return false;
+        }
         $this->path = $this->getAbsolutePath()."/AES128Assets/iv";
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
         }
-        chown($this->path, $owner);
+        $r = chown($this->path, $owner);
+        if (!$r) {
+            return false;
+        }
         $this->path = $this->getAbsolutePath()."/AES256Assets/k";
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
         }
-        chown($this->path, $owner);
+        $r = chown($this->path, $owner);
+        if (!$r) {
+            return false;
+        }
         $this->path = $this->getAbsolutePath()."/AES256Assets/iv";
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
@@ -225,7 +277,10 @@ class Commands extends Command
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
         }
-        rename($this->path, $newName128);
+        $r = rename($this->path, $newName128);
+        if (!$r) {
+            return false;
+        }
         $this->path = $this->getAbsolutePath()."/AES256Assets/k";
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
@@ -241,7 +296,10 @@ class Commands extends Command
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
         }
-        rename($this->path, $newName128);
+        $r = rename($this->path, $newName128);
+        if (!$r) {
+            return false;
+        }
         $this->path = $this->getAbsolutePath()."/AES256Assets/iv";
         if (!$this->fileExists($this->path)) {
             throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
@@ -253,7 +311,7 @@ class Commands extends Command
 
     protected function test128($value)
     {
-        $aes = new AES();
+        $aes = new Crypto();
         $e = $aes->encryptString($value);
         return [$e, $aes->decryptString($e)];
     }
@@ -261,8 +319,86 @@ class Commands extends Command
 
     protected function test256($value)
     {
-        $aes = new AES("AES-256-CBC");
+        $aes = new Crypto("AES-256-CBC");
         $e = $aes->encryptString($value);
         return [$e, $aes->decryptString($e)];
+    }
+
+
+    protected function encryptKey()
+    {
+        // Encrypt AES 128 Key
+        $masterKey = Hash::sha512(shell_exec($this->getAbsolutePath()."/MasterKey/./a.out"));
+        $this->path = $this->getAbsolutePath()."/AES128Assets/k";
+        if (!$this->fileExists($this->path)) {
+            throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
+        }
+        $size = filesize($this->path);
+        $handle = fopen($this->path, "r+b");
+        $content = fread($handle, $size);
+        fwrite($handle, "");
+        fclose($handle);
+        $encrypted = openssl_encrypt($content, "AES-256-CBC", $masterKey, 0, " ~!@#$%^&*(K_*-.");
+        $handle = fopen($this->path, "r+");
+        fwrite($handle, $encrypted);
+        $r = fclose($handle);
+        if (!$r) {
+            return false;
+        }
+
+        // Encrypt AES 256 Key
+        $this->path = $this->getAbsolutePath()."/AES256Assets/k";
+        if (!$this->fileExists($this->path)) {
+            throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
+        }
+        $size = filesize($this->path);
+        $handle = fopen($this->path, "r+b");
+        $content = fread($handle, $size);
+        fwrite($handle, "");
+        fclose($handle);
+        $encrypted = openssl_encrypt($content, "AES-256-CBC", $masterKey, 0, " ~!@#$%^&*(K_*-.");
+        $handle = fopen($this->path, "r+");
+        fwrite($handle, $encrypted);
+        $r = fclose($handle);
+        return $r;
+    }
+
+
+    protected function encryptIV()
+    {
+        // Encrypt AES 128 IV
+        $masterKey = Hash::sha512(shell_exec($this->getAbsolutePath()."/MasterKey/./a.out"));
+        $this->path = $this->getAbsolutePath()."/AES128Assets/iv";
+        if (!$this->fileExists($this->path)) {
+            throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
+        }
+        $size = filesize($this->path);
+        $handle = fopen($this->path, "r+b");
+        $content = fread($handle, $size);
+        fwrite($handle, "");
+        fclose($handle);
+        $encrypted = openssl_encrypt($content, "AES-256-CBC", $masterKey, 0, " ~!@#$%^&*(K_*-.");
+        $handle = fopen($this->path, "r+");
+        fwrite($handle, $encrypted);
+        $r = fclose($handle);
+        if (!$r) {
+            return false;
+        }
+
+        // Encrypt AES 256 IV
+        $this->path = $this->getAbsolutePath()."/AES256Assets/iv";
+        if (!$this->fileExists($this->path)) {
+            throw new RuntimeException("[RuntimeException]:\n\nFile $this->path doesn't exist!");
+        }
+        $size = filesize($this->path);
+        $handle = fopen($this->path, "r+b");
+        $content = fread($handle, $size);
+        fwrite($handle, "");
+        fclose($handle);
+        $encrypted = openssl_encrypt($content, "AES-256-CBC", $masterKey, 0, " ~!@#$%^&*(K_*-.");
+        $handle = fopen($this->path, "r+");
+        fwrite($handle, $encrypted);
+        $r = fclose($handle);
+        return $r;
     }
 }
