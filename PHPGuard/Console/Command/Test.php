@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * @author  Baha2r
+ * @license MIT
+ * Date: 24/Oct/2019 02:25 AM
+ *
+ * Tests Guard cryptography system
+ **/
 
 namespace PHPGuard\Console\Command;
 

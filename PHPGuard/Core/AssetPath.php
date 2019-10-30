@@ -3,7 +3,7 @@
 /**
  * @author  Baha2r
  * @license MIT
- * Date: 18/Oct/2019
+ * Date: 18/Oct/2019 02:20 AM
  *
  * This trait find absolute path of assets directory
  **/

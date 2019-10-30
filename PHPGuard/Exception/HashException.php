@@ -3,7 +3,7 @@
 /**
  * @author  Baha2r
  * @license MIT
- * Date: 18/Oct/2019
+ * Date: 19/Oct/2019 21:09 PM
  *
  * Main hash exception class
  **/

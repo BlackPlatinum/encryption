@@ -1,6 +1,14 @@
 #!/usr/bin/env php
 <?php
 
+/**
+ * @author  Baha2r
+ * @license MIT
+ * Date: 21/Oct/2019 23:27 PM
+ *
+ * Executes Guard commands
+ **/
+
 error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
 
 require __DIR__."/vendor/autoload.php";

@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * @author  Baha2r
+ * @license MIT
+ * Date: 23/Oct/2019 00:11 AM
+ *
+ * Configures key and initial vector files
+ **/
 
 namespace PHPGuard\Console\Command;
 

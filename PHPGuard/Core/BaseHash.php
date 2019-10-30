@@ -3,7 +3,7 @@
 /**
  * @author  Baha2r
  * @license MIT
- * Date: 16/Oct/2019
+ * Date: 19/Oct/2019 21:10 PM
  *
  * Base hash interface
  **/

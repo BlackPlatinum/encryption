@@ -3,7 +3,7 @@
 /**
  * @author  Baha2r
  * @license MIT
- * Date: 16/Oct/2019
+ * Date: 16/Oct/2019 20:56 PM
  *
  * Main class to compute digest hash of all types data
  **/

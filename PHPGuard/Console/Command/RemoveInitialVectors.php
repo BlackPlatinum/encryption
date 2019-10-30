@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * @author  Baha2r
+ * @license MIT
+ * Date: 22/Oct/2019 21:40 PM
+ *
+ * Removes IV files
+ **/
 
 namespace PHPGuard\Console\Command;
 

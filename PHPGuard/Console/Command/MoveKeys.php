@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * @author  Baha2r
+ * @license MIT
+ * Date: 28/Oct/2019 01:31 AM
+ *
+ * Moves key files to other directories
+ **/
 
 namespace PHPGuard\Console\Command;
 

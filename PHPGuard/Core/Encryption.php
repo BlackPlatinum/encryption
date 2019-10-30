@@ -3,7 +3,7 @@
 /**
  * @author  Baha2r
  * @license MIT
- * Date: 16/Oct/2019
+ * Date: 16/Oct/2019 02:39 AM
  *
  * Base encryption interface
  **/

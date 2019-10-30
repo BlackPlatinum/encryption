@@ -1,6 +1,10 @@
-//
-// Created by baha2r on 10/29/19 00:20
-//
+/**
+ * @author  Baha2r
+ * @license MIT
+ * Date: 29/Oct/2019 00:20 AM
+ *
+ * Master key generator
+ **/
 
 #include "master_key.h"
 
