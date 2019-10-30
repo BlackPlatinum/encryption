@@ -3,7 +3,7 @@
 /**
  * @author  Baha2r
  * @license MIT
- * Date: 16/Oct/2019
+ * Date: 16/Oct/2019 22:16 PM
  *
  * Main Reader class to read encryption key and initial vector from file
  **/
@@ -26,7 +26,8 @@ abstract class AssetReader
      * @param  array  $bytes  Input byte array
      *
      * @return string returns decoded byte array $bytes
-     * @deprecated
+     *
+     * @deprecated since 1.2.0
      */
     private function compute($bytes)
     {
@@ -46,6 +47,8 @@ abstract class AssetReader
      * @param  array  $array  the input array
      *
      * @return string return a binary or normal string
+     *
+     * @deprecated since 1.5.2
      */
     private function arrayToString($array)
     {
@@ -68,8 +71,7 @@ abstract class AssetReader
         $content = fread($handle, $size);
         fclose($handle);
         $decrypted = openssl_decrypt($content, "AES-256-CBC", $masterKey, 0, " ~!@#$%^&*(K_*-.");
-        $barr = unpack("c*", $decrypted);
-        return $this->arrayToString($barr);
+        return $decrypted;
     }
 
 
