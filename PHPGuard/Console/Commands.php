@@ -11,7 +11,7 @@
 namespace PHPGuard\Console;
 
 
-use PHPGuard\Crypto\Crypto;
+use PHPGuard\Crypto\Algorithms\AES;
 use PHPGuard\Hash\Hash;
 use PHPGuard\Core\AssetPath;
 use Symfony\Component\Console\Exception\RuntimeException;
@@ -324,7 +324,7 @@ class Commands extends Command
 
     protected function test128($value)
     {
-        $aes = new Crypto();
+        $aes = new AES();
         $e = $aes->encryptString($value);
         return [$e, $aes->decryptString($e)];
     }
@@ -332,7 +332,7 @@ class Commands extends Command
 
     protected function test256($value)
     {
-        $aes = new Crypto("AES-256-CBC");
+        $aes = new AES("AES-256-CBC");
         $e = $aes->encryptString($value);
         return [$e, $aes->decryptString($e)];
     }
