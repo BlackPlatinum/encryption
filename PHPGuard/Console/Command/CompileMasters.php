@@ -16,9 +16,9 @@ use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CompileAssets extends Commands
+class CompileMasters extends Commands
 {
-    protected static $defaultName = "compile:assets";
+    protected static $defaultName = "compile:masters";
 
     public function __construct(string $name = null)
     {
@@ -28,8 +28,8 @@ class CompileAssets extends Commands
 
     protected function configure()
     {
-        $this->setDescription("Compile asset files")
-                ->setHelp("<comment>\nThis command allows you to compile asset files like keys and initial vectors\n</comment>");
+        $this->setDescription("Compile master files")
+                ->setHelp("<comment>\nThis command allows you to compile master files like keys and initial vectors\n</comment>");
         parent::configure();
     }
 
