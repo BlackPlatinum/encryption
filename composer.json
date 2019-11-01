@@ -28,8 +28,8 @@
     "symfony/console": "^4.3"
   },
   "autoload": {
-    "psr-0": {
-      "PHPGuard": ""
+    "psr-4": {
+      "PHPGuard\\": ""
     }
   }
 }
