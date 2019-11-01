@@ -26,7 +26,7 @@ use PHPGuard\Console\Command\MoveKeys;
 use PHPGuard\Console\Command\MoveInitialVectors;
 use PHPGuard\Console\Command\EncryptKey;
 use PHPGuard\Console\Command\EncryptIV;
-use PHPGuard\Console\Command\CompileAssets;
+use PHPGuard\Console\Command\CompileMasters;
 
 $application = new Application("PHPGuard Library Console", "v1.0.5");
 
@@ -43,5 +43,5 @@ $application->add(new MoveKeys());
 $application->add(new MoveInitialVectors());
 $application->add(new EncryptKey());
 $application->add(new EncryptIV());
-$application->add(new CompileAssets());
+$application->add(new CompileMasters());
 $application->run();
