@@ -86,7 +86,7 @@ abstract class AssetReader
     {
         $path = $this->getAbsolutePath()."/AES128Assets/k";
         if (!is_file($path) || !file_exists($path)) {
-            throw new RuntimeException("File not found!");
+            throw new RuntimeException("File $path not found!");
         }
         return $this->reader($path);
     }
@@ -102,7 +102,7 @@ abstract class AssetReader
     {
         $path = $this->getAbsolutePath()."/AES128Assets/iv";
         if (!is_file($path) || !file_exists($path)) {
-            throw new RuntimeException("File not found!");
+            throw new RuntimeException("File $path not found!");
         }
         return $this->reader($path);
     }
@@ -118,7 +118,7 @@ abstract class AssetReader
     {
         $path = $this->getAbsolutePath()."/AES256Assets/k";
         if (!is_file($path) || !file_exists($path)) {
-            throw new RuntimeException("File not found!");
+            throw new RuntimeException("File $path not found!");
         }
         return $this->reader($path);
     }
@@ -134,7 +134,7 @@ abstract class AssetReader
     {
         $path = $this->getAbsolutePath()."/AES256Assets/iv";
         if (!is_file($path) || !file_exists($path)) {
-            throw new RuntimeException("File not found!");
+            throw new RuntimeException("File $path not found!");
         }
         return $this->reader($path);
     }
