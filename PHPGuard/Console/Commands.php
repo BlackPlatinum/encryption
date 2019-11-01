@@ -123,6 +123,9 @@ class Commands extends Command
     protected function generateKey()
     {
         // Generates key file for AES-128-CBC
+        if (!$this->fileExists($this->getAbsolutePath()."/AES128Assets")) {
+            mkdir($this->getAbsolutePath()."/AES128Assets", 0400, true);
+        }
         $this->path = $this->getAbsolutePath()."/AES128Assets/k";
         $randoms = openssl_random_pseudo_bytes(self::KEY128Len);
         $handle = fopen($this->path, "w+b");
@@ -133,6 +136,9 @@ class Commands extends Command
         }
 
         // Generates key file for AES-256-CBC
+        if (!$this->fileExists($this->getAbsolutePath()."/AES256Assets")) {
+            mkdir($this->getAbsolutePath()."/AES256Assets", 0400, true);
+        }
         $this->path = $path = $this->getAbsolutePath()."/AES256Assets/k";
         $randoms = openssl_random_pseudo_bytes(self::KEY256Len);
         $handle = fopen($this->path, "w+b");
@@ -145,6 +151,9 @@ class Commands extends Command
     protected function generateIv()
     {
         // Generates iv file for AES-128-CBC
+        if (!$this->fileExists($this->getAbsolutePath()."/AES128Assets")) {
+            mkdir($this->getAbsolutePath()."/AES128Assets", 0400, true);
+        }
         $this->path = $this->getAbsolutePath()."/AES128Assets/iv";
         $randoms = openssl_random_pseudo_bytes(openssl_cipher_iv_length(self::AES128));
         $handle = fopen($this->path, "w+b");
@@ -155,6 +164,9 @@ class Commands extends Command
         }
 
         // Generates iv file for AES-256-CBC
+        if (!$this->fileExists($this->getAbsolutePath()."/AES256Assets")) {
+            mkdir($this->getAbsolutePath()."/AES256Assets", 0400, true);
+        }
         $this->path = $this->getAbsolutePath()."/AES256Assets/iv";
         $randoms = openssl_random_pseudo_bytes(openssl_cipher_iv_length(self::AES256));
         $handle = fopen($this->path, "w+b");
