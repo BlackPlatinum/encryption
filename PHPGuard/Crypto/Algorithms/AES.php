@@ -8,7 +8,7 @@
  * Main AES encryption class to encrypt and decrypt data
  **/
 
-namespace PHPGuard\Crypto;
+namespace PHPGuard\Crypto\Algorithms;
 
 
 use PHPGuard\Core\Encryption;
@@ -19,7 +19,7 @@ use PHPGuard\Core\AssetReader;
 use RuntimeException;
 
 
-class Crypto extends AssetReader implements Encryption, Decryption
+class AES extends AssetReader implements Encryption, Decryption
 {
 
     // Algorithm name
