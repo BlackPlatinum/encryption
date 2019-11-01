@@ -48,37 +48,30 @@ class AES extends AssetReader implements Encryption, Decryption
 
 
     /**
-     * Main constructor initial basic values
+     * Main constructor which initial basic values
      *
-     * @param  string  $method  [optional] cryptography method name
-     * @param  int     $option  [optional] $option = 0, use internal key and iv. $option = 1, use internal key but generates different
-     *                          ivs in each run
+     * @param  string  $method  [optional] cryptography method name. The default method is AES-128-CBC
+     * @param  int     $option  [optional] $option = 0, use internal key and iv by default. $option = 1, key and iv will be set by user
      */
     public function __construct($method = self::AES128, $option = 0)
     {
         $this->method = $method;
         $this->options = $option;
-        if ($this->options === 0) {
-            if ($this->method === self::AES128) {
-                $this->flag_128 = true;
-                $this->KEY = parent::readKey128();
-                $this->IV = parent::readIV128();
-            } else {
-                $this->flag_256 = true;
-                $this->KEY = parent::readKey256();
-                $this->IV = parent::readIV256();
-            }
+        if ($this->method === self::AES128 && $this->options === 0) {
+            $this->flag_128 = true;
+            $this->KEY = parent::readKey128();
+            $this->IV = parent::readIV128();
         }
-        if ($this->options === 1) {
-            if ($this->method === self::AES128) {
-                $this->flag_128 = true;
-                $this->KEY = parent::readKey128();
-                $this->ivGenerator();
-            } else {
-                $this->flag_256 = true;
-                $this->KEY = parent::readKey256();
-                $this->ivGenerator();
-            }
+        if ($this->method === self::AES256 && $this->options === 0) {
+            $this->flag_256 = true;
+            $this->KEY = parent::readKey256();
+            $this->IV = parent::readIV256();
+        }
+        if ($this->method === self::AES128 && $this->options === 1) {
+            $this->flag_128 = true;
+        }
+        if ($this->method === self::AES256 && $this->options === 1) {
+            $this->flag_256 = true;
         }
     }
 
@@ -88,25 +81,59 @@ class AES extends AssetReader implements Encryption, Decryption
      *
      * @return boolean return true if cryptography method name is acceptable, false otherwise
      */
-    private function validate()
+    private function validateCipherMethod()
     {
         return $this->method === self::AES128 || $this->method === self::AES256;
     }
 
 
     /**
-     * Generates initial vector if $options equals to 1
+     * Sets key of cryptography system
      *
-     * @return null
+     * @param  string  $key  key of cryptography system
      */
-    private function ivGenerator()
+    public function setKey($key): void
     {
-        if ($this->flag_128) {
-            $this->IV = openssl_random_pseudo_bytes(openssl_cipher_iv_length(self::AES128));
-            return;
+        $this->KEY = $key;
+    }
+
+
+    /**
+     * Sets IV of cryptography system
+     *
+     * @param  string  $IV  iv of cryptography system
+     *
+     * @throws RuntimeException throws exception if initial vector's length be more or less than 16
+     */
+    public function setIV($IV): void
+    {
+        $len = strlen($IV);
+        if ($len > 16 || $len < 16) {
+            throw new RuntimeException("Initial vector's length can not be $len!");
         }
-        $this->IV = openssl_random_pseudo_bytes(openssl_cipher_iv_length(self::AES256));
-        return;
+        $this->IV = $IV;
+    }
+
+
+    /**
+     * Gets key of cryptography system
+     *
+     * @return string return key of cryptography system
+     */
+    public function getKey()
+    {
+        return $this->KEY;
+    }
+
+
+    /**
+     * Gets IV of cryptography system
+     *
+     * @return string return initial vector of cryptography system
+     */
+    public function getIV()
+    {
+        return $this->IV;
     }
 
 
@@ -120,11 +147,11 @@ class AES extends AssetReader implements Encryption, Decryption
      */
     public function encryptString($value)
     {
-        if (!$this->validate()) {
+        if (!$this->validateCipherMethod()) {
             throw new EncryptionException("Cipher method wrong!");
         }
-        if (is_null($this->IV)) {
-            throw new RuntimeException("Undefined option!");
+        if (is_null($this->IV) || is_null($this->KEY)) {
+            throw new RuntimeException("Empty key and initial vector!");
         }
         if ($this->flag_128) {
             $cipher = openssl_encrypt($value, self::AES128, $this->KEY, 0, $this->IV);
@@ -151,7 +178,7 @@ class AES extends AssetReader implements Encryption, Decryption
      */
     public function decryptString($cipher)
     {
-        if (!$this->validate()) {
+        if (!$this->validateCipherMethod()) {
             throw new EncryptionException("Cipher method wrong!");
         }
         if ($this->flag_128) {
@@ -207,16 +234,5 @@ class AES extends AssetReader implements Encryption, Decryption
             return $this->decryptString($cipher);
         }
         return unserialize(json_decode($this->decryptString($cipher)));
-    }
-
-
-    /**
-     * Returns supported cryptography algorithms by this class
-     *
-     * @return array return name of supported cryptography algorithms by this class
-     */
-    public static function supported()
-    {
-        return [self::AES128, self::AES256];
     }
 }
