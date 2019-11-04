@@ -14,34 +14,11 @@ error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
 require __DIR__."/vendor/autoload.php";
 
 use Symfony\Component\Console\Application;
-use PHPGuard\Console\Command\ChangeMode;
-use PHPGuard\Console\Command\ChangeOwner;
-use PHPGuard\Console\Command\Config;
-use PHPGuard\Console\Command\GenerateIV;
-use PHPGuard\Console\Command\GenerateKey;
-use PHPGuard\Console\Command\RemoveInitialVectors;
-use PHPGuard\Console\Command\RemoveKeys;
-use PHPGuard\Console\Command\Test;
-use PHPGuard\Console\Command\MoveKeys;
-use PHPGuard\Console\Command\MoveInitialVectors;
-use PHPGuard\Console\Command\EncryptKey;
-use PHPGuard\Console\Command\EncryptIV;
-use PHPGuard\Console\Command\CompileMasters;
+use PHPGuard\Console\Commands;
 
-$application = new Application("PHPGuard Library Console", "v1.0.5");
+
+$application = new Application("PHPGuard Library Console", "v1.1.0");
 
 // ... register commands
-$application->add(new ChangeMode());
-$application->add(new ChangeOwner());
-$application->add(new GenerateKey());
-$application->add(new GenerateIV());
-$application->add(new RemoveKeys());
-$application->add(new RemoveInitialVectors());
-$application->add(new Config());
-$application->add(new Test());
-$application->add(new MoveKeys());
-$application->add(new MoveInitialVectors());
-$application->add(new EncryptKey());
-$application->add(new EncryptIV());
-$application->add(new CompileMasters());
+$application->add(new Commands());
 $application->run();
