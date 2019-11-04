@@ -42,7 +42,7 @@ abstract class Hash implements BaseHash
      * @param  string|mixed  $data       the data is being hashed
      * @param  string        $method     the hash algorithm
      * @param  bool          $serialize  [optional] if $serialize is true, $data can be any type but resources.
-     *                                   it uses json encode to convert any types to string
+     *                                   it uses json encode and serialize to convert any types to string
      *
      * @return false|string return the digested hash value on success or false on failure
      * @throws HashException throws exception if could not hash the data
@@ -51,7 +51,7 @@ abstract class Hash implements BaseHash
     {
         $digest = null;
         if ($serialize === true) {
-            $digest = openssl_digest(json_encode($data), $method);
+            $digest = openssl_digest(json_encode(serialize($data)), $method);
             if ($digest === false) {
                 throw new HashException("Could not hash the data!");
             }
