@@ -4,22 +4,15 @@ A security cryptography library for PHP. It can be used by different frameworks 
 
 Features
 --------
-Supports: AES-128-CBC, AES-256-CBC, MD5, SHA1, SHA224, SHA256, SHA384, SHA512
+Supports: AES-128-CBC, AES-256-CBC, RC4, CAST5-CBC, BlowFish-CBC, MD5, SHA1, SHA224, SHA256, SHA384, SHA512
 
 PHPGuard Console App
 --------------------
-A command line interface designed for this library due to managing keys and initial vectors
-easily.
+A command line interface designed for this library due to set a admin password.
 
-Commands Example:
+Command:
 
-* [php guard]
-
-* [php guard config:reconfigure 0400 root]
-
-* [php guard alter:owner]
-
-* [php guard test:system]
+* [php guard set:adminkey]
 
 `How to use console app?`
 
@@ -39,19 +32,35 @@ Examples
 -------
 
 ```php
-use PHPGuard\AES\AES;
+use PHPGuard\Crypto\Crypto;
 
+$cr = new Crypto();
 
-$aes = new AES();
-$c = $aes->encrypt(["Name" => "Logan", "LastName" => "Lormen", "Age" => 22, "IsStudent" => true, "Courses"=>["Math", "Ecocnomy", "Chemistry"]]);
-print $c . "\n";
-print_r($aes->decrypt($c));
+$cr->setKey("somthing");
+$cr->setIV("somthing else");
+$c = $cr->encrypt([
+        "Name"      => "Baha2r",
+        "LastName"  => "Mirzazadeh",
+        "Age"       => 22,
+        "IsStudent" => true,
+        "Courses"   => ["Math", "Ecocnomy", "Chemistry"]
+]);
+print $c."\n";
+print_r($cr->decrypt($c));
 
+$cr = $cr->setCipher("RC4");
 
-$aes = new AES("AES-128-CBC", true);
-$c = $aes->encryptString("Hello! I am plaintext :)");
-print $c . "\n";
-print $aes->decryptString($c);
+$cr->setKey("fbhff vsdfgjhg");
+$c = $cr->encrypt([
+        "Name"      => "Baha2r",
+        "LastName"  => "Mirzazadeh",
+        "Age"       => 22,
+        "IsStudent" => true,
+        "Courses"   => ["Math", "Ecocnomy", "Chemistry"]
+]);
+print $c."\n";
+print_r($cr->decrypt($c));
+print_r(Crypto::supported());
 
 
 use PHPGuard\Hash\Hash;
