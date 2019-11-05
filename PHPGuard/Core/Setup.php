@@ -47,6 +47,6 @@ abstract class Setup
      */
     protected function setupIV($iv)
     {
-        return substr(Hash::sha384(["Q& ^".$iv.";?پ ="], true, true), 31, 16);
+        return Hash::sha384(["Q& ^".$iv.";?پ ="], true, true);
     }
 }
