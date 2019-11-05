@@ -34,7 +34,7 @@ abstract class Setup
      */
     protected function setupKey($key)
     {
-        return Hash::sha512([":  ژ~'".$key."` ز- /|  "], true);
+        return Hash::sha512([":  ژ~'".$key."` ز- /|  "], true, true);
     }
 
 
@@ -47,6 +47,6 @@ abstract class Setup
      */
     protected function setupIV($iv)
     {
-        return substr(Hash::sha384(["Q& ^".$iv.";?پ ="], true), 31, 16);
+        return substr(Hash::sha384(["Q& ^".$iv.";?پ ="], true, true), 31, 16);
     }
 }
