@@ -27,6 +27,8 @@
     "ext-json": "*",
     "symfony/console": "^4.3"
   },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "autoload": {
     "psr-4": {
       "PHPGuard\\": "PHPGuard/"
