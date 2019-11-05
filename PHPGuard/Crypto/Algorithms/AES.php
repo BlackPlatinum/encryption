@@ -91,7 +91,7 @@ class AES extends Setup implements Encryption, Decryption
      */
     public function setIV($iv): void
     {
-        $this->IV = parent::setupIV($iv);
+        $this->IV = substr(parent::setupIV($iv), 0, 16);
     }
 
 
