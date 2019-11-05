@@ -50,7 +50,7 @@ print_r($cr->decrypt($c));
 
 $cr = $cr->setCipher("RC4");
 
-$cr->setKey("fbhff vsdfgjhg");
+$cr->setKey("new thing!");
 $c = $cr->encrypt([
         "Name"      => "Baha2r",
         "LastName"  => "Mirzazadeh",
