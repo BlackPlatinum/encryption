@@ -17,7 +17,7 @@ use Symfony\Component\Console\Application;
 use PHPGuard\Console\Commands;
 
 
-$application = new Application("PHPGuard Library Console", "v1.1.0");
+$application = new Application("PHPGuard Library Console", "v2.0.0");
 
 // ... register commands
 $application->add(new Commands());
