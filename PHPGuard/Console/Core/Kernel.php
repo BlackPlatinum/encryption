@@ -21,6 +21,6 @@ class Kernel extends Command
 {
     protected function SetAdminKey()
     {
-
+        //
     }
 }
