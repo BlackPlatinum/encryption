@@ -47,7 +47,7 @@ class AES extends Setup implements Encryption, Decryption
     /**
      * Constructor
      *
-     * @param  string  $method Cryptography method name. The default method is AES-256-CBC
+     * @param  string  $method  Cryptography method name. The default method is AES-256-CBC
      */
     public function __construct($method = self::AES256)
     {
@@ -131,7 +131,7 @@ class AES extends Setup implements Encryption, Decryption
             throw new EncryptionException("Cipher method wrong!");
         }
         if (is_null($this->IV) || is_null($this->KEY)) {
-            throw new RuntimeException("Empty key or initial vector!");
+            throw new EncryptionException("Empty key or initial vector!");
         }
         if ($this->flag_256) {
             $cipher = openssl_encrypt($value, self::AES256, $this->KEY, 0, $this->IV);
