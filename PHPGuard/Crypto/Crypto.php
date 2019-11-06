@@ -115,7 +115,7 @@ class Crypto implements Encryption, Decryption
      *
      * @return Crypto return new instance of Crypto with $cipher parameter
      */
-    public function setCipher($cipher): Crypto
+    public function setCipher($cipher)
     {
         return (new Crypto($cipher));
     }
