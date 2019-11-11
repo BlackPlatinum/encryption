@@ -26,6 +26,26 @@ abstract class Setup
 
 
     /**
+     * Chunks a string to an array and appends extra characters to it
+     *
+     * @param  string  $value  The entered string
+     *
+     * @return array return chunked array
+     */
+    private function chunk($value)
+    {
+        if ($value <= 3) {
+            return [":ءژ~'".$value."`چز- گ| پ"];
+        }
+        $chars = str_split($value, 3);
+        for ($i = 0; $i < count($chars); $i++) {
+            $chars[$i] = ":ءژ~'".$chars[$i]."`چز- گ| پ";
+        }
+        return $chars;
+    }
+
+
+    /**
      * Setup a key for each user
      *
      * @param  string  $key  Entered key
@@ -34,7 +54,7 @@ abstract class Setup
      */
     protected function setupKey($key)
     {
-        return Hash::sha512([":  ژ~'".$key."` ز- /|  "], true, true);
+        return Hash::sha512($this->chunk($key), true, true);
     }
 
 
@@ -47,6 +67,6 @@ abstract class Setup
      */
     protected function setupIV($iv)
     {
-        return Hash::sha384(["Q& ^".$iv.";?پ ="], true, true);
+        return Hash::sha384($this->chunk($iv), true, true);
     }
 }
