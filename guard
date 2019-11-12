@@ -9,16 +9,13 @@
  * Executes Guard commands
  **/
 
-error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
-
 require __DIR__."/vendor/autoload.php";
 
+use PHPGuard\Console\SetMasterKeyCommand;
 use Symfony\Component\Console\Application;
-use PHPGuard\Console\Commands;
-
 
 $application = new Application("PHPGuard Library Console", "v2.0.0");
 
 // ... register commands
-$application->add(new Commands());
+$application->add(new SetMasterKeyCommand());
 $application->run();
