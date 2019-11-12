@@ -51,21 +51,21 @@ abstract class Hash implements BaseHash
     private static function hash($data, $method, $serialize = false, $raw_output = false)
     {
         $digest = null;
-        if ($serialize === true) {
+        if ($serialize) {
             $digest = openssl_digest(json_encode(serialize($data)), $method, $raw_output);
-            if ($digest === false) {
+            if (!$digest) {
                 throw new HashException("Could not hash the data!");
             }
             return $digest;
         }
         if (!is_string($data)) {
-            throw new HashException("$data have to be string or put second parameter true!");
+            throw new HashException("$data have to be string or change second parameter to true!");
         }
-        $digest = openssl_digest($data, $method);
-        if ($digest === false) {
+        $digest = openssl_digest($data, $method, $raw_output);
+        if (!$digest) {
             throw new HashException("Could not hash the data!");
         }
-        return openssl_digest($data, $method);
+        return $digest;
     }
 
 
