@@ -63,7 +63,7 @@ class SetMasterKeyCommand extends Command
      * @param  InputInterface   $input
      * @param  OutputInterface  $output
      *
-     * @throws RuntimeException Throws runtime exception if it will be failed to set master key
+     * @throws RuntimeException Throws runtime exception if it fails to set master key
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
