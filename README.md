@@ -12,7 +12,7 @@ A command line interface designed for this library due to set a admin password.
 
 Command:
 
-* [php guard set:adminkey]
+* [php guard setAdminKey]
 
 `How to use console app?`
 
@@ -32,12 +32,12 @@ Examples
 -------
 
 ```php
+use PHPGuard\Core\MasterKey;
 use PHPGuard\Crypto\Crypto;
 
-$cr = new Crypto();
-
-$cr->setKey("somthing");
-$cr->setIV("somthing else");
+$cr = new Crypto("CAST5-CBC");
+$cr->setKey((new MasterKey())->getMaster());
+$cr->setIV("somthing");
 $c = $cr->encrypt([
         "Name"      => "Baha2r",
         "LastName"  => "Mirzazadeh",
@@ -48,8 +48,8 @@ $c = $cr->encrypt([
 print $c."\n";
 print_r($cr->decrypt($c));
 
-$cr = $cr->setCipher("RC4");
 
+$cr = $cr->setCipher("RC4");
 $cr->setKey("new thing!");
 $c = $cr->encrypt([
         "Name"      => "Baha2r",
