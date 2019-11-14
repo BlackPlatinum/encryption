@@ -51,8 +51,8 @@ class SetMasterKeyCommand extends Command
     protected function configure(): void
     {
         $this->setName("setAdminKey")
-                ->setDescription("Set admin key for using Guard cryptography system")
-                ->setHelp("<comment>\nSet admin key for using Guard cryptography system. It uses admin key to generate master key due to protect your data.\n</comment>");
+                ->setDescription("Sets admin key for using Guard cryptography system")
+                ->setHelp("<comment>\nSets admin key for using Guard cryptography system. It uses admin key to generate master key due to protect your data.\n</comment>");
         parent::configure();
     }
 
