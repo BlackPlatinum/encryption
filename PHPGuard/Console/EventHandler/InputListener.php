@@ -14,4 +14,26 @@ namespace PHPGuard\Console\EventHandler;
 class InputListener
 {
 
+    /**
+     * @var string Stores entered admin key
+     */
+    public static $adminKey;
+
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        //
+    }
+
+
+    /**
+     * @param  InputEvent  $event
+     */
+    public function onInputEvent(InputEvent $event)
+    {
+        self::$adminKey = $event->getInput();
+    }
 }
