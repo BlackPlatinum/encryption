@@ -25,6 +25,7 @@
     "php": "^7.1",
     "ext-openssl": "*",
     "ext-json": "*",
+    "ext-redis": "*",
     "symfony/console": "^4.3",
     "symfony/event-dispatcher": "^4.3",
     "baha2rmirzazadeh/phpscanner": "v1.5.1.1"
