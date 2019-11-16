@@ -14,5 +14,5 @@ namespace PHPGuard\Core;
 interface BaseHash
 {
     // Base hashing method
-    public static function hash($data, $algorithm, $serialize = false, $raw_output = false);
+    public static function make($data, $algorithm, $serialize = false, $raw_output = false);
 }
