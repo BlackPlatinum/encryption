@@ -11,7 +11,7 @@
 namespace PHPGuard\Core;
 
 
-use PHPGuard\Hash\Hash;
+use PHPGuard\Hashing\Hash;
 
 abstract class Setup
 {

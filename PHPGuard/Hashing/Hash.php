@@ -8,7 +8,7 @@
  * Main class to compute digest hash of all types data
  **/
 
-namespace PHPGuard\Hash;
+namespace PHPGuard\Hashing;
 
 
 use PHPGuard\Core\BaseHash;

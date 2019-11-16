@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use PHPGuard\Console\EventHandler\InputListener;
 use PHPGuard\Console\EventHandler\InputEvent;
-use PHPGuard\Hash\Hash;
+use PHPGuard\Hashing\Hash;
 
 class SetMasterKeyCommand extends Command
 {
