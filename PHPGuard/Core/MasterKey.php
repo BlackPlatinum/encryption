@@ -38,7 +38,7 @@ class MasterKey
     {
         $this->redis = new Redis();
         $this->redis->connect("127.0.0.1");
-        $this->mk = Hash::sha256(["This", "Is", "?", "!"], true);
+        $this->mk = Hash::make(["This", "Is", "?", "!"], "SHA384", true);
     }
 
 
