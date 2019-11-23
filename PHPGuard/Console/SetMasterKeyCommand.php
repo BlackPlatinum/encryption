@@ -76,11 +76,11 @@ class SetMasterKeyCommand extends Command
         $listener = new InputListener();
         $dispatcher->addListener(InputEvent::EVENT_NAME, array($listener, "onInputEvent"));
         $dispatcher->dispatch(new InputEvent(), InputEvent::EVENT_NAME);
-        $this->master = Hash::sha512("ژ‍‍‍‍‍`گ ث".InputListener::$adminKey."ءو ؛");
+        $this->master = Hash::make("ژ‍‍‍‍‍`گ ث".InputListener::$adminKey."ءو ؛");
         if (is_null($this->master)) {
             throw new RuntimeException("[RuntimeException]:\n\nFailed to set master key!\n");
         }
-        $isInserted = $this->redis->set(Hash::sha256(["This", "Is", "?", "!"], true), $this->master);
+        $isInserted = $this->redis->set(Hash::make(["This", "Is", "?", "!"], "SHA384", true), $this->master);
         if (!$isInserted) {
             throw new RuntimeException("Master key generated successfully, but we can not insert it in memory heap!");
         }
