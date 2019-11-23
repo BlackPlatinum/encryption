@@ -54,7 +54,7 @@ abstract class Setup
      */
     protected function setupKey($key)
     {
-        return Hash::sha512($this->chunk($key), true, true);
+        return Hash::make($this->chunk($key), "SHA3-512", true, true);
     }
 
 
@@ -67,6 +67,6 @@ abstract class Setup
      */
     protected function setupIV($iv)
     {
-        return Hash::sha384($this->chunk($iv), true, true);
+        return Hash::make($this->chunk($iv), "SHA384", true, true);
     }
 }
