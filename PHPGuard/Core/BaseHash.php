@@ -17,5 +17,5 @@ interface BaseHash
     public static function make($data, $algorithm, $serialize = false, $raw_output = false);
 
     // Base message authentication code generator
-    public static function makeMAC($data, $key, $algorithm, $serialize = false, $raw_output = false);
+    public static function makeMAC($data, $key, $algorithm);
 }
