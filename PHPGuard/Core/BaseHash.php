@@ -13,15 +13,9 @@ namespace PHPGuard\Core;
 
 interface BaseHash
 {
-    public static function md5($data, $serialize = false);
+    // Base hashing method
+    public static function make($data, $algorithm, $serialize = false, $raw_output = false);
 
-    public static function sha1($data, $serialize = false);
-
-    public static function sha224($data, $serialize = false);
-
-    public static function sha256($data, $serialize = false);
-
-    public static function sha384($data, $serialize = false);
-
-    public static function sha512($data, $serialize = false);
+    // Base message authentication code generator
+    public static function makeMAC($data, $key, $algorithm);
 }
