@@ -214,9 +214,9 @@ class Crypto implements Encryption, Decryption
 
 
     /**
-     * Returns supported cryptography algorithms by this class
+     * Returns supported cryptography algorithms
      *
-     * @return array return name of supported cryptography algorithms by this class
+     * @return array return name of supported cryptography algorithms
      */
     public static function supported()
     {
