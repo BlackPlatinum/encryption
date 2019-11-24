@@ -17,51 +17,57 @@ use PHPGuard\Exception\HashException;
 abstract class Hash implements BaseHash
 {
 
-    // md5 algorithm
+    /**
+     * @var string MD5 Algorithm
+     */
     private const MD5 = "MD5";
 
-    // sha1 algorithm
+    /**
+     * @var string SHA1 Algorithm
+     */
     private const SHA1 = "SHA1";
 
-    // sha224 algorithm
+    /**
+     * @var string SHA224 Algorithm
+     */
     private const SHA224 = "SHA224";
 
-    // sha256 algorithm
+    /**
+     * @var string SHA256 Algorithm
+     */
     private const SHA256 = "SHA256";
 
-    // sha384 algorithm
+    /**
+     * @var string SHA384 Algorithm
+     */
     private const SHA384 = "SHA384";
 
-    // sha512 algorithm
+    /**
+     * @var string SHA512 Algorithm
+     */
     private const SHA512 = "SHA512";
 
-
     /**
-     * Make digested hash from a value by a specific hash algorithm
-     *
-     * @param  string|mixed  $data        The data is being hashed
-     * @param  string        $method      The hash algorithm
-     * @param  bool          $serialize   [optional] if $serialize is true, $data can be any type but resources
-     *
-     * @param  bool          $raw_output  [optional] Setting to true will return as raw output data, otherwise the return
-     *                                    value is binhex encoded
-     *
-     * @return false|string return the digested hash value on success or false on failure
+     * @var string SHA3-512 Algorithm
      */
-    private static function hash($data, $method, $serialize = false, $raw_output = false)
+    private const SHA3_512 = "SHA3-512";
+
+
+    // Core method of generating digest from a data by a specific hash algorithm
+    private static function hash($data, $algorithm, $serialize = false, $raw_output = false)
     {
         $digest = null;
         if ($serialize) {
-            $digest = openssl_digest(json_encode(serialize($data)), $method, $raw_output);
+            $digest = openssl_digest(json_encode(serialize($data)), $algorithm, $raw_output);
             if (!$digest) {
                 throw new HashException("Could not hash the data!");
             }
             return $digest;
         }
         if (!is_string($data)) {
-            throw new HashException("$data have to be string or change second parameter to true!");
+            throw new HashException("$data have to be string or change serialize parameter to true!");
         }
-        $digest = openssl_digest($data, $method, $raw_output);
+        $digest = openssl_digest($data, $algorithm, $raw_output);
         if (!$digest) {
             throw new HashException("Could not hash the data!");
         }
@@ -69,116 +75,98 @@ abstract class Hash implements BaseHash
     }
 
 
-    /**
-     * Make digested hash from a value by this specific hash algorithm
-     *
-     * @param  string|mixed  $data        the data is being hashed
-     * @param  bool          $serialize   [optional] if $serialize is true, $data can be any type but resources.
-     *                                    it uses json encode to convert any types to string
-     *
-     * @param  bool          $raw_output  [optional] Setting to true will return as raw output data, otherwise the return
-     *                                    value is binhex encoded
-     *
-     * @return false|string return the digested hash value on success or false on failure
-     * @throws HashException throws exception if could not hash the data
-     */
-    public static function md5($data, $serialize = false, $raw_output = false)
+    // Core method of generating message authentication code from a data by a specific hash algorithm
+    private static function mac($data, $key, $algorithm)
     {
-        return self::hash($data, self::MD5, $serialize, $raw_output);
+        $mac = hash_hmac($algorithm, $data, $key);
+        if (is_null($mac)) {
+            throw new HashException("Could not generate message authentication code!");
+        }
+        return $mac;
     }
 
 
     /**
-     * Make digested hash from a value by this specific hash algorithm
+     * Makes hash from a data by a specific hash algorithm
      *
-     * @param  string|mixed  $data        the data is being hashed
-     * @param  bool          $serialize   [optional] if $serialize is true, $data can be any type but resources.
-     *                                    it uses json encode to convert any types to string
+     * @param  string|mixed  $data        The data is being hashed
+     * @param  string        $algorithm   The hash algorithm
+     * @param  bool          $serialize   [optional] if $serialize is true, $data can be any type but resources
      *
      * @param  bool          $raw_output  [optional] Setting to true will return as raw output data, otherwise the return
      *                                    value is binhex encoded
      *
      * @return false|string return the digested hash value on success or false on failure
-     * @throws HashException throws exception if could not hash the data
+     *
+     * @throws HashException Throws hash exception if can not compute the hash
      */
-    public static function sha1($data, $serialize = false, $raw_output = false)
+    public static function make($data, $algorithm = self::SHA3_512, $serialize = false, $raw_output = false)
     {
-        return self::hash($data, self::SHA1, $serialize, $raw_output);
+        return self::hash($data, $algorithm, $serialize, $raw_output);
     }
 
 
     /**
-     * Make digested hash from a value by this specific hash algorithm
+     * Makes message authentication code from a data by a specific hash algorithm
      *
-     * @param  string|mixed  $data        the data is being hashed
-     * @param  bool          $serialize   [optional] if $serialize is true, $data can be any type but resources.
-     *                                    it uses json encode to convert any types to string
+     * @param  string  $data       The data is being hashed
+     * @param  string  $key        Shared secret key used for generating the HMAC variant of the message digest
+     * @param  string  $algorithm  The hash algorithm
      *
-     * @param  bool          $raw_output  [optional] Setting to true will return as raw output data, otherwise the return
-     *                                    value is binhex encoded
-     *
-     * @return false|string return the digested hash value on success or false on failure
-     * @throws HashException throws exception if could not hash the data
+     * @return string return message authentication code
      */
-    public static function sha224($data, $serialize = false, $raw_output = false)
+    public static function makeMAC($data, $key, $algorithm = self::SHA3_512)
     {
-        return self::hash($data, self::SHA224, $serialize, $raw_output);
+        return self::mac($data, $key, $algorithm);
     }
 
 
     /**
-     * Make digested hash from a value by this specific hash algorithm
+     * Verifies that a password matches a hash
      *
-     * @param  string|mixed  $data        the data is being hashed
-     * @param  bool          $serialize   [optional] if $serialize is true, $data can be any type but resources.
-     *                                    it uses json encode to convert any types to string
+     * @param  string  $password  The user's password
+     * @param  string  $hash      A hash created by Hash::make() or every openssl based hashing system
      *
-     * @param  bool          $raw_output  [optional] Setting to true will return as raw output data, otherwise the return
-     *                                    value is binhex encoded
-     *
-     * @return false|string return the digested hash value on success or false on failure
-     * @throws HashException throws exception if could not hash the data
+     * @return boolean returns true if the password and hash match, or false otherwise
      */
-    public static function sha256($data, $serialize = false, $raw_output = false)
+    public static function verify($password, $hash)
     {
-        return self::hash($data, self::SHA256, $serialize, $raw_output);
+        $algorithms = self::supported();
+        foreach ($algorithms as $algorithm) {
+            if (self::make($password, $algorithm) === $hash) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
-    /**
-     * Make digested hash from a value by this specific hash algorithm
-     *
-     * @param  string|mixed  $data        the data is being hashed
-     * @param  bool          $serialize   [optional] if $serialize is true, $data can be any type but resources.
-     *                                    it uses json encode to convert any types to string
-     *
-     * @param  bool          $raw_output  [optional] Setting to true will return as raw output data, otherwise the return
-     *                                    value is binhex encoded
-     *
-     * @return false|string return the digested hash value on success or false on failure
-     * @throws HashException throws exception if could not hash the data
-     */
-    public static function sha384($data, $serialize = false, $raw_output = false)
-    {
-        return self::hash($data, self::SHA384, $serialize, $raw_output);
-    }
+//    /**
+//     * @param $hashed
+//     *
+//     * @return boolean
+//     */
+//    public static function needsRehash($hashed)
+//    {
+//
+//    }
 
 
     /**
-     * Make digested hash from a value by this specific hash algorithm
+     * Returns supported hash algorithms
      *
-     * @param  string|mixed  $data        the data is being hashed
-     * @param  bool          $serialize   [optional] if $serialize is true, $data can be any type but resources.
-     *                                    it uses json encode to convert any types to string
-     *
-     * @param  bool          $raw_output  [optional] Setting to true will return as raw output data, otherwise the return
-     *                                    value is binhex encoded
-     *
-     * @return false|string return the digested hash value on success or false on failure
-     * @throws HashException throws exception if could not hash the data
+     * @return array returns name of supported hash algorithms
      */
-    public static function sha512($data, $serialize = false, $raw_output = false)
+    public static function supported()
     {
-        return self::hash($data, self::SHA512, $serialize, $raw_output);
+        return [
+                self::MD5,
+                self::SHA1,
+                self::SHA224,
+                self::SHA256,
+                self::SHA384,
+                self::SHA512,
+                self::SHA3_512
+        ];
     }
 }
