@@ -11,22 +11,25 @@
 namespace PHPGuard\Crypto\Algorithms;
 
 
-use PHPGuard\Core\Decryption;
+use PHPGuard\Core\BaseCrypto;
 use PHPGuard\Core\Encryption;
-use PHPGuard\Core\Setup;
-use PHPGuard\Exception\DecryptionException;
+use PHPGuard\Core\Decryption;
+use PHPGuard\Exception\CryptoException;
 use PHPGuard\Exception\EncryptionException;
-use RuntimeException;
+use PHPGuard\Exception\DecryptionException;
 
-class BlowFish extends Setup implements Encryption, Decryption
+
+class BlowFish extends BaseCrypto implements Encryption, Decryption
 {
-    // Algorithm name
-    private const BLOWFISH = "BF-CBC";
 
-    // Stores Key
+    /**
+     * @var string Key
+     */
     private $KEY;
 
-    // Stores IV
+    /**
+     * @var string IV
+     */
     private $IV;
 
 
@@ -35,14 +38,27 @@ class BlowFish extends Setup implements Encryption, Decryption
      */
     public function __construct()
     {
-        parent::__construct();
+        parent::__construct("BF-CBC");
+    }
+
+
+    /**
+     * Validates value of key and IV
+     *
+     * @throws CryptoException Throws exception if key or IV remain null
+     */
+    private function validateAssets(): void
+    {
+        if (is_null($this->IV) || is_null($this->KEY)) {
+            throw new CryptoException("Empty key or initial vector!");
+        }
     }
 
 
     /**
      * Sets key of cryptography system
      *
-     * @param  string  $key  key of cryptography system [recommended use user's password as key]
+     * @param  string  $key  Key of cryptography system [recommended use user's password as key]
      */
     public function setKey($key): void
     {
@@ -53,7 +69,7 @@ class BlowFish extends Setup implements Encryption, Decryption
     /**
      * Sets IV of cryptography system
      *
-     * @param  string  $iv  iv of cryptography system [recommended use user's password as iv]
+     * @param  string  $iv  IV of cryptography system [recommended use user's password as IV]
      */
     public function setIV($iv): void
     {
@@ -62,9 +78,9 @@ class BlowFish extends Setup implements Encryption, Decryption
 
 
     /**
-     * Gets key of cryptography system
+     * Returns key of cryptography system
      *
-     * @return string return key of cryptography system
+     * @return string Returns key of cryptography system
      */
     public function getKey()
     {
@@ -73,9 +89,9 @@ class BlowFish extends Setup implements Encryption, Decryption
 
 
     /**
-     * Gets IV of cryptography system
+     * Returns IV of cryptography system
      *
-     * @return string return initial vector of cryptography system
+     * @return string Returns IV of cryptography system
      */
     public function getIV()
     {
@@ -84,81 +100,69 @@ class BlowFish extends Setup implements Encryption, Decryption
 
 
     /**
-     * Encrypts the given value
+     * Encrypts the given data
      *
-     * @param  string  $value  the value that will be encrypted
+     * @param  string  $data  The data that will be encrypted
      *
-     * @return false|string return encrypted value, false on failure
-     * @throws EncryptionException throws exception if validate method returns false or can not encrypt the the $value
+     * @return false|string Returns encrypted data, false on failure
+     * @throws EncryptionException Throws exception if validate method returns false or can not encrypt the the $data
+     * @throws CryptoException Throws exception if key or IV remain null
      */
-    public function encryptString($value)
+    public function encryptString($data)
     {
-        if (is_null($this->IV) || is_null($this->KEY)) {
-            throw new EncryptionException("Empty key or initial vector!");
-        }
-        $cipher = openssl_encrypt($value, self::BLOWFISH, $this->KEY, 0, $this->IV);
-        if ($cipher === false) {
-            throw new EncryptionException("Could not encrypt the data!");
-        }
-        return base64_encode($cipher);
-    }
-
-
-    /**
-     * Decrypts the given cipher
-     *
-     * @param  string  $cipher  the cipher that will be decrypted
-     *
-     * @return false|string return decrypted cipher, false on failure
-     * @throws DecryptionException throws exception if validate method returns false or can not decrypt the the $cipher
-     */
-    public function decryptString($cipher)
-    {
-        $plain = openssl_decrypt(base64_decode($cipher), self::BLOWFISH, $this->KEY, 0, $this->IV);
-        if ($plain === false) {
-            throw new DecryptionException("Could not decrypt the data!");
-        }
-        return $plain;
+        $this->validateAssets();
+        return parent::stringEncryption($data, $this->KEY, $this->IV);
     }
 
 
     /**
      * Encrypts the given data
      *
-     * @param  mixed  $data       the data that will be encrypted
-     * @param  bool   $serialize  [recommended true], if $serialize is false and $data is string is correct,
-     *                            but if $serialize is false and $data is not string you get run time exception
+     * @param  mixed  $data       The data that will be encrypted
+     * @param  bool   $serialize  [Recommended true], If $serialize is false and $data is string is correct,
+     *                            but if $serialize is false and $data is not string you will get EncryptionException
      *
-     * @return false|string return encrypted value, false on failure
-     * @throws EncryptionException throws exception if validate method returns false or can not decrypt the the $cipher
+     * @return false|string Returns encrypted value, false on failure
+     * @throws EncryptionException Throws exception if validate method returns false or can not decrypt the the $cipher
+     * @throws CryptoException Throws exception if key or IV remain null
      */
     public function encrypt($data, $serialize = true)
     {
-        if ($serialize === false && !is_string($data)) {
-            throw new RuntimeException("Can not convert $data to string! change serialize to true");
-        }
-        if ($serialize === false && is_string($data)) {
-            return $this->encryptString($data);
-        }
-        return $this->encryptString(json_encode(serialize($data)));
+        $this->validateAssets();
+        return parent::encryption($data, $this->KEY, $this->IV, $serialize);
     }
 
 
     /**
      * Decrypts the given cipher
      *
-     * @param  string  $cipher       the cipher that will be decrypted
-     * @param  bool    $unserialize  [recommended true], if $unserialize is false you achieve unserialized json decoded value
+     * @param  string  $cipher  The cipher that will be decrypted
+     *
+     * @return false|string Returns decrypted cipher, false on failure
+     * @throws DecryptionException Throws exception if validate method returns false or can not decrypt the the $cipher
+     * @throws CryptoException Throws exception if key or IV remain null
+     */
+    public function decryptString($cipher)
+    {
+        $this->validateAssets();
+        return parent::stringDecryption($cipher, $this->KEY, $this->IV);
+    }
+
+
+    /**
+     * Decrypts the given cipher
+     *
+     * @param  string  $cipher       The cipher that will be decrypted
+     * @param  bool    $unserialize  [Recommended true], If $unserialize is false you achieve unserialized json decoded value
      *                               and must be handled by user
      *
-     * @return mixed return encrypted value, false on failure
-     * @throws DecryptionException throws exception if validate method returns false or can not decrypt the the $cipher
+     * @return false|mixed|string Returns encrypted value, false on failure
+     * @throws DecryptionException Throws exception if validate method returns false or can not decrypt the the $cipher
+     * @throws CryptoException Throws exception if key or IV remain null
      */
     public function decrypt($cipher, $unserialize = true)
     {
-        if ($unserialize === false) {
-            return $this->decryptString($cipher);
-        }
-        return unserialize(json_decode($this->decryptString($cipher)));
+        $this->validateAssets();
+        return parent::decryption($cipher, $this->KEY, $this->IV, $unserialize);
     }
 }
