@@ -56,7 +56,7 @@ class AES extends BaseCrypto implements Encryption, Decryption
      */
     private function validateCipherMethod()
     {
-        return $this->algorithm === "AES-128-CBC" || $this->algorithm === "AES-256-CBC";
+        return $this->algorithm === "AES-128-CBC" || $this->algorithm === "AES-192-CBC" || $this->algorithm === "AES-256-CBC";
     }
 
 
