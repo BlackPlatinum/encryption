@@ -16,9 +16,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use PHPGuard\Console\EventHandler\InputListener;
-use PHPGuard\Console\EventHandler\InputEvent;
+use PHPScanner\Scanner\Scanner;
 use PHPGuard\Hashing\Hash;
 
 class SetMasterKeyCommand extends Command
@@ -68,15 +66,16 @@ class SetMasterKeyCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $output->writeln("");
-        $output->writeln("<question>>>> Welcome to Guard cryptography system</question><comment>  v2.0.0</comment>");
+        $output->writeln("<question>>>> Welcome to Guard cryptography system!</question><comment>  v2.0.0</comment>");
+        $output->writeln("");
+        $output->writeln("<error>>>> Warning: You can have one admin key for each project!</error>");
+        $output->writeln("<error>Keep your admin key safe!</error>");
         $output->writeln("");
         $output->writeln("<question>>>> Please enter your admin key:</question>");
         $output->writeln("");
-        $dispatcher = new EventDispatcher();
-        $listener = new InputListener();
-        $dispatcher->addListener(InputEvent::EVENT_NAME, array($listener, "onInputEvent"));
-        $dispatcher->dispatch(new InputEvent(), InputEvent::EVENT_NAME);
-        $this->master = Hash::make("ژ‍‍‍‍‍`گ ث".InputListener::$adminKey."ءو ؛");
+        $scn = new Scanner();
+        $adminKey = $scn->nextString();
+        $this->master = Hash::make("ژ‍‍‍‍‍`گ ث".$adminKey."ءو ؛");
         if (is_null($this->master)) {
             throw new RuntimeException("[RuntimeException]:\n\nFailed to set master key!\n");
         }
