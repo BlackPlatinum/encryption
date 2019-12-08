@@ -14,8 +14,9 @@ namespace PHPGuard\Crypto\Algorithms;
 use PHPGuard\Core\BaseCrypto;
 use PHPGuard\Core\Encryption;
 use PHPGuard\Core\Decryption;
-use PHPGuard\Exception\DecryptionException;
+use PHPGuard\Exception\CryptoException;
 use PHPGuard\Exception\EncryptionException;
+use PHPGuard\Exception\DecryptionException;
 
 
 class AES extends BaseCrypto implements Encryption, Decryption
@@ -57,6 +58,19 @@ class AES extends BaseCrypto implements Encryption, Decryption
     private function validateCipherMethod()
     {
         return $this->algorithm === "AES-128-CBC" || $this->algorithm === "AES-192-CBC" || $this->algorithm === "AES-256-CBC";
+    }
+
+
+    /**
+     * Validates value of key and IV
+     *
+     * @throws CryptoException Throws exception if key or IV remain null
+     */
+    private function validateAssets(): void
+    {
+        if (is_null($this->IV) || is_null($this->KEY)) {
+            throw new CryptoException("Empty key or initial vector!");
+        }
     }
 
 
@@ -111,15 +125,14 @@ class AES extends BaseCrypto implements Encryption, Decryption
      *
      * @return false|string Returns encrypted data, false on failure
      * @throws EncryptionException Throws exception if validate method returns false or can not encrypt the the $data
+     * @throws CryptoException Throws exception if key or IV remain null
      */
     public function encryptString($data)
     {
         if (!$this->validateCipherMethod()) {
             throw new EncryptionException("Cipher method wrong!");
         }
-        if (is_null($this->IV) || is_null($this->KEY)) {
-            throw new EncryptionException("Empty key or initial vector!");
-        }
+        $this->validateAssets();
         return parent::stringEncryption($data, $this->KEY, $this->IV);
     }
 
@@ -133,12 +146,14 @@ class AES extends BaseCrypto implements Encryption, Decryption
      *
      * @return false|string Returns encrypted value, false on failure
      * @throws EncryptionException Throws exception if validate method returns false or can not decrypt the the $cipher
+     * @throws CryptoException Throws exception if key or IV remain null
      */
     public function encrypt($data, $serialize = true)
     {
         if (!$this->validateCipherMethod()) {
             throw new EncryptionException("Cipher method wrong!");
         }
+        $this->validateAssets();
         return parent::encryption($data, $this->KEY, $this->IV, $serialize);
     }
 
@@ -150,12 +165,14 @@ class AES extends BaseCrypto implements Encryption, Decryption
      *
      * @return false|string Returns decrypted cipher, false on failure
      * @throws DecryptionException Throws exception if validate method returns false or can not decrypt the the $cipher
+     * @throws CryptoException Throws exception if key or IV remain null
      */
     public function decryptString($cipher)
     {
         if (!$this->validateCipherMethod()) {
             throw new DecryptionException("Cipher method wrong!");
         }
+        $this->validateAssets();
         return parent::stringDecryption($cipher, $this->KEY, $this->IV);
     }
 
@@ -169,9 +186,11 @@ class AES extends BaseCrypto implements Encryption, Decryption
      *
      * @return false|mixed|string Returns encrypted value, false on failure
      * @throws DecryptionException Throws exception if validate method returns false or can not decrypt the the $cipher
+     * @throws CryptoException Throws exception if key or IV remain null
      */
     public function decrypt($cipher, $unserialize = true)
     {
+        $this->validateAssets();
         return parent::decryption($cipher, $this->KEY, $this->IV, $unserialize);
     }
 }
