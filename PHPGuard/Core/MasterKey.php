@@ -42,7 +42,7 @@ class MasterKey
     }
 
 
-    /** Returns created master key
+    /** Returns generated master key
      *
      * @return string Returns registered master key
      *
