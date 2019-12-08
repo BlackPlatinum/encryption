@@ -5,78 +5,65 @@
  * @license MIT
  * Date: 16/Oct/2019 02:44 AM
  *
- * Main AES encryption class to encrypt and decrypt data
+ * Main AES encryption class to encrypt and decrypt data.
  **/
 
 namespace PHPGuard\Crypto\Algorithms;
 
 
+use PHPGuard\Core\BaseCrypto;
 use PHPGuard\Core\Encryption;
 use PHPGuard\Core\Decryption;
-use PHPGuard\Core\Setup;
-use PHPGuard\Exception\EncryptionException;
 use PHPGuard\Exception\DecryptionException;
-use RuntimeException;
+use PHPGuard\Exception\EncryptionException;
 
 
-class AES extends Setup implements Encryption, Decryption
+class AES extends BaseCrypto implements Encryption, Decryption
 {
 
-    // Algorithm name
-    private const AES128 = "AES-128-CBC";
-
-    // Algorithm name
-    private const AES256 = "AES-256-CBC";
-
-    // store key
+    /**
+     * @var string Key
+     */
     private $KEY;
 
-    // store IV
+    /**
+     * @var string IV
+     */
     private $IV;
 
-    // store method
-    private $method;
-
-    // determines which algorithm must use
-    private $flag_128 = false;
-
-    // determines which algorithm must use
-    private $flag_256 = false;
+    /**
+     * @var string Algorithm name
+     */
+    private $algorithm;
 
 
     /**
      * Constructor
      *
-     * @param  string  $method  Cryptography method name. The default method is AES-256-CBC
+     * @param  string  $algorithm  Cryptography method name. The default method is AES-256-CBC
      */
-    public function __construct($method = self::AES256)
+    public function __construct($algorithm = "AES-256-CBC")
     {
-        parent::__construct();
-        $this->method = $method;
-        if ($this->method === self::AES256) {
-            $this->flag_256 = true;
-        }
-        if ($this->method === self::AES128) {
-            $this->flag_128 = true;
-        }
+        $this->algorithm = $algorithm;
+        parent::__construct($this->algorithm);
     }
 
 
     /**
-     * Validate cryptography method name is acceptable or not
+     * Validates cryptography method name is acceptable or not
      *
-     * @return boolean return true if cryptography method name is acceptable, false otherwise
+     * @return boolean Returns true if cryptography method name is acceptable, false otherwise
      */
     private function validateCipherMethod()
     {
-        return $this->method === self::AES128 || $this->method === self::AES256;
+        return $this->algorithm === "AES-128-CBC" || $this->algorithm === "AES-256-CBC";
     }
 
 
     /**
      * Sets key of cryptography system
      *
-     * @param  string  $key  key of cryptography system [recommended use user's password as key]
+     * @param  string  $key  Key of cryptography system [recommended use user's password as key]
      */
     public function setKey($key): void
     {
@@ -87,7 +74,7 @@ class AES extends Setup implements Encryption, Decryption
     /**
      * Sets IV of cryptography system
      *
-     * @param  string  $iv  iv of cryptography system [recommended use user's password as iv]
+     * @param  string  $iv  IV of cryptography system [recommended use user's password as IV]
      */
     public function setIV($iv): void
     {
@@ -96,9 +83,9 @@ class AES extends Setup implements Encryption, Decryption
 
 
     /**
-     * Gets key of cryptography system
+     * Returns key of cryptography system
      *
-     * @return string return key of cryptography system
+     * @return string Returns key of cryptography system
      */
     public function getKey()
     {
@@ -107,9 +94,9 @@ class AES extends Setup implements Encryption, Decryption
 
 
     /**
-     * Gets IV of cryptography system
+     * Returns IV of cryptography system
      *
-     * @return string return initial vector of cryptography system
+     * @return string Returns IV of cryptography system
      */
     public function getIV()
     {
@@ -118,14 +105,14 @@ class AES extends Setup implements Encryption, Decryption
 
 
     /**
-     * Encrypts the given value
+     * Encrypts the given data
      *
-     * @param  string  $value  the value that will be encrypted
+     * @param  string  $data  The data that will be encrypted
      *
-     * @return false|string return encrypted value, false on failure
-     * @throws EncryptionException throws exception if validate method returns false or can not encrypt the the $value
+     * @return false|string Returns encrypted data, false on failure
+     * @throws EncryptionException Throws exception if validate method returns false or can not encrypt the the $data
      */
-    public function encryptString($value)
+    public function encryptString($data)
     {
         if (!$this->validateCipherMethod()) {
             throw new EncryptionException("Cipher method wrong!");
@@ -133,86 +120,58 @@ class AES extends Setup implements Encryption, Decryption
         if (is_null($this->IV) || is_null($this->KEY)) {
             throw new EncryptionException("Empty key or initial vector!");
         }
-        if ($this->flag_256) {
-            $cipher = openssl_encrypt($value, self::AES256, $this->KEY, 0, $this->IV);
-            if ($cipher === false) {
-                throw new EncryptionException("Could not encrypt the data!");
-            }
-            return base64_encode($cipher);
-        }
-        $cipher = openssl_encrypt($value, self::AES128, $this->KEY, 0, $this->IV);
-        if ($cipher === false) {
-            throw new EncryptionException("Could not encrypt the data!");
-        }
-        return base64_encode($cipher);
-    }
-
-
-    /**
-     * Decrypts the given cipher
-     *
-     * @param  string  $cipher  the cipher that will be decrypted
-     *
-     * @return false|string return decrypted cipher, false on failure
-     * @throws DecryptionException throws exception if validate method returns false or can not decrypt the the $cipher
-     */
-    public function decryptString($cipher)
-    {
-        if (!$this->validateCipherMethod()) {
-            throw new EncryptionException("Cipher method wrong!");
-        }
-        if ($this->flag_256) {
-            $plain = openssl_decrypt(base64_decode($cipher), self::AES256, $this->KEY, 0, $this->IV);
-            if ($plain === false) {
-                throw new DecryptionException("Could not decrypt the data!");
-            }
-            return $plain;
-        }
-        $plain = openssl_decrypt(base64_decode($cipher), self::AES128, $this->KEY, 0, $this->IV);
-        if ($plain === false) {
-            throw new DecryptionException("Could not decrypt the data!");
-        }
-        return $plain;
+        return parent::stringEncryption($data, $this->KEY, $this->IV);
     }
 
 
     /**
      * Encrypts the given data
      *
-     * @param  mixed  $data       the data that will be encrypted
-     * @param  bool   $serialize  [recommended true], if $serialize is false and $data is string is correct,
-     *                            but if $serialize is false and $data is not string you get run time exception
+     * @param  mixed  $data       The data that will be encrypted
+     * @param  bool   $serialize  [Recommended true], If $serialize is false and $data is string is correct,
+     *                            but if $serialize is false and $data is not string you will get EncryptionException
      *
-     * @return false|string return encrypted value, false on failure
-     * @throws EncryptionException throws exception if validate method returns false or can not decrypt the the $cipher
+     * @return false|string Returns encrypted value, false on failure
+     * @throws EncryptionException Throws exception if validate method returns false or can not decrypt the the $cipher
      */
     public function encrypt($data, $serialize = true)
     {
-        if ($serialize === false && !is_string($data)) {
-            throw new RuntimeException("Can not convert $data to string! change serialize to true");
+        if (!$this->validateCipherMethod()) {
+            throw new EncryptionException("Cipher method wrong!");
         }
-        if ($serialize === false && is_string($data)) {
-            return $this->encryptString($data);
-        }
-        return $this->encryptString(json_encode(serialize($data)));
+        return parent::encryption($data, $this->KEY, $this->IV, $serialize);
     }
 
 
     /**
      * Decrypts the given cipher
      *
-     * @param  string  $cipher       the cipher that will be decrypted
-     * @param  bool    $unserialize  [recommended true], if $unserialize is false you achieve unserialized json decoded value
+     * @param  string  $cipher  The cipher that will be decrypted
+     *
+     * @return false|string Returns decrypted cipher, false on failure
+     * @throws DecryptionException Throws exception if validate method returns false or can not decrypt the the $cipher
+     */
+    public function decryptString($cipher)
+    {
+        if (!$this->validateCipherMethod()) {
+            throw new DecryptionException("Cipher method wrong!");
+        }
+        return parent::stringDecryption($cipher, $this->KEY, $this->IV);
+    }
+
+
+    /**
+     * Decrypts the given cipher
+     *
+     * @param  string  $cipher       The cipher that will be decrypted
+     * @param  bool    $unserialize  [Recommended true], If $unserialize is false you achieve unserialized json decoded value
      *                               and must be handled by user
      *
-     * @return mixed return encrypted value, false on failure
-     * @throws DecryptionException throws exception if validate method returns false or can not decrypt the the $cipher
+     * @return false|mixed|string Returns encrypted value, false on failure
+     * @throws DecryptionException Throws exception if validate method returns false or can not decrypt the the $cipher
      */
     public function decrypt($cipher, $unserialize = true)
     {
-        if ($unserialize === false) {
-            return $this->decryptString($cipher);
-        }
-        return unserialize(json_decode($this->decryptString($cipher)));
+        return parent::decryption($cipher, $this->KEY, $this->IV, $unserialize);
     }
 }
