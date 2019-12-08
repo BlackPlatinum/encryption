@@ -5,7 +5,7 @@
  * @license MIT
  * Date: 05/Nov/2019 02:22 AM
  *
- * Setup key and initial vector for each registered user
+ * CryptoSetup class setup key and initial vector for each cryptography algorithm
  **/
 
 namespace PHPGuard\Core;
@@ -13,7 +13,7 @@ namespace PHPGuard\Core;
 
 use PHPGuard\Hashing\Hash;
 
-abstract class Setup
+abstract class CryptoSetup
 {
 
     /**
@@ -46,7 +46,7 @@ abstract class Setup
 
 
     /**
-     * Setup a key for each user
+     * Setup a key for each cryptography algorithm
      *
      * @param  string  $key  Entered key
      *
@@ -59,7 +59,7 @@ abstract class Setup
 
 
     /**
-     * Setup an initial vector for each user
+     * Setup an initial vector for each cryptography algorithm
      *
      * @param  string  $iv  Entered iv
      *
