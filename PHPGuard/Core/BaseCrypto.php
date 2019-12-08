@@ -11,26 +11,102 @@
 namespace PHPGuard\Core;
 
 
-class BaseCrypto extends CryptoSetup implements Encryption, Decryption
+use PHPGuard\Exception\EncryptionException;
+use PHPGuard\Exception\DecryptionException;
+
+
+abstract class BaseCrypto extends CryptoSetup
 {
 
-    public function decrypt($cipher, $unserialize = true)
+    /**
+     * @var string Algorithm name
+     */
+    private $algorithm;
+
+
+    /**
+     * Constructor
+     *
+     * @param  string  $algorithm
+     */
+    protected function __construct($algorithm)
     {
-        // TODO: Implement decrypt() method.
+        parent::__construct();
+        $this->algorithm = $algorithm;
     }
 
-    public function decryptString($cipher)
+
+    /**
+     * @param  string  $value
+     * @param  string  $key
+     * @param  string  $iv
+     *
+     * @return false|string
+     * @throws EncryptionException
+     */
+    protected function stringEncryption($value, $key, $iv)
     {
-        // TODO: Implement decryptString() method.
+        $cipher = openssl_encrypt($value, $this->algorithm, $key, 0, $iv);
+        if (!$cipher) {
+            throw new EncryptionException("Could not encrypt the data!");
+        }
+        return base64_encode($cipher);
     }
 
-    public function encrypt($data, $serialize = true)
+
+    /**
+     * @param  mixed   $data
+     * @param  string  $key
+     * @param  string  $iv
+     * @param  bool    $serialize
+     *
+     * @return false|string
+     * @throws EncryptionException
+     */
+    protected function encryption($data, $key, $iv, $serialize = true)
     {
-        // TODO: Implement encrypt() method.
+        if (!$serialize && !is_string($data)) {
+            throw new EncryptionException("Can not convert $data to string! change serialize to true");
+        }
+        if (!$serialize && is_string($data)) {
+            return $this->stringEncryption($data, $key, $iv);
+        }
+        return $this->stringEncryption(json_encode(serialize($data)), $key, $iv);
     }
 
-    public function encryptString($value)
+
+    /**
+     * @param  string  $cipher
+     * @param  string  $key
+     * @param  string  $iv
+     *
+     * @return false|string
+     * @throws DecryptionException
+     */
+    protected function stringDecryption($cipher, $key, $iv)
     {
-        // TODO: Implement encryptString() method.
+        $plain = openssl_decrypt(base64_decode($cipher), $this->algorithm, $key, 0, $iv);
+        if (!$plain) {
+            throw new DecryptionException("Could not decrypt the data!");
+        }
+        return $plain;
+    }
+
+
+    /**
+     * @param  string  $cipher
+     * @param  string  $key
+     * @param  string  $iv
+     * @param  bool    $unserialize
+     *
+     * @return false|mixed|string
+     * @throws DecryptionException
+     */
+    protected function decryption($cipher, $key, $iv, $unserialize = true)
+    {
+        if (!$unserialize) {
+            return $this->stringDecryption($cipher, $key, $iv);
+        }
+        return unserialize(json_decode($this->stringDecryption($cipher, $key, $iv)));
     }
 }
