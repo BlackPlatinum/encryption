@@ -19,7 +19,7 @@ abstract class BaseCrypto extends CryptoSetup
 {
 
     /**
-     * @var string Algorithm name
+     * @var string Algorithm
      */
     private $algorithm;
 
