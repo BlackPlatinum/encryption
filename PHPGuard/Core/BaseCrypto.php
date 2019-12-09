@@ -11,8 +11,8 @@
 namespace PHPGuard\Core;
 
 
-use PHPGuard\Exception\EncryptionException;
-use PHPGuard\Exception\DecryptionException;
+use PHPGuard\Core\Exceptions\EncryptionException;
+use PHPGuard\Core\Exceptions\DecryptionException;
 
 
 abstract class BaseCrypto extends CryptoSetup

@@ -11,7 +11,7 @@
 namespace PHPGuard\Core;
 
 
-use PHPGuard\Exception\MasterKeyException;
+use PHPGuard\Core\Exceptions\MasterKeyException;
 use PHPGuard\Hashing\Hash;
 use Redis;
 
