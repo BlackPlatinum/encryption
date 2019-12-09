@@ -11,100 +11,103 @@
 namespace PHPGuard\Crypto;
 
 
-use PHPGuard\Core\Decryption;
+use PHPGuard\Core\BaseCrypto;
 use PHPGuard\Core\Encryption;
-use PHPGuard\Crypto\Algorithms\AES;
-use PHPGuard\Crypto\Algorithms\BlowFish;
-use PHPGuard\Crypto\Algorithms\CAST5;
-use PHPGuard\Crypto\Algorithms\RC4;
-use PHPGuard\Exception\DecryptionException;
-use PHPGuard\Exception\EncryptionException;
-use RuntimeException;
+use PHPGuard\Core\Decryption;
+use PHPGuard\Core\Exceptions\CryptoException;
+use PHPGuard\Core\Exceptions\EncryptionException;
+use PHPGuard\Core\Exceptions\DecryptionException;
 
 
-class Crypto implements Encryption, Decryption
+class Crypto extends BaseCrypto implements Encryption, Decryption
 {
-    // Algorithm name
-    private const AES128 = "AES-128-CBC";
 
-    // Algorithm name
-    private const AES256 = "AES-256-CBC";
+    /**
+     * @var string Key
+     */
+    private $KEY;
 
-    // Algorithm name
-    private const BLOWFISH = "BF-CBC";
+    /**
+     * @var string IV
+     */
+    private $IV;
 
-    // Algorithm name
-    private const RC4 = "RC4";
+    /**
+     * @var string Algorithm
+     */
+    private $algorithm;
 
-    // Algorithm name
-    private const CAST = "CAST5-CBC";
-
-    // The algorithm which is using now
-    private $inUse;
+    /**
+     * @var array All supported algorithms
+     */
+    private const ALGORITHMS = [
+            "AES-128-CBC",
+            "AES-192-CBC",
+            "AES-256-CBC",
+            "BF-CBC",
+            "CAST5-CBC"
+    ];
 
 
     /**
      * Constructor
      *
-     * @param  string  $algorithm  The cryptography algorithm
-     *
-     * @throws RuntimeException Throws exception if validate method returns false
+     * @param  string  $algorithm  Cryptography method name. The default method is AES-256-CBC
      */
-    public function __construct($algorithm = self::AES256)
+    public function __construct($algorithm = self::ALGORITHMS[2])
     {
-        if ($algorithm === self::AES128 || $algorithm === self::AES256) {
-            $this->inUse = new AES($algorithm);
-        }
-        if ($algorithm === self::BLOWFISH) {
-            $this->inUse = new BlowFish();
-        }
-        if ($algorithm === self::RC4) {
-            $this->inUse = new RC4();
-        }
-        if ($algorithm === self::CAST) {
-            $this->inUse = new CAST5();
-        }
-        if (!$this->validate()) {
-            throw new RuntimeException("Cipher method wrong!");
-        }
+        $this->algorithm = strtoupper($algorithm);
+        parent::__construct($this->algorithm);
     }
 
 
     /**
-     * Validates algorithms
+     * Validates cryptography method name is acceptable or not
      *
-     * @return boolean return true if algorithm name is acceptable, return false otherwise
+     * @return boolean Returns true if cryptography method name is acceptable, false otherwise
      */
-    private function validate()
+    private function validateCipherMethod()
     {
-        return !is_null($this->inUse);
+        return in_array($this->algorithm, self::ALGORITHMS, true);
+    }
+
+
+    /**
+     * Validates value of key and IV
+     *
+     * @return array
+     * @throws CryptoException Throws exception if key or IV remain null
+     */
+    private function isAssetsValid()
+    {
+        return [isset($this->KEY) ?? false, isset($this->IV) ?? false];
     }
 
 
     /**
      * Sets key of cryptography system
      *
-     * @param  string  $key  key of cryptography system [recommended use user's password as key]
+     * @param  string  $key  Key of cryptography system [recommended use user's password as key]
      */
     public function setKey($key): void
     {
-        $this->inUse->setKey($key);
+        $this->KEY = parent::setupKey($key);
     }
 
 
     /**
      * Sets IV of cryptography system
      *
-     * @param  string  $iv  iv of cryptography system [recommended use user's password as iv]
-     *
-     * @throws EncryptionException Throws exception if IV will be set for RC4 algorithm
+     * @param  string  $iv  IV of cryptography system [recommended use user's password as IV]
      */
     public function setIV($iv): void
     {
-        if (get_class($this->inUse) === get_class(new RC4())) {
-            throw new EncryptionException("There is no initial vector in RC4 algorithm!");
+        if ($this->algorithm === self::ALGORITHMS[0] || $this->algorithm === self::ALGORITHMS[1] || $this->algorithm === self::ALGORITHMS[2]) {
+            $this->IV = substr(parent::setupIV($iv), 0, 16);
         }
-        $this->inUse->setIV($iv);
+        if ($this->algorithm === self::ALGORITHMS[3] || $this->algorithm === self::ALGORITHMS[4]) {
+            $this->IV = substr(parent::setupIV($iv), 0, 8);
+        }
     }
 
 
@@ -113,7 +116,7 @@ class Crypto implements Encryption, Decryption
      *
      * @param  string  $cipher  The new cipher
      *
-     * @return Crypto return new instance of Crypto with $cipher parameter
+     * @return Crypto Returns new instance of Crypto class with $cipher parameter
      */
     public function setCipher($cipher)
     {
@@ -122,109 +125,122 @@ class Crypto implements Encryption, Decryption
 
 
     /**
-     * Gets key of cryptography system
+     * Returns key of cryptography system
      *
-     * @return string return key of cryptography system
+     * @return string Returns key of cryptography system
      */
     public function getKey()
     {
-        return $this->inUse->getKey();
+        return $this->KEY;
     }
 
 
     /**
-     * Gets IV of cryptography system
+     * Returns IV of cryptography system
      *
-     * @return string return initial vector of cryptography system
+     * @return string Returns IV of cryptography system
      */
     public function getIV()
     {
-        return $this->inUse->getIV();
-    }
-
-
-    /**
-     * Gets the algorithm of cryptography system
-     *
-     * @return string return the algorithm of cryptography system
-     */
-    public function getCipher()
-    {
-        return get_class($this->inUse);
-    }
-
-    /**
-     * Encrypts the given value
-     *
-     * @param  string  $value  the value that will be encrypted
-     *
-     * @return false|string return encrypted value, false on failure
-     * @throws EncryptionException throws exception if validate method returns false or can not encrypt the the $value
-     */
-    public function encryptString($value)
-    {
-        return $this->inUse->encryptString($value);
-    }
-
-
-    /**
-     * Decrypts the given cipher
-     *
-     * @param  string  $cipher  the cipher that will be decrypted
-     *
-     * @return false|string return decrypted cipher, false on failure
-     * @throws DecryptionException throws exception if validate method returns false or can not decrypt the the $cipher
-     */
-    public function decryptString($cipher)
-    {
-        return $this->inUse->decryptString($cipher);
+        return $this->IV;
     }
 
 
     /**
      * Encrypts the given data
      *
-     * @param  mixed  $data       the data that will be encrypted
-     * @param  bool   $serialize  [recommended true], if $serialize is false and $data is string is correct,
-     *                            but if $serialize is false and $data is not string you get run time exception
+     * @param  string  $data  The data that will be encrypted
      *
-     * @return false|string return encrypted value, false on failure
-     * @throws EncryptionException throws exception if validate method returns false or can not decrypt the the $cipher
+     * @return false|string Returns encrypted data, false on failure
+     * @throws EncryptionException Throws exception if validate method returns false or can not encrypt the the $data
+     * @throws CryptoException Throws exception if key or IV remain null
+     */
+    public function encryptString($data)
+    {
+        if (!$this->validateCipherMethod()) {
+            throw new EncryptionException("Cipher method not defined!");
+        }
+        if (!$this->isAssetsValid()[0] || !$this->isAssetsValid()[1]) {
+            throw new CryptoException("Empty Key or IV!");
+        }
+        return parent::stringEncryption($data, $this->KEY, $this->IV);
+    }
+
+
+    /**
+     * Encrypts the given data
+     *
+     * @param  mixed  $data       The data that will be encrypted
+     * @param  bool   $serialize  [Recommended true], If $serialize is false and $data is string is correct,
+     *                            but if $serialize is false and $data is not string you will get EncryptionException
+     *
+     * @return false|string Returns encrypted value, false on failure
+     * @throws EncryptionException Throws exception if validate method returns false or can not decrypt the the $cipher
+     * @throws CryptoException Throws exception if key or IV remain null
      */
     public function encrypt($data, $serialize = true)
     {
-        return $this->inUse->encrypt($data, $serialize);
+        if (!$this->validateCipherMethod()) {
+            throw new EncryptionException("Cipher method not defined!");
+        }
+        if (!$this->isAssetsValid()[0] || !$this->isAssetsValid()[1]) {
+            throw new CryptoException("Empty Key or IV!");
+        }
+        return parent::encryption($data, $this->KEY, $this->IV, $serialize);
     }
 
 
     /**
      * Decrypts the given cipher
      *
-     * @param  string  $cipher       the cipher that will be decrypted
-     * @param  bool    $unserialize  [recommended true], if $unserialize is false you achieve unserialized json decoded value
+     * @param  string  $cipher  The cipher that will be decrypted
+     *
+     * @return false|string Returns decrypted cipher, false on failure
+     * @throws DecryptionException Throws exception if validate method returns false or can not decrypt the the $cipher
+     * @throws CryptoException Throws exception if key or IV remain null
+     */
+    public function decryptString($cipher)
+    {
+        if (!$this->validateCipherMethod()) {
+            throw new EncryptionException("Cipher method not defined!");
+        }
+        if (!$this->isAssetsValid()[0] || !$this->isAssetsValid()[1]) {
+            throw new CryptoException("Empty Key or IV!");
+        }
+        return parent::stringDecryption($cipher, $this->KEY, $this->IV);
+    }
+
+
+    /**
+     * Decrypts the given cipher
+     *
+     * @param  string  $cipher       The cipher that will be decrypted
+     * @param  bool    $unserialize  [Recommended true], If $unserialize is false you achieve unserialized json decoded value
      *                               and must be handled by user
      *
-     * @return mixed return encrypted value, false on failure
-     * @throws DecryptionException throws exception if validate method returns false or can not decrypt the the $cipher
+     * @return false|mixed|string Returns encrypted value, false on failure
+     * @throws DecryptionException Throws exception if validate method returns false or can not decrypt the the $cipher
+     * @throws CryptoException Throws exception if key or IV remain null
      */
     public function decrypt($cipher, $unserialize = true)
     {
-        return $this->inUse->decrypt($cipher, $unserialize);
+        if (!$this->validateCipherMethod()) {
+            throw new EncryptionException("Cipher method not defined!");
+        }
+        if (!$this->isAssetsValid()[0] || !$this->isAssetsValid()[1]) {
+            throw new CryptoException("Empty Key or IV!");
+        }
+        return parent::decryption($cipher, $this->KEY, $this->IV, $unserialize);
     }
 
 
     /**
      * Returns supported cryptography algorithms
      *
-     * @return array return name of supported cryptography algorithms
+     * @return array Returns name of supported cryptography algorithms
      */
     public static function supported()
     {
-        return [
-                "AES"      => [self::AES128, self::AES256],
-                "BlowFish" => [self::BLOWFISH],
-                "RC"       => [self::RC4],
-                "CAST"     => [self::CAST]
-        ];
+        return self::ALGORITHMS;
     }
 }
