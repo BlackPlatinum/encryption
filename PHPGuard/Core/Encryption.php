@@ -15,5 +15,5 @@ interface Encryption
 {
     public function encrypt($data, $serialize = true);
 
-    public function encryptString($value);
+    public function encryptString($data);
 }

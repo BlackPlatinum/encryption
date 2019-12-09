@@ -12,7 +12,7 @@ namespace PHPGuard\Hashing;
 
 
 use PHPGuard\Core\BaseHash;
-use PHPGuard\Exception\HashException;
+use PHPGuard\Core\Exceptions\HashException;
 
 abstract class Hash implements BaseHash
 {

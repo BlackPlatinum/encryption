@@ -4,7 +4,7 @@ A security cryptography library for PHP. It can be used by different frameworks 
 
 Features
 --------
-Supports: AES-128-CBC, AES-256-CBC, RC4, CAST5-CBC, BlowFish-CBC, MD5, SHA1, SHA224, SHA256, SHA384, SHA512
+Supports: AES-128-CBC, AES-192, AES-256-CBC, CAST5-CBC, BlowFish-CBC, MD5, SHA1, SHA224, SHA256, SHA384, SHA512
 
 PHPGuard Console App
 --------------------
@@ -49,7 +49,7 @@ print $c."\n";
 print_r($cr->decrypt($c));
 
 
-$cr = $cr->setCipher("RC4");
+$cr = $cr->setCipher("AES-192-CBC");
 $cr->setKey("new thing!");
 $c = $cr->encrypt([
         "Name"      => "Baha2r",
@@ -63,10 +63,10 @@ print_r($cr->decrypt($c));
 print_r(Crypto::supported());
 
 
-use PHPGuard\Hash\Hash;
+use PHPGuard\Hashing\Hash;
 
-print Hash::sha224([1, 3, 4, 5, 7], true);
-print Hash::sha512("Hello PHPGuard!");
+print Hash::make([1, 2, 3, 4], "SHA384", true)
+print Hash::make("Hello PHPGuard!");
 ```
 
 ### Classes and Methods description

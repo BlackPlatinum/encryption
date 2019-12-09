@@ -4,7 +4,6 @@
   "keywords": [
     "php",
     "security",
-    "cyber",
     "cipher",
     "encryption",
     "decryption",
@@ -13,7 +12,6 @@
   ],
   "type": "library",
   "license": "MIT",
-  "homepage": "https://github.com/Baha2rM98/PHPGuard",
   "authors": [
     {
       "name": "Bahador Mirzazadeh",
@@ -22,13 +20,12 @@
     }
   ],
   "require": {
-    "php": "^7.1",
+    "php": "^7.2",
     "ext-openssl": "*",
     "ext-json": "*",
     "ext-redis": "*",
     "symfony/console": "^4.3",
-    "symfony/event-dispatcher": "^4.3",
-    "baha2rmirzazadeh/phpscanner": "v1.5.1.1"
+    "baha2rmirzazadeh/phpscanner": "^1.5"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,

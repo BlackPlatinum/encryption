@@ -8,7 +8,7 @@
  * Main hash exception class
  **/
 
-namespace PHPGuard\Exception;
+namespace PHPGuard\Core\Exceptions;
 
 use RuntimeException;
 

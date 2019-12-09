@@ -11,7 +11,7 @@
 namespace PHPGuard\Core;
 
 
-use PHPGuard\Exception\MasterKeyException;
+use PHPGuard\Core\Exceptions\MasterKeyException;
 use PHPGuard\Hashing\Hash;
 use Redis;
 
@@ -42,7 +42,7 @@ class MasterKey
     }
 
 
-    /** Returns created master key
+    /** Returns generated master key
      *
      * @return string Returns registered master key
      *
