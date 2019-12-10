@@ -64,10 +64,10 @@ abstract class BaseCrypto extends CryptoSetup
      * @return false|string
      * @throws EncryptionException
      */
-    protected function encryption($data, $key, $iv, $serialize = true)
+    protected function encryption($data, $key, $iv, $serialize)
     {
         if (!is_string($data) && !$serialize) {
-            throw new EncryptionException("Can not convert $data to string! change $serialize to true");
+            throw new EncryptionException("Can not convert $data to string! change serialize => $serialize to true");
         }
         if (is_string($data) && !$serialize) {
             return $this->stringEncryption($data, $key, $iv);
@@ -103,7 +103,7 @@ abstract class BaseCrypto extends CryptoSetup
      * @return false|mixed|string
      * @throws DecryptionException
      */
-    protected function decryption($cipher, $key, $iv, $unserialize = true)
+    protected function decryption($cipher, $key, $iv, $unserialize)
     {
         if (!$unserialize) {
             return $this->stringDecryption($cipher, $key, $iv);
