@@ -45,9 +45,9 @@ abstract class Hash extends DoHash implements BaseHash
     /**
      * Makes hash from a data by a specific hash algorithm
      *
-     * @param  mixed   $data       The data is being hashed
-     * @param  string  $algorithm  The hash algorithm
-     * @param  array   $options    An associative array containing options
+     * @param  mixed  $data       The data is being hashed
+     * @param  mixed  $algorithm  The hash algorithm
+     * @param  array  $options    An associative array containing options
      *
      * @return string|false Returns the digested hash value on success or false on failure
      * @throws HashException Throws hash exception on failure
@@ -61,7 +61,7 @@ abstract class Hash extends DoHash implements BaseHash
     /**
      * Makes a message authentication code from a data by SHA3-512 hash algorithm
      *
-     * @param  string  $data  The data is being hashed
+     * @param  mixed   $data  The data is being hashed
      * @param  string  $key   Shared secret key used for generating the HMAC variant of the message digest
      *
      * @return string|null Returns calculated message authentication code
@@ -76,7 +76,7 @@ abstract class Hash extends DoHash implements BaseHash
     /**
      * Verifies that a hashed data matches a hash
      *
-     * @param  string  $data    The data
+     * @param  mixed   $data    The data
      * @param  string  $hashed  A hash created by Hash::makeHash()
      *
      * @return boolean Returns true if the data and hash match, or false otherwise
@@ -91,7 +91,7 @@ abstract class Hash extends DoHash implements BaseHash
      * Checks if the given hash matches the given options
      *
      * @param  string  $hashed     The hashed data
-     * @param  string  $algorithm  The hash algorithm
+     * @param  mixed   $algorithm  The hash algorithm
      * @param  array   $options    An associative array containing options
      *
      * @return boolean Returns true if the hash should be rehashed to match the given algorithm and options, or false otherwise
@@ -105,7 +105,7 @@ abstract class Hash extends DoHash implements BaseHash
     /**
      * Checks if the given data matches the given MAC
      *
-     * @param  string  $data  The data
+     * @param  mixed   $data  The data
      * @param  string  $key   The MAC generator's key
      * @param  string  $mac   The given MAC
      *
