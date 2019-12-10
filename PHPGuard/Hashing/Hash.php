@@ -44,6 +44,8 @@ abstract class Hash extends DoHash implements BaseHash
 
     /**
      * Makes hash from a data by a specific hash algorithm
+     *<p>
+     * It uses ARGON2ID as default
      *
      * @param  mixed  $data       The data is being hashed
      * @param  mixed  $algorithm  The hash algorithm
