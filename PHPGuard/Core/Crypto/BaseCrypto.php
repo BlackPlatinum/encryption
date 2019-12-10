@@ -8,9 +8,10 @@
  * Base PHPGuard cryptography class
  **/
 
-namespace PHPGuard\Core;
+namespace PHPGuard\Core\Crypto;
 
 
+use PHPGuard\Core\CryptoSetup;
 use PHPGuard\Core\Exceptions\EncryptionException;
 use PHPGuard\Core\Exceptions\DecryptionException;
 
@@ -65,10 +66,10 @@ abstract class BaseCrypto extends CryptoSetup
      */
     protected function encryption($data, $key, $iv, $serialize = true)
     {
-        if (!$serialize && !is_string($data)) {
-            throw new EncryptionException("Can not convert $data to string! change serialize to true");
+        if (!is_string($data) && !$serialize) {
+            throw new EncryptionException("Can not convert $data to string! change $serialize to true");
         }
-        if (!$serialize && is_string($data)) {
+        if (is_string($data) && !$serialize) {
             return $this->stringEncryption($data, $key, $iv);
         }
         return $this->stringEncryption(json_encode(serialize($data)), $key, $iv);

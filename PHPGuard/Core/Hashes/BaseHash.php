@@ -8,7 +8,7 @@
  * Base hash interface
  **/
 
-namespace PHPGuard\Core;
+namespace PHPGuard\Core\Hashes;
 
 
 interface BaseHash

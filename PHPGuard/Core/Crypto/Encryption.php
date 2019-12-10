@@ -8,7 +8,7 @@
  * Base encryption interface
  **/
 
-namespace PHPGuard\Core;
+namespace PHPGuard\Core\Crypto;
 
 
 interface Encryption
