@@ -14,7 +14,7 @@ namespace PHPGuard\Core;
 interface BaseHash
 {
     // Base hashing method
-    public static function makeHash($data,$algorithm, $serialize);
+    public static function makeHash($data, $algorithm, $options);
 
     // Base message authentication code generator
     public static function makeMAC($data, $key);
