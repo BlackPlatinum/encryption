@@ -11,9 +11,9 @@
 namespace PHPGuard\Crypto;
 
 
-use PHPGuard\Core\BaseCrypto;
-use PHPGuard\Core\Encryption;
-use PHPGuard\Core\Decryption;
+use PHPGuard\Core\Crypto\BaseCrypto;
+use PHPGuard\Core\Crypto\Encryption;
+use PHPGuard\Core\Crypto\Decryption;
 use PHPGuard\Core\Exceptions\CryptoException;
 use PHPGuard\Core\Exceptions\EncryptionException;
 use PHPGuard\Core\Exceptions\DecryptionException;
