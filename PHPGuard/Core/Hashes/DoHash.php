@@ -37,14 +37,7 @@ abstract class DoHash
     protected static function hash($data, $algorithm, $options = [])
     {
         $digest = null;
-        if (!is_string($data)) {
-            $digest = password_hash(json_encode($data), $algorithm, $options);
-            if (!$digest) {
-                throw new HashException("Could not hash the data!");
-            }
-            return $digest;
-        }
-        $digest = password_hash($data, $algorithm, $options);
+        $digest = password_hash((is_string($data) ? $data : json_encode($data)), $algorithm, $options);
         if (!$digest) {
             throw new HashException("Could not hash the data!");
         }
@@ -53,7 +46,7 @@ abstract class DoHash
 
 
     /**
-     * @param  string  $data
+     * @param  mixed   $data
      * @param  string  $key
      *
      * @return string|null
@@ -62,7 +55,7 @@ abstract class DoHash
     protected static function mac($data, $key)
     {
         $mac = null;
-        $mac = hash_hmac("SHA3-512", $data, $key);
+        $mac = hash_hmac("SHA3-512", (is_string($data) ? $data : json_encode($data)), $key);
         if (is_null($mac)) {
             throw new HashException("Could not generate message authentication code!");
         }
@@ -71,14 +64,14 @@ abstract class DoHash
 
 
     /**
-     * @param  string  $data
+     * @param  mixed   $data
      * @param  string  $hashed
      *
      * @return boolean
      */
     protected static function verifyHashes($data, $hashed)
     {
-        return password_verify($data, $hashed);
+        return password_verify((is_string($data) ? $data : json_encode($data)), $hashed);
     }
 
 
@@ -96,7 +89,7 @@ abstract class DoHash
 
 
     /**
-     * @param  string  $data
+     * @param  mixed   $data
      * @param  string  $key
      * @param  string  $mac
      *
