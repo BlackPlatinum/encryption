@@ -34,7 +34,7 @@ abstract class DoHash
      * @return string|false
      * @throws HashException
      */
-    protected static function hash($data, $algorithm, $options = [])
+    protected static function hash($data, $algorithm, $options)
     {
         $digest = null;
         $digest = password_hash((is_string($data) ? $data : json_encode($data)), $algorithm, $options);
