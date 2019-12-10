@@ -5,168 +5,134 @@
  * @license MIT
  * Date: 16/Oct/2019 20:56 PM
  *
- * Main class to compute digest hash of all types data
+ * Main hash class to compute digest of all type data
  **/
 
 namespace PHPGuard\Hashing;
 
 
-use PHPGuard\Core\BaseHash;
+use PHPGuard\Core\Hashes\DoHash;
+use PHPGuard\Core\Hashes\BaseHash;
 use PHPGuard\Core\Exceptions\HashException;
 
-abstract class Hash implements BaseHash
+
+abstract class Hash extends DoHash implements BaseHash
 {
 
     /**
-     * @var string MD5 Algorithm
+     * @var array Algorithms
      */
-    private const MD5 = "MD5";
+    private const ALGORITHMS = [
+            PASSWORD_ARGON2ID,
+            PASSWORD_ARGON2I,
+            PASSWORD_BCRYPT,
+            CRYPT_SHA512,
+            CRYPT_SHA256,
+            CRYPT_BLOWFISH,
+            CRYPT_MD5
+    ];
+
 
     /**
-     * @var string SHA1 Algorithm
+     * Constructor
      */
-    private const SHA1 = "SHA1";
-
-    /**
-     * @var string SHA224 Algorithm
-     */
-    private const SHA224 = "SHA224";
-
-    /**
-     * @var string SHA256 Algorithm
-     */
-    private const SHA256 = "SHA256";
-
-    /**
-     * @var string SHA384 Algorithm
-     */
-    private const SHA384 = "SHA384";
-
-    /**
-     * @var string SHA512 Algorithm
-     */
-    private const SHA512 = "SHA512";
-
-    /**
-     * @var string SHA3-512 Algorithm
-     */
-    private const SHA3_512 = "SHA3-512";
-
-
-    // Core method of generating digest from a data by a specific hash algorithm
-    private static function hash($data, $algorithm, $serialize = false, $raw_output = false)
+    private function __construct()
     {
-        $digest = null;
-        if ($serialize) {
-            $digest = openssl_digest(json_encode(serialize($data)), $algorithm, $raw_output);
-            if (!$digest) {
-                throw new HashException("Could not hash the data!");
-            }
-            return $digest;
-        }
-        if (!is_string($data)) {
-            throw new HashException("$data have to be string or change serialize parameter to true!");
-        }
-        $digest = openssl_digest($data, $algorithm, $raw_output);
-        if (!$digest) {
-            throw new HashException("Could not hash the data!");
-        }
-        return $digest;
-    }
-
-
-    // Core method of generating message authentication code from a data by a specific hash algorithm
-    private static function mac($data, $key, $algorithm)
-    {
-        $mac = hash_hmac($algorithm, $data, $key);
-        if (is_null($mac)) {
-            throw new HashException("Could not generate message authentication code!");
-        }
-        return $mac;
+        parent::__construct();
     }
 
 
     /**
      * Makes hash from a data by a specific hash algorithm
      *
-     * @param  string|mixed  $data        The data is being hashed
-     * @param  string        $algorithm   The hash algorithm
-     * @param  bool          $serialize   [optional] if $serialize is true, $data can be any type but resources
-     *
-     * @param  bool          $raw_output  [optional] Setting to true will return as raw output data, otherwise the return
-     *                                    value is binhex encoded
-     *
-     * @return false|string return the digested hash value on success or false on failure
-     *
-     * @throws HashException Throws hash exception if can not compute the hash
-     */
-    public static function make($data, $algorithm = self::SHA3_512, $serialize = false, $raw_output = false)
-    {
-        return self::hash($data, $algorithm, $serialize, $raw_output);
-    }
-
-
-    /**
-     * Makes message authentication code from a data by a specific hash algorithm
-     *
-     * @param  string  $data       The data is being hashed
-     * @param  string  $key        Shared secret key used for generating the HMAC variant of the message digest
+     * @param  mixed   $data       The data is being hashed
      * @param  string  $algorithm  The hash algorithm
+     * @param  array   $options    An associative array containing options
      *
-     * @return string return message authentication code
+     * @return string|false Returns the digested hash value on success or false on failure
+     * @throws HashException Throws hash exception on failure
      */
-    public static function makeMAC($data, $key, $algorithm = self::SHA3_512)
+    public static function makeHash($data, $algorithm = self::ALGORITHMS[0], $options = [])
     {
-        return self::mac($data, $key, $algorithm);
+        return parent::hash($data, $algorithm, $options);
     }
 
 
     /**
-     * Verifies that a password matches a hash
+     * Makes a message authentication code from a data by SHA3-512 hash algorithm
      *
-     * @param  string  $password  The user's password
-     * @param  string  $hash      A hash created by Hash::make() or every openssl based hashing system
+     * @param  string  $data  The data is being hashed
+     * @param  string  $key   Shared secret key used for generating the HMAC variant of the message digest
      *
-     * @return boolean returns true if the password and hash match, or false otherwise
+     * @return string|null Returns calculated message authentication code
+     * @throws HashException Throws hash exception on failure
      */
-    public static function verify($password, $hash)
+    public static function makeMAC($data, $key)
     {
-        $algorithms = self::supported();
-        foreach ($algorithms as $algorithm) {
-            if (self::make($password, $algorithm) === $hash) {
-                return true;
-            }
-        }
-        return false;
+        return parent::mac($data, $key);
     }
 
 
-//    /**
-//     * @param $hashed
-//     *
-//     * @return boolean
-//     */
-//    public static function needsRehash($hashed)
-//    {
-//
-//    }
+    /**
+     * Verifies that a hashed data matches a hash
+     *
+     * @param  string  $data    The data
+     * @param  string  $hashed  A hash created by Hash::makeHash()
+     *
+     * @return boolean Returns true if the data and hash match, or false otherwise
+     */
+    public static function verifyHash($data, $hashed)
+    {
+        return parent::verifyHashes($data, $hashed);
+    }
+
+
+    /**
+     * Checks if the given hash matches the given options
+     *
+     * @param  string  $hashed     The hashed data
+     * @param  string  $algorithm  The hash algorithm
+     * @param  array   $options    An associative array containing options
+     *
+     * @return boolean Returns true if the hash should be rehashed to match the given algorithm and options, or false otherwise
+     */
+    public static function needsRehash($hashed, $algorithm, $options = [])
+    {
+        return parent::passwordNeedsRehash($hashed, $algorithm, $options);
+    }
+
+
+    /**
+     * Checks if the given data matches the given MAC
+     *
+     * @param  string  $data  The data
+     * @param  string  $key   The MAC generator's key
+     * @param  string  $mac   The given MAC
+     *
+     * @return boolean Returns true if the data and MAC match, or false otherwise
+     * @throws HashException Throws hash exception on failure
+     */
+    public static function verifyMAC($data, $key, $mac)
+    {
+        return parent::verifyMacs($data, $key, $mac);
+    }
 
 
     /**
      * Returns supported hash algorithms
      *
-     * @return array returns name of supported hash algorithms
+     * @return array Returns name of supported hash algorithms
      */
     public static function supported()
     {
         return [
-                self::MD5,
-                self::SHA1,
-                self::SHA224,
-                self::SHA256,
-                self::SHA384,
-                self::SHA512,
-                self::SHA3_512
+                "PASSWORD_ARGON2ID",
+                "PASSWORD_ARGON2I",
+                "PASSWORD_BCRYPT",
+                "CRYPT_SHA512",
+                "CRYPT_SHA256",
+                "CRYPT_BLOWFISH",
+                "CRYPT_MD5"
         ];
     }
 }
