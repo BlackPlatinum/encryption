@@ -13,7 +13,9 @@ namespace PHPGuard\Core\Crypto;
 
 interface Decryption
 {
-    public function decrypt($cipher, $unserialize = true);
+    // Decrypts all type of data
+    public function decrypt($cipher, $unserialize);
 
+    // Decrypts string data
     public function decryptString($cipher);
 }
