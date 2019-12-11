@@ -6,7 +6,7 @@ Features
 --------
 Cryptography supports: AES-128-CBC, AES-192, AES-256-CBC, CAST5-CBC, BlowFish-CBC
 
-Hashing supports: ARGON2ID, ARGON2I, BCRYPT
+Hashing supports: SHA3-512, SHA512, WHIRLPOOL
 
 PHPGuard Console App
 --------------------
