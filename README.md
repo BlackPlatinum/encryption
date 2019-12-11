@@ -4,7 +4,9 @@ A security cryptography library for PHP. It can be used by different frameworks 
 
 Features
 --------
-Supports: AES-128-CBC, AES-192, AES-256-CBC, CAST5-CBC, BlowFish-CBC, MD5, SHA1, SHA224, SHA256, SHA384, SHA512
+Cryptography supports: AES-128-CBC, AES-192, AES-256-CBC, CAST5-CBC, BlowFish-CBC
+
+Hashing supports: ARGON2ID, ARGON2I, BCRYPT
 
 PHPGuard Console App
 --------------------
@@ -65,8 +67,8 @@ print_r(Crypto::supported());
 
 use PHPGuard\Hashing\Hash;
 
-print Hash::make([1, 2, 3, 4], "SHA384", true)
-print Hash::make("Hello PHPGuard!");
+print Hash::makeHash([1, 2, 3, 4])
+print Hash::makeMAC("Hello PHPGuard!", "key");
 ```
 
 ### Classes and Methods description
