@@ -17,7 +17,8 @@ use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use PHPScanner\Scanner\Scanner;
-use PHPGuard\Hashing\Hash;
+use PHPGuard\Core\Hashing\Hash;
+
 
 class SetMasterKeyCommand extends Command
 {
@@ -75,11 +76,11 @@ class SetMasterKeyCommand extends Command
         $output->writeln("");
         $scn = new Scanner();
         $adminKey = $scn->nextString();
-        $this->master = Hash::make("ژ‍‍‍‍‍`گ ث".$adminKey."ءو ؛");
+        $this->master = Hash::makeHash($adminKey);
         if (is_null($this->master)) {
             throw new RuntimeException("[RuntimeException]:\n\nFailed to set master key!\n");
         }
-        $isInserted = $this->redis->set(Hash::make(["This", "Is", "?", "!"], "SHA384", true), $this->master);
+        $isInserted = $this->redis->set(Hash::makeHash(["This", "Is", "?", "!"]), $this->master);
         if (!$isInserted) {
             throw new RuntimeException("Master key generated successfully, but we can not insert it in memory heap!");
         }

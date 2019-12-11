@@ -12,8 +12,9 @@ namespace PHPGuard\Core;
 
 
 use PHPGuard\Core\Exceptions\MasterKeyException;
-use PHPGuard\Hashing\Hash;
+use PHPGuard\Core\Hashing\Hash;
 use Redis;
+
 
 class MasterKey
 {
@@ -38,7 +39,7 @@ class MasterKey
     {
         $this->redis = new Redis();
         $this->redis->connect("127.0.0.1");
-        $this->mk = Hash::make(["This", "Is", "?", "!"], "SHA384", true);
+        $this->mk = Hash::makeHash(["This", "Is", "?", "!"]);
     }
 
 
