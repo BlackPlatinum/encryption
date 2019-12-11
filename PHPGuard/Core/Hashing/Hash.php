@@ -17,6 +17,8 @@ use PHPGuard\Core\Exceptions\HashException;
 abstract class Hash
 {
 
+    public const DEFAULT_SALT = '؟$ْaُrgپoءn2idژ$v=19$}m=65536,t=4,p=1$dEtگvYVl\1ak(1Ke~kp6emچl1Lw$gD5÷hvPta?bykٌٍَُّ]ژٰآ»ؤfQbI)iQf*‍Q48OqG/p!llnWj+Mzb`1ym/zUVY';
+
     /**
      * Constructor
      */
@@ -45,17 +47,18 @@ abstract class Hash
      * It uses SHA3-512 as default
      *
      * @param  mixed    $data       The data is being hashed
+     * @param  string   $salt       [Optional] The salt that will be append to the data
      * @param  string   $algorithm  The hash algorithm
      * @param  boolean  $rawOutput  [Optional] True returns raw hashed string, false returns base64 encoded hashed string
      *
      * @return string|false Returns the digested hash value on success or false on failure
      */
-    public static function makeHash($data, $algorithm = "SHA3-512", $rawOutput = false)
+    public static function makeHash($data, $salt = null, $algorithm = "SHA3-512", $rawOutput = false)
     {
         if (!self::validateAlgorithm($algorithm)) {
             throw new HashException("Invalid algorithm name!");
         }
-        return openssl_digest(is_string($data) ? $data : json_encode($data), $algorithm, $rawOutput);
+        return openssl_digest((is_string($data) ? $data : json_encode($data)).$salt, $algorithm, $rawOutput);
     }
 
 
