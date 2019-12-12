@@ -5,13 +5,14 @@
  * @license MIT
  * Date: 05/Nov/2019 02:22 AM
  *
- * CryptoSetup class setup key and initial vector for each cryptography algorithm
+ * CryptoSetup class setup key and IV for each cryptography algorithm
  **/
 
 namespace PHPGuard\Core;
 
 
-use PHPGuard\Hashing\Hash;
+use PHPGuard\Core\Hashing\Hash;
+
 
 abstract class CryptoSetup
 {
@@ -26,7 +27,7 @@ abstract class CryptoSetup
 
 
     /**
-     * Chunks a string to an array and appends extra characters to it
+     * Chunks a string to an array
      *
      * @param  string  $value  The entered string
      *
@@ -34,14 +35,7 @@ abstract class CryptoSetup
      */
     private function chunk($value)
     {
-        if ($value <= 3) {
-            return [":ءژ~'".$value."`چز- گ| پ"];
-        }
-        $chars = str_split($value, 3);
-        for ($i = 0; $i < count($chars); $i++) {
-            $chars[$i] = ":ءژ~'".$chars[$i]."`چز- گ| پ";
-        }
-        return $chars;
+        return str_split($value, 4);
     }
 
 
@@ -50,23 +44,23 @@ abstract class CryptoSetup
      *
      * @param  string  $key  Entered key
      *
-     * @return string return the constructed key
+     * @return string Returns the constructed key
      */
     protected function setupKey($key)
     {
-        return Hash::make($this->chunk($key), "SHA3-512", true, true);
+        return Hash::makeHash($this->chunk($key), Hash::DEFAULT_SALT);
     }
 
 
     /**
-     * Setup an initial vector for each cryptography algorithm
+     * Setup an IV for each cryptography algorithm
      *
      * @param  string  $iv  Entered iv
      *
-     * @return string return the constructed initial vector
+     * @return string Returns the constructed IV
      */
     protected function setupIV($iv)
     {
-        return Hash::make($this->chunk($iv), "SHA384", true, true);
+        return Hash::makeHash($this->chunk($iv), Hash::DEFAULT_SALT);
     }
 }

@@ -4,15 +4,18 @@ A security cryptography library for PHP. It can be used by different frameworks 
 
 Features
 --------
-Supports: AES-128-CBC, AES-192, AES-256-CBC, CAST5-CBC, BlowFish-CBC, MD5, SHA1, SHA224, SHA256, SHA384, SHA512
+Cryptography supports: AES-128-CBC, AES-192, AES-256-CBC, CAST5-CBC, BlowFish-CBC
+
+Hashing supports: SHA3-512, SHA512, WHIRLPOOL
 
 PHPGuard Console App
 --------------------
-A command line interface designed for this library due to set a admin password.
+A command line interface designed for this library due to set a admin password, test system etc.
 
-Command:
+Some of commands:
 
-* [php guard setAdminKey]
+* [php guard set:key]
+* [php guard fresh]
 
 `How to use console app?`
 
@@ -36,7 +39,7 @@ use PHPGuard\Core\MasterKey;
 use PHPGuard\Crypto\Crypto;
 
 $cr = new Crypto("CAST5-CBC");
-$cr->setKey((new MasterKey())->getMaster());
+$cr->setKey(MasterKey::getMaster());
 $cr->setIV("somthing");
 $c = $cr->encrypt([
         "Name"      => "Baha2r",
@@ -60,13 +63,14 @@ $c = $cr->encrypt([
 ]);
 print $c."\n";
 print_r($cr->decrypt($c));
+
 print_r(Crypto::supported());
 
 
 use PHPGuard\Hashing\Hash;
 
-print Hash::make([1, 2, 3, 4], "SHA384", true)
-print Hash::make("Hello PHPGuard!");
+print Hash::makeHash([1, 2, 3, 4])
+print Hash::makeMAC("Hello PHPGuard!", "key");
 ```
 
 ### Classes and Methods description

@@ -8,12 +8,14 @@
  * Base encryption interface
  **/
 
-namespace PHPGuard\Core;
+namespace PHPGuard\Core\Crypto;
 
 
 interface Encryption
 {
-    public function encrypt($data, $serialize = true);
+    // Encrypts all data types
+    public function encrypt($data, $serialize);
 
+    // Encrypts string type
     public function encryptString($data);
 }

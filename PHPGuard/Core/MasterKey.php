@@ -12,33 +12,21 @@ namespace PHPGuard\Core;
 
 
 use PHPGuard\Core\Exceptions\MasterKeyException;
-use PHPGuard\Hashing\Hash;
+use PHPGuard\Core\Hashing\Hash;
 use Redis;
+
 
 class MasterKey
 {
-
-    /**
-     * @var Redis
-     */
-    private $redis;
-
-    /**
-     * @var false|string
-     */
-    private $mk;
-
 
     /**
      * Constructor
      *
      * Creates connection with redis database
      */
-    public function __construct()
+    private function __construct()
     {
-        $this->redis = new Redis();
-        $this->redis->connect("127.0.0.1");
-        $this->mk = Hash::make(["This", "Is", "?", "!"], "SHA384", true);
+        //
     }
 
 
@@ -48,30 +36,15 @@ class MasterKey
      *
      * @throws MasterKeyException Throws master key exception if it fails to get master key
      */
-    public function getMaster()
+    public static function getMaster()
     {
-        $masterKey = $this->redis->get($this->mk);
-        if (!$masterKey) {
+        $redis = new Redis();
+        $redis->connect("127.0.0.1");
+        $key = Hash::makeHash(["This", "Is", "?", "!"]);
+        $key = $redis->get($key);
+        if (!$key) {
             throw new MasterKeyException("Master key has not been set yet!");
         }
-        return $masterKey;
-    }
-
-
-    /**
-     * Drops registered master key
-     */
-    public function dropMaster(): void
-    {
-        $this->redis->del($this->mk);
-    }
-
-
-    /**
-     * Drops all data in all databases
-     */
-    public function dropAll(): void
-    {
-        $this->redis->flushAll();
+        return $key;
     }
 }

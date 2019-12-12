@@ -11,12 +11,13 @@
 namespace PHPGuard\Crypto;
 
 
-use PHPGuard\Core\BaseCrypto;
-use PHPGuard\Core\Encryption;
-use PHPGuard\Core\Decryption;
+use PHPGuard\Core\Crypto\BaseCrypto;
+use PHPGuard\Core\Crypto\Encryption;
+use PHPGuard\Core\Crypto\Decryption;
 use PHPGuard\Core\Exceptions\CryptoException;
 use PHPGuard\Core\Exceptions\EncryptionException;
 use PHPGuard\Core\Exceptions\DecryptionException;
+use Exception;
 
 
 class Crypto extends BaseCrypto implements Encryption, Decryption
@@ -37,24 +38,15 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
      */
     private $algorithm;
 
-    /**
-     * @var array All supported algorithms
-     */
-    private const ALGORITHMS = [
-            "AES-128-CBC",
-            "AES-192-CBC",
-            "AES-256-CBC",
-            "BF-CBC",
-            "CAST5-CBC"
-    ];
-
 
     /**
      * Constructor
      *
-     * @param  string  $algorithm  Cryptography method name. The default method is AES-256-CBC
+     * @param  string  $algorithm  Cryptography algorithm
+     *                             <p>
+     *                             The default method is AES-256-CBC
      */
-    public function __construct($algorithm = self::ALGORITHMS[2])
+    public function __construct($algorithm = "AES-256-CBC")
     {
         $this->algorithm = strtoupper($algorithm);
         parent::__construct($this->algorithm);
@@ -68,14 +60,14 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
      */
     private function validateCipherMethod()
     {
-        return in_array($this->algorithm, self::ALGORITHMS, true);
+        return in_array($this->algorithm, self::supported(), true);
     }
 
 
     /**
-     * Validates value of key and IV
+     * Validates value of Key and IV
      *
-     * @return array
+     * @return array Returns authenticity of Key and IV as an array
      * @throws CryptoException Throws exception if key or IV remain null
      */
     private function isAssetsValid()
@@ -85,7 +77,7 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
 
 
     /**
-     * Sets key of cryptography system
+     * Set key of cryptography system
      *
      * @param  string  $key  Key of cryptography system [recommended use user's password as key]
      */
@@ -96,23 +88,23 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
 
 
     /**
-     * Sets IV of cryptography system
+     * Set IV of cryptography system
      *
      * @param  string  $iv  IV of cryptography system [recommended use user's password as IV]
      */
     public function setIV($iv): void
     {
-        if ($this->algorithm === self::ALGORITHMS[0] || $this->algorithm === self::ALGORITHMS[1] || $this->algorithm === self::ALGORITHMS[2]) {
-            $this->IV = substr(parent::setupIV($iv), 0, 16);
+        if ($this->algorithm === self::supported()[0] || $this->algorithm === self::supported()[1] || $this->algorithm === self::supported()[2]) {
+            $this->IV = substr(parent::setupIV($iv), 13, 16);
         }
-        if ($this->algorithm === self::ALGORITHMS[3] || $this->algorithm === self::ALGORITHMS[4]) {
-            $this->IV = substr(parent::setupIV($iv), 0, 8);
+        if ($this->algorithm === self::supported()[3] || $this->algorithm === self::supported()[4]) {
+            $this->IV = substr(parent::setupIV($iv), 13, 8);
         }
     }
 
 
     /**
-     * Sets algorithm of cryptography system
+     * Set algorithm of cryptography system
      *
      * @param  string  $cipher  The new cipher
      *
@@ -120,7 +112,7 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
      */
     public function setCipher($cipher)
     {
-        return (new Crypto($cipher));
+        return new Crypto($cipher);
     }
 
 
@@ -149,32 +141,10 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
     /**
      * Encrypts the given data
      *
-     * @param  string  $data  The data that will be encrypted
+     * @param  mixed    $data       The data that will be encrypted
+     * @param  boolean  $serialize  [Optional] If set to true, converts mixed types to string
      *
-     * @return false|string Returns encrypted data, false on failure
-     * @throws EncryptionException Throws exception if validate method returns false or can not encrypt the the $data
-     * @throws CryptoException Throws exception if key or IV remain null
-     */
-    public function encryptString($data)
-    {
-        if (!$this->validateCipherMethod()) {
-            throw new EncryptionException("Cipher method not defined!");
-        }
-        if (!$this->isAssetsValid()[0] || !$this->isAssetsValid()[1]) {
-            throw new CryptoException("Empty Key or IV!");
-        }
-        return parent::stringEncryption($data, $this->KEY, $this->IV);
-    }
-
-
-    /**
-     * Encrypts the given data
-     *
-     * @param  mixed  $data       The data that will be encrypted
-     * @param  bool   $serialize  [Recommended true], If $serialize is false and $data is string is correct,
-     *                            but if $serialize is false and $data is not string you will get EncryptionException
-     *
-     * @return false|string Returns encrypted value, false on failure
+     * @return string Returns encrypted value, false on failure
      * @throws EncryptionException Throws exception if validate method returns false or can not decrypt the the $cipher
      * @throws CryptoException Throws exception if key or IV remain null
      */
@@ -191,15 +161,15 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
 
 
     /**
-     * Decrypts the given cipher
+     * Encrypts the given data
      *
-     * @param  string  $cipher  The cipher that will be decrypted
+     * @param  string  $data  The data that will be encrypted
      *
-     * @return false|string Returns decrypted cipher, false on failure
-     * @throws DecryptionException Throws exception if validate method returns false or can not decrypt the the $cipher
+     * @return string Returns encrypted data, false on failure
+     * @throws EncryptionException Throws exception if validate method returns false or can not encrypt the the $data
      * @throws CryptoException Throws exception if key or IV remain null
      */
-    public function decryptString($cipher)
+    public function encryptString($data)
     {
         if (!$this->validateCipherMethod()) {
             throw new EncryptionException("Cipher method not defined!");
@@ -207,22 +177,21 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
         if (!$this->isAssetsValid()[0] || !$this->isAssetsValid()[1]) {
             throw new CryptoException("Empty Key or IV!");
         }
-        return parent::stringDecryption($cipher, $this->KEY, $this->IV);
+        return parent::stringEncryption($data, $this->KEY, $this->IV);
     }
 
 
     /**
      * Decrypts the given cipher
      *
-     * @param  string  $cipher       The cipher that will be decrypted
-     * @param  bool    $unserialize  [Recommended true], If $unserialize is false you achieve unserialized json decoded value
-     *                               and must be handled by user
+     * @param  string   $package      The package array that contains cipher and mac
+     * @param  boolean  $unserialize  [Optional] If set to true, converts string types to mixed
      *
      * @return false|mixed|string Returns encrypted value, false on failure
      * @throws DecryptionException Throws exception if validate method returns false or can not decrypt the the $cipher
      * @throws CryptoException Throws exception if key or IV remain null
      */
-    public function decrypt($cipher, $unserialize = true)
+    public function decrypt($package, $unserialize = true)
     {
         if (!$this->validateCipherMethod()) {
             throw new EncryptionException("Cipher method not defined!");
@@ -230,7 +199,56 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
         if (!$this->isAssetsValid()[0] || !$this->isAssetsValid()[1]) {
             throw new CryptoException("Empty Key or IV!");
         }
-        return parent::decryption($cipher, $this->KEY, $this->IV, $unserialize);
+        return parent::decryption($package, $this->KEY, $this->IV, $unserialize);
+    }
+
+
+    /**
+     * Decrypts the given cipher
+     *
+     * @param  string  $package  TThe package array that contains cipher and mac
+     *
+     * @return false|string Returns decrypted cipher, false on failure
+     * @throws DecryptionException Throws exception if validate method returns false or can not decrypt the the $cipher
+     * @throws CryptoException Throws exception if key or IV remain null
+     */
+    public function decryptString($package)
+    {
+        if (!$this->validateCipherMethod()) {
+            throw new EncryptionException("Cipher method not defined!");
+        }
+        if (!$this->isAssetsValid()[0] || !$this->isAssetsValid()[1]) {
+            throw new CryptoException("Empty Key or IV!");
+        }
+        return parent::stringDecryption($package, $this->KEY, $this->IV);
+    }
+
+
+    /**
+     * Generates cryptographically secure pseudo-random bytes
+     *
+     * @param  integer  $length  The length of the random byte
+     *
+     * @return string Returns Generated random
+     * @throws Exception Throws exception if can not generate random data
+     */
+    public static function randomBytes($length)
+    {
+        return parent::byteRandom($length);
+    }
+
+
+    /**
+     * Generates cryptographically secure pseudo-random strings
+     *
+     * @param  integer  $length  The length of the random string
+     *
+     * @return string Returns Generated random
+     * @throws Exception Throws exception if can not generate random data
+     */
+    public static function randomString($length)
+    {
+        return parent::stringRandom($length);
     }
 
 
@@ -241,6 +259,12 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
      */
     public static function supported()
     {
-        return self::ALGORITHMS;
+        return [
+                "AES-128-CBC",
+                "AES-192-CBC",
+                "AES-256-CBC",
+                "BF-CBC",
+                "CAST5-CBC"
+        ];
     }
 }

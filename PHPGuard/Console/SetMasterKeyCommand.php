@@ -17,20 +17,11 @@ use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use PHPScanner\Scanner\Scanner;
-use PHPGuard\Hashing\Hash;
+use PHPGuard\Core\Hashing\Hash;
+
 
 class SetMasterKeyCommand extends Command
 {
-
-    /**
-     * @var string|null Master key
-     */
-    private $master;
-
-    /**
-     * @var Redis Store master key in memory
-     */
-    private $redis;
 
     /**
      * @param  string|null  $name  The name of the command. The default name is null, it means it must be set in configure()
@@ -38,8 +29,6 @@ class SetMasterKeyCommand extends Command
     public function __construct(string $name = null)
     {
         parent::__construct($name);
-        $this->redis = new Redis();
-        $this->redis->connect("127.0.0.1");
     }
 
 
@@ -48,9 +37,9 @@ class SetMasterKeyCommand extends Command
      */
     protected function configure(): void
     {
-        $this->setName("setAdminKey")
-                ->setDescription("Sets admin key for using Guard cryptography system")
-                ->setHelp("<comment>\nSets admin key for using Guard cryptography system. It uses admin key to generate master key due to protect your data.\n</comment>");
+        $this->setName("set:key")
+                ->setDescription("Set admin key for using Guard cryptography system")
+                ->setHelp("<comment>\nSet admin key for using Guard cryptography system. It uses admin key to generate master key due to protect your data.\n</comment>");
         parent::configure();
     }
 
@@ -65,21 +54,21 @@ class SetMasterKeyCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
+        $scn = new Scanner();
+        $redis = new Redis();
         $output->writeln("");
-        $output->writeln("<question>>>> Welcome to Guard cryptography system!</question><comment>  v2.0.0</comment>");
-        $output->writeln("");
-        $output->writeln("<error>>>> Warning: You can have one admin key for each project!</error>");
-        $output->writeln("<error>Keep your admin key safe!</error>");
+        $output->writeln("<comment>>>> Warning: You can have one admin key for each project!</comment>");
+        $output->writeln("<comment>Keep your admin key safe!</comment>");
         $output->writeln("");
         $output->writeln("<question>>>> Please enter your admin key:</question>");
         $output->writeln("");
-        $scn = new Scanner();
+        $redis->connect("127.0.0.1");
         $adminKey = $scn->nextString();
-        $this->master = Hash::make("ژ‍‍‍‍‍`گ ث".$adminKey."ءو ؛");
-        if (is_null($this->master)) {
+        $master = Hash::makeHash($adminKey);
+        if (!$master) {
             throw new RuntimeException("[RuntimeException]:\n\nFailed to set master key!\n");
         }
-        $isInserted = $this->redis->set(Hash::make(["This", "Is", "?", "!"], "SHA384", true), $this->master);
+        $isInserted = $redis->set(Hash::makeHash(["This", "Is", "?", "!"]), $master);
         if (!$isInserted) {
             throw new RuntimeException("Master key generated successfully, but we can not insert it in memory heap!");
         }
