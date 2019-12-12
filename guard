@@ -14,12 +14,14 @@ require __DIR__."/vendor/autoload.php";
 use PHPGuard\Console\SetMasterKeyCommand;
 use PHPGuard\Console\DropMasterKeyCommand;
 use PHPGuard\Console\FreshCommand;
+use PHPGuard\Console\TestSystemCommand;
 use Symfony\Component\Console\Application;
 
-$application = new Application("PHPGuard Library Console", "v3.1.5");
+$application = new Application("PHPGuard Console", "v3.1.5");
 
 // ... register commands
 $application->add(new SetMasterKeyCommand());
 $application->add(new DropMasterKeyCommand());
 $application->add(new FreshCommand());
+$application->add(new TestSystemCommand());
 $application->run();
