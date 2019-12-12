@@ -79,7 +79,7 @@ abstract class BaseCrypto extends CryptoSetup
         if (!$cipher) {
             throw new EncryptionException("Could not encrypt the data!");
         }
-        $mac = Hash::makeMAC($cipher, $key);
+        $mac = Hash::makeMAC($cipher, Hash::DEFAULT_SALT.$key.$iv);
         $package = json_encode(compact("cipher", "mac"));
         if (!$package) {
             throw new EncryptionException("Could not encrypt the data!");
@@ -114,7 +114,7 @@ abstract class BaseCrypto extends CryptoSetup
     protected function decryption($package, $key, $iv, $unserialize)
     {
         $package = $this->getJsonPackage($package);
-        $newMAC = Hash::makeMAC($package["cipher"], $key);
+        $newMAC = Hash::makeMAC($package["cipher"], Hash::DEFAULT_SALT.$key.$iv);
         if ($newMAC !== $package["mac"]) {
             throw new DecryptionException("Invalid MAC!");
         }
