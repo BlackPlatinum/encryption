@@ -17,6 +17,7 @@ use PHPGuard\Core\Crypto\Decryption;
 use PHPGuard\Core\Exceptions\CryptoException;
 use PHPGuard\Core\Exceptions\EncryptionException;
 use PHPGuard\Core\Exceptions\DecryptionException;
+use Exception;
 
 
 class Crypto extends BaseCrypto implements Encryption, Decryption
@@ -64,9 +65,9 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
 
 
     /**
-     * Validates value of key and IV
+     * Validates value of Key and IV
      *
-     * @return array Returns evaluated Key and IV as an array
+     * @return array Returns authenticity of Key and IV as an array
      * @throws CryptoException Throws exception if key or IV remain null
      */
     private function isAssetsValid()
@@ -76,7 +77,7 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
 
 
     /**
-     * Sets key of cryptography system
+     * Set key of cryptography system
      *
      * @param  string  $key  Key of cryptography system [recommended use user's password as key]
      */
@@ -87,23 +88,23 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
 
 
     /**
-     * Sets IV of cryptography system
+     * Set IV of cryptography system
      *
      * @param  string  $iv  IV of cryptography system [recommended use user's password as IV]
      */
     public function setIV($iv): void
     {
         if ($this->algorithm === self::supported()[0] || $this->algorithm === self::supported()[1] || $this->algorithm === self::supported()[2]) {
-            $this->IV = substr(parent::setupIV($iv), 0, 16);
+            $this->IV = substr(parent::setupIV($iv), 13, 16);
         }
         if ($this->algorithm === self::supported()[3] || $this->algorithm === self::supported()[4]) {
-            $this->IV = substr(parent::setupIV($iv), 0, 8);
+            $this->IV = substr(parent::setupIV($iv), 13, 8);
         }
     }
 
 
     /**
-     * Sets algorithm of cryptography system
+     * Set algorithm of cryptography system
      *
      * @param  string  $cipher  The new cipher
      *
@@ -111,7 +112,7 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
      */
     public function setCipher($cipher)
     {
-        return (new Crypto($cipher));
+        return new Crypto($cipher);
     }
 
 
@@ -140,8 +141,8 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
     /**
      * Encrypts the given data
      *
-     * @param  mixed  $data  The data that will be encrypted
-     * @param  bool   $serialize
+     * @param  mixed    $data       The data that will be encrypted
+     * @param  boolean  $serialize  [Optional] If set to true, converts mixed types to string
      *
      * @return string Returns encrypted value, false on failure
      * @throws EncryptionException Throws exception if validate method returns false or can not decrypt the the $cipher
@@ -183,8 +184,8 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
     /**
      * Decrypts the given cipher
      *
-     * @param  string  $package  The package array that contains cipher and mac
-     * @param  bool    $unserialize
+     * @param  string   $package      The package array that contains cipher and mac
+     * @param  boolean  $unserialize  [Optional] If set to true, converts string types to mixed
      *
      * @return false|mixed|string Returns encrypted value, false on failure
      * @throws DecryptionException Throws exception if validate method returns false or can not decrypt the the $cipher
@@ -207,7 +208,7 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
      *
      * @param  string  $package  TThe package array that contains cipher and mac
      *
-     * @return false|mixed|string Returns decrypted cipher, false on failure
+     * @return false|string Returns decrypted cipher, false on failure
      * @throws DecryptionException Throws exception if validate method returns false or can not decrypt the the $cipher
      * @throws CryptoException Throws exception if key or IV remain null
      */
@@ -220,6 +221,34 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
             throw new CryptoException("Empty Key or IV!");
         }
         return parent::stringDecryption($package, $this->KEY, $this->IV);
+    }
+
+
+    /**
+     * Generates cryptographically secure pseudo-random bytes
+     *
+     * @param  integer  $length  The length of the random byte
+     *
+     * @return string Returns Generated random
+     * @throws Exception Throws exception if can not generate random data
+     */
+    public static function randomBytes($length)
+    {
+        return parent::byteRandom($length);
+    }
+
+
+    /**
+     * Generates cryptographically secure pseudo-random strings
+     *
+     * @param  integer  $length  The length of the random string
+     *
+     * @return string Returns Generated random
+     * @throws Exception Throws exception if can not generate random data
+     */
+    public static function randomString($length)
+    {
+        return parent::stringRandom($length);
     }
 
 
