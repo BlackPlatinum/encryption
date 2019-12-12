@@ -65,7 +65,7 @@ class SetMasterKeyCommand extends Command
         $redis->connect("127.0.0.1");
         $adminKey = $scn->nextString();
         $master = Hash::makeHash($adminKey);
-        if (is_null($master)) {
+        if (!$master) {
             throw new RuntimeException("[RuntimeException]:\n\nFailed to set master key!\n");
         }
         $isInserted = $redis->set(Hash::makeHash(["This", "Is", "?", "!"]), $master);
