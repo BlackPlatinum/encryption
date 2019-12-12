@@ -8,7 +8,8 @@
     "encryption",
     "decryption",
     "hash",
-    "hashing"
+    "hashing",
+    "mac"
   ],
   "type": "library",
   "license": "MIT",
@@ -20,18 +21,21 @@
     }
   ],
   "require": {
-    "php": "^7.2",
+    "php": "^7.2.25",
     "ext-openssl": "*",
     "ext-json": "*",
     "ext-redis": "*",
     "symfony/console": "^4.3",
     "baha2rmirzazadeh/phpscanner": "^1.5"
   },
-  "minimum-stability": "dev",
-  "prefer-stable": true,
+  "config": {
+    "sort-packages": true
+  },
   "autoload": {
     "psr-4": {
       "PHPGuard\\": "PHPGuard/"
     }
-  }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }
