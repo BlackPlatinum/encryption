@@ -11,6 +11,7 @@
 namespace PHPGuard\Core\Crypto;
 
 
+use Exception;
 use PHPGuard\Core\CryptoSetup;
 use PHPGuard\Core\Exceptions\EncryptionException;
 use PHPGuard\Core\Exceptions\DecryptionException;
@@ -75,7 +76,8 @@ abstract class BaseCrypto extends CryptoSetup
      */
     protected function encryption($data, $key, $iv, $serialize)
     {
-        $cipher = openssl_encrypt($serialize ? json_encode(serialize($data)) : $data, $this->algorithm, $key, 0, $iv);
+        $cipher = base64_encode(openssl_encrypt($serialize ? json_encode(serialize($data)) : $data, $this->algorithm,
+                $key, 0, $iv));
         if (!$cipher) {
             throw new EncryptionException("Could not encrypt the data!");
         }
@@ -118,7 +120,7 @@ abstract class BaseCrypto extends CryptoSetup
         if ($newMAC !== $package["mac"]) {
             throw new DecryptionException("Invalid MAC!");
         }
-        $plain = openssl_decrypt($package["cipher"], $this->algorithm, $key, 0, $iv);
+        $plain = openssl_decrypt(base64_decode($package["cipher"]), $this->algorithm, $key, 0, $iv);
         if (!$plain) {
             throw new DecryptionException("Could not decrypt the data!");
         }
@@ -131,11 +133,35 @@ abstract class BaseCrypto extends CryptoSetup
      * @param  string  $key
      * @param  string  $iv
      *
-     * @return false|mixed|string
+     * @return false|string
      * @throws DecryptionException
      */
     protected function stringDecryption($cipher, $key, $iv)
     {
         return $this->decryption($cipher, $key, $iv, false);
+    }
+
+
+    /**
+     * @param  integer  $length
+     *
+     * @return false|string
+     * @throws Exception
+     */
+    protected static function byteRandom($length)
+    {
+        return random_bytes($length);
+    }
+
+
+    /**
+     * @param  integer  $length
+     *
+     * @return false|string
+     * @throws Exception
+     */
+    protected static function stringRandom($length)
+    {
+        return bin2hex(random_bytes($length));
     }
 }
