@@ -10,11 +10,12 @@ Hashing supports: SHA3-512, SHA512, WHIRLPOOL
 
 PHPGuard Console App
 --------------------
-A command line interface designed for this library due to set a admin password.
+A command line interface designed for this library due to set a admin password, test system etc.
 
-Command:
+Some of commands:
 
-* [php guard setAdminKey]
+* [php guard set:key]
+* [php guard fresh]
 
 `How to use console app?`
 
@@ -38,7 +39,7 @@ use PHPGuard\Core\MasterKey;
 use PHPGuard\Crypto\Crypto;
 
 $cr = new Crypto("CAST5-CBC");
-$cr->setKey((new MasterKey())->getMaster());
+$cr->setKey(MasterKey::getMaster());
 $cr->setIV("somthing");
 $c = $cr->encrypt([
         "Name"      => "Baha2r",
@@ -62,6 +63,7 @@ $c = $cr->encrypt([
 ]);
 print $c."\n";
 print_r($cr->decrypt($c));
+
 print_r(Crypto::supported());
 
 
