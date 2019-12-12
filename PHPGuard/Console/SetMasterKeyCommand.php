@@ -57,8 +57,8 @@ class SetMasterKeyCommand extends Command
         $scn = new Scanner();
         $redis = new Redis();
         $output->writeln("");
-        $output->writeln("<error>>>> Warning: You can have one admin key for each project!</error>");
-        $output->writeln("<error>Keep your admin key safe!</error>");
+        $output->writeln("<comment>>>> Warning: You can have one admin key for each project!</comment>");
+        $output->writeln("<comment>Keep your admin key safe!</comment>");
         $output->writeln("");
         $output->writeln("<question>>>> Please enter your admin key:</question>");
         $output->writeln("");
