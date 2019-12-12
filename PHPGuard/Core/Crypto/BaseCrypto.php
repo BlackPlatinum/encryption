@@ -145,7 +145,7 @@ abstract class BaseCrypto extends CryptoSetup
     /**
      * @param  integer  $length
      *
-     * @return false|string
+     * @return string
      * @throws Exception
      */
     protected static function byteRandom($length)
@@ -157,7 +157,7 @@ abstract class BaseCrypto extends CryptoSetup
     /**
      * @param  integer  $length
      *
-     * @return false|string
+     * @return string
      * @throws Exception
      */
     protected static function stringRandom($length)
