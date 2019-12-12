@@ -14,6 +14,7 @@ namespace PHPGuard\Core\Crypto;
 use PHPGuard\Core\CryptoSetup;
 use PHPGuard\Core\Exceptions\EncryptionException;
 use PHPGuard\Core\Exceptions\DecryptionException;
+use PHPGuard\Core\Hashing\Hash;
 
 
 abstract class BaseCrypto extends CryptoSetup
@@ -38,76 +39,103 @@ abstract class BaseCrypto extends CryptoSetup
 
 
     /**
-     * @param  string  $value
-     * @param  string  $key
-     * @param  string  $iv
+     * @param  string  $package
      *
-     * @return false|string
-     * @throws EncryptionException
+     * @return array
      */
-    protected function stringEncryption($value, $key, $iv)
+    private function getJsonPackage($package)
     {
-        $cipher = openssl_encrypt($value, $this->algorithm, $key, 0, $iv);
-        if (!$cipher) {
-            throw new EncryptionException("Could not encrypt the data!");
+        $package = json_decode(base64_decode($package), true);
+        if (!$this->isValidPackage($package)) {
+            throw new DecryptionException("Invalid package!");
         }
-        return base64_encode($cipher);
+        return $package;
     }
 
 
     /**
-     * @param  mixed   $data
-     * @param  string  $key
-     * @param  string  $iv
-     * @param  bool    $serialize
+     * @param  mixed  $package
      *
-     * @return false|string
+     * @return boolean
+     */
+    private function isValidPackage($package)
+    {
+        return is_array($package) && isset($package["cipher"], $package["mac"]);
+    }
+
+
+    /**
+     * @param  mixed    $data
+     * @param  string   $key
+     * @param  string   $iv
+     * @param  boolean  $serialize
+     *
+     * @return string
      * @throws EncryptionException
      */
     protected function encryption($data, $key, $iv, $serialize)
     {
-        if (!is_string($data) && !$serialize) {
-            throw new EncryptionException("Can not convert $data to string! change serialize => $serialize to true");
+        $cipher = openssl_encrypt($serialize ? json_encode(serialize($data)) : $data, $this->algorithm, $key, 0, $iv);
+        if (!$cipher) {
+            throw new EncryptionException("Could not encrypt the data!");
         }
-        if (is_string($data) && !$serialize) {
-            return $this->stringEncryption($data, $key, $iv);
+        $mac = Hash::makeMAC($cipher, $key);
+        $package = json_encode(compact("cipher", "mac"));
+        if (!$package) {
+            throw new EncryptionException("Could not encrypt the data!");
         }
-        return $this->stringEncryption(json_encode(serialize($data)), $key, $iv);
+        return base64_encode($package);
     }
 
 
     /**
-     * @param  string  $cipher
+     * @param  string  $data
      * @param  string  $key
      * @param  string  $iv
      *
-     * @return false|string
-     * @throws DecryptionException
+     * @return string
+     * @throws EncryptionException
      */
-    protected function stringDecryption($cipher, $key, $iv)
+    protected function stringEncryption($data, $key, $iv)
     {
-        $plain = openssl_decrypt(base64_decode($cipher), $this->algorithm, $key, 0, $iv);
-        if (!$plain) {
-            throw new DecryptionException("Could not decrypt the data!");
-        }
-        return $plain;
+        return $this->encryption($data, $key, $iv, false);
     }
 
 
     /**
-     * @param  string  $cipher
-     * @param  string  $key
-     * @param  string  $iv
-     * @param  bool    $unserialize
+     * @param  string   $package
+     * @param  string   $key
+     * @param  string   $iv
+     * @param  boolean  $unserialize
      *
      * @return false|mixed|string
      * @throws DecryptionException
      */
-    protected function decryption($cipher, $key, $iv, $unserialize)
+    protected function decryption($package, $key, $iv, $unserialize)
     {
-        if (!$unserialize) {
-            return $this->stringDecryption($cipher, $key, $iv);
+        $package = $this->getJsonPackage($package);
+        $newMAC = Hash::makeMAC($package["cipher"], $key);
+        if ($newMAC !== $package["mac"]) {
+            throw new DecryptionException("Invalid MAC!");
         }
-        return unserialize(json_decode($this->stringDecryption($cipher, $key, $iv)));
+        $plain = openssl_decrypt($package["cipher"], $this->algorithm, $key, 0, $iv);
+        if (!$plain) {
+            throw new DecryptionException("Could not decrypt the data!");
+        }
+        return $unserialize ? unserialize(json_decode($plain)) : $plain;
+    }
+
+
+    /**
+     * @param  string  $cipher
+     * @param  string  $key
+     * @param  string  $iv
+     *
+     * @return false|mixed|string
+     * @throws DecryptionException
+     */
+    protected function stringDecryption($cipher, $key, $iv)
+    {
+        return $this->decryption($cipher, $key, $iv, false);
     }
 }
