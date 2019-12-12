@@ -71,7 +71,7 @@ abstract class Hash
      * @param  string  $key        Shared secret key used for generating the HMAC variant of the message digest
      * @param  string  $algorithm  The hash algorithm
      *
-     * @return string|null Returns calculated message authentication code
+     * @return string Returns calculated message authentication code
      */
     public static function makeMAC($data, $key, $algorithm = "SHA3-512")
     {
