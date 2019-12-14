@@ -11,7 +11,6 @@
 namespace PHPGuard\Core\Crypto;
 
 
-use Exception;
 use PHPGuard\Core\CryptoSetup;
 use PHPGuard\Core\Exceptions\EncryptionException;
 use PHPGuard\Core\Exceptions\DecryptionException;
@@ -35,7 +34,7 @@ abstract class BaseCrypto extends CryptoSetup
     protected function __construct($algorithm)
     {
         parent::__construct();
-        $this->algorithm = $algorithm;
+        $this->algorithm = strtoupper($algorithm);
     }
 
 
@@ -61,28 +60,30 @@ abstract class BaseCrypto extends CryptoSetup
      */
     private function isValidPackage($package)
     {
-        return is_array($package) && isset($package["cipher"], $package["mac"]);
+        return is_array($package) && isset($package["iv"], $package["cipher"], $package["mac"]) && (strlen(base64_decode($package["iv"],
+                                true)) === openssl_cipher_iv_length($this->algorithm));
     }
 
 
     /**
      * @param  mixed    $data
      * @param  string   $key
-     * @param  string   $iv
      * @param  boolean  $serialize
      *
      * @return string
      * @throws EncryptionException
      */
-    protected function encryption($data, $key, $iv, $serialize)
+    protected function encryption($data, $key, $serialize)
     {
+        $iv = random_bytes(openssl_cipher_iv_length($this->algorithm));
         $cipher = base64_encode(openssl_encrypt($serialize ? json_encode(serialize($data)) : $data, $this->algorithm,
                 $key, 0, $iv));
         if (!$cipher) {
             throw new EncryptionException("Could not encrypt the data!");
         }
         $mac = Hash::makeMAC($cipher, Hash::DEFAULT_SALT.$key.$iv);
-        $package = json_encode(compact("cipher", "mac"));
+        $iv = base64_encode($iv);
+        $package = json_encode(compact("iv", "cipher", "mac"));
         if (!$package) {
             throw new EncryptionException("Could not encrypt the data!");
         }
@@ -93,52 +94,50 @@ abstract class BaseCrypto extends CryptoSetup
     /**
      * @param  string  $data
      * @param  string  $key
-     * @param  string  $iv
      *
      * @return string
      * @throws EncryptionException
      */
-    protected function stringEncryption($data, $key, $iv)
+    protected function stringEncryption($data, $key)
     {
-        return $this->encryption($data, $key, $iv, false);
+        return $this->encryption($data, $key, false);
     }
 
 
     /**
      * @param  string   $package
      * @param  string   $key
-     * @param  string   $iv
      * @param  boolean  $unserialize
      *
      * @return false|mixed|string
      * @throws DecryptionException
      */
-    protected function decryption($package, $key, $iv, $unserialize)
+    protected function decryption($package, $key, $unserialize)
     {
         $package = $this->getJsonPackage($package);
+        $iv = base64_decode($package["iv"]);
         $newMAC = Hash::makeMAC($package["cipher"], Hash::DEFAULT_SALT.$key.$iv);
-        if ($newMAC !== $package["mac"]) {
+        if (!hash_equals($package["mac"], $newMAC)) {
             throw new DecryptionException("Invalid MAC!");
         }
-        $plain = openssl_decrypt(base64_decode($package["cipher"]), $this->algorithm, $key, 0, $iv);
-        if (!$plain) {
+        $decrypted = openssl_decrypt(base64_decode($package["cipher"]), $this->algorithm, $key, 0, $iv);
+        if (!$decrypted) {
             throw new DecryptionException("Could not decrypt the data!");
         }
-        return $unserialize ? unserialize(json_decode($plain)) : $plain;
+        return $unserialize ? unserialize(json_decode($decrypted)) : $decrypted;
     }
 
 
     /**
      * @param  string  $cipher
      * @param  string  $key
-     * @param  string  $iv
      *
      * @return false|string
      * @throws DecryptionException
      */
-    protected function stringDecryption($cipher, $key, $iv)
+    protected function stringDecryption($cipher, $key)
     {
-        return $this->decryption($cipher, $key, $iv, false);
+        return $this->decryption($cipher, $key, false);
     }
 
 
@@ -146,7 +145,6 @@ abstract class BaseCrypto extends CryptoSetup
      * @param  integer  $length
      *
      * @return string
-     * @throws Exception
      */
     protected static function byteRandom($length)
     {
@@ -158,7 +156,6 @@ abstract class BaseCrypto extends CryptoSetup
      * @param  integer  $length
      *
      * @return string
-     * @throws Exception
      */
     protected static function stringRandom($length)
     {
