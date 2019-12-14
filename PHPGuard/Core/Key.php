@@ -5,24 +5,22 @@
  * @license MIT
  * Date: 14/Nov/2019 22:14 PM
  *
- * Managing master key is done by this class
+ * Managing key is done by this class
  **/
 
 namespace PHPGuard\Core;
 
 
-use PHPGuard\Core\Exceptions\MasterKeyException;
+use PHPGuard\Core\Exceptions\KeyException;
 use PHPGuard\Core\Hashing\Hash;
 use Redis;
 
 
-class MasterKey
+class Key
 {
 
     /**
      * Constructor
-     *
-     * Creates connection with redis database
      */
     private function __construct()
     {
@@ -30,20 +28,20 @@ class MasterKey
     }
 
 
-    /** Returns generated master key
+    /** Returns registered key
      *
-     * @return string Returns registered master key
+     * @return string Returns registered key
      *
-     * @throws MasterKeyException Throws master key exception if it fails to get master key
+     * @throws KeyException Throws key exception if it fails to get key
      */
-    public static function getMaster()
+    public static function getKey()
     {
         $redis = new Redis();
         $redis->connect("127.0.0.1");
         $key = Hash::makeHash(["This", "Is", "?", "!"]);
         $key = $redis->get($key);
         if (!$key) {
-            throw new MasterKeyException("Master key has not been set yet!");
+            throw new KeyException("The key has not been set yet!");
         }
         return $key;
     }
