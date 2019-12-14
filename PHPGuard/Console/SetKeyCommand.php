@@ -5,7 +5,7 @@
  * @license MIT
  * Date: 12/Nov/2019 23:14 PM
  *
- * SetMasterKeyCommand class provides a system to generate master key
+ * SetKeyCommand class provides a system to set a encryption key on Redis database
  **/
 
 namespace PHPGuard\Console;
@@ -20,7 +20,7 @@ use PHPScanner\Scanner\Scanner;
 use PHPGuard\Core\Hashing\Hash;
 
 
-class SetMasterKeyCommand extends Command
+class SetKeyCommand extends Command
 {
 
     /**
@@ -38,9 +38,8 @@ class SetMasterKeyCommand extends Command
     protected function configure(): void
     {
         $this->setName("set:key")
-                ->setDescription("Set admin key for using Guard cryptography system")
-                ->setHelp("<comment>\nSet admin key for using Guard cryptography system. It uses admin key to generate master key due to protect your data.\n</comment>");
-        parent::configure();
+                ->setDescription("Set a key for Guard cryptography system")
+                ->setHelp("<comment>\nSet a key for Guard cryptography system. It passes a complex progress to save It in Redis database as key => value.\n</comment>");
     }
 
 
@@ -50,29 +49,28 @@ class SetMasterKeyCommand extends Command
      * @param  InputInterface   $input
      * @param  OutputInterface  $output
      *
-     * @throws RuntimeException Throws runtime exception if it fails to set master key
+     * @throws RuntimeException Throws runtime exception if it fails to set the key
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $scn = new Scanner();
         $redis = new Redis();
         $output->writeln("");
-        $output->writeln("<comment>>>> Warning: You can have one admin key for each project!</comment>");
-        $output->writeln("<comment>Keep your admin key safe!</comment>");
+        $output->writeln("<comment>>>> Warning: You can have one key for all of your data!</comment>");
+        $output->writeln("<comment>>>> Keep your key safe!</comment>");
         $output->writeln("");
-        $output->writeln("<question>>>> Please enter your admin key:</question>");
+        $output->writeln("<question>>>> Please enter your key:</question>");
         $output->writeln("");
         $redis->connect("127.0.0.1");
-        $adminKey = $scn->nextString();
-        $master = Hash::makeHash($adminKey);
-        if (!$master) {
-            throw new RuntimeException("[RuntimeException]:\n\nFailed to set master key!\n");
+        $key = $scn->nextString();
+        if (!$key) {
+            throw new RuntimeException("[RuntimeException]:\n\nFailed to set the key!\n");
         }
-        $isInserted = $redis->set(Hash::makeHash(["This", "Is", "?", "!"]), $master);
+        $isInserted = $redis->set(Hash::makeHash(["This", "Is", "Redis", "Key", "!"], Hash::DEFAULT_SALT), $key);
         if (!$isInserted) {
-            throw new RuntimeException("Master key generated successfully, but we can not insert it in memory heap!");
+            throw new RuntimeException("The key generated successfully, but we can not insert it in memory heap!");
         }
         $output->writeln("");
-        $output->writeln("<info>>>> Master key generated successfully!\n</info>");
+        $output->writeln("<info>>>> The key generated successfully!\n</info>");
     }
 }
