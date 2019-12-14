@@ -5,7 +5,7 @@
  * @license MIT
  * Date: 12/Dec/2019 20:25 PM
  *
- * DropMasterKeyCommand class let you to drop registered master key
+ * DropKeyCommand class let you to drop registered key
  **/
 
 namespace PHPGuard\Console;
@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use PHPGuard\Core\Hashing\Hash;
 
 
-class DropMasterKeyCommand extends Command
+class DropKeyCommand extends Command
 {
 
     /**
@@ -37,9 +37,8 @@ class DropMasterKeyCommand extends Command
     protected function configure(): void
     {
         $this->setName("drop:key")
-                ->setDescription("Drops admin key")
-                ->setHelp("<comment>\nDrops admin key. You can generate a new one with 'php guard set:key'\n</comment>");
-        parent::configure();
+                ->setDescription("Drops registered key")
+                ->setHelp("<comment>\nDrops registered key. You can generate a new one with 'php guard set:key'\n</comment>");
     }
 
 
@@ -49,21 +48,18 @@ class DropMasterKeyCommand extends Command
      * @param  InputInterface   $input
      * @param  OutputInterface  $output
      *
-     * @throws RuntimeException Throws runtime exception if it fails to set master key
+     * @throws RuntimeException Throws runtime exception if it fails to drop the key
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $redis = new Redis();
         $redis->connect("127.0.0.1");
-        $key = Hash::makeHash(["This", "Is", "?", "!"]);
-        if ($redis->exists($key)) {
-            $redis->del($key);
-            $output->writeln("");
-            $output->writeln("<info>>>> Master key dropped successfully!\n</info>");
-            return;
+        $key = Hash::makeHash(["This", "Is", "Redis", "Key", "!"], Hash::DEFAULT_SALT);
+        if (!$redis->exists($key)) {
+            throw new RuntimeException("[RuntimeException]:\n\n>>> There is no key to drop!\n");
         }
+        $redis->del($key);
         $output->writeln("");
-        $output->writeln("<error>>>> Master key doesn't exist!</error>");
-        $output->writeln("");
+        $output->writeln("<info>>>> The key dropped successfully!\n</info>");
     }
 }

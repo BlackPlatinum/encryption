@@ -17,6 +17,9 @@ use PHPGuard\Core\Exceptions\HashException;
 class Hash
 {
 
+    /**
+     * @var string The default salt
+     */
     public const DEFAULT_SALT = '؟$ْaُrgپoءn2idژ$v=19$}m=65536,t=4,p=1$dEtگvYVl\1ak(1Ke~kp6emچl1Lw$gD5÷hvPta?bykٌٍَُّ]ژٰآ»ؤfQbI)iQf*‍Q48OqG/p!llnWj+Mzb`1ym/zUVY';
 
     /**

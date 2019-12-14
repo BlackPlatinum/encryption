@@ -13,7 +13,6 @@ namespace PHPGuard\Console;
 
 use Redis;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -38,7 +37,6 @@ class FreshCommand extends Command
         $this->setName("fresh")
                 ->setDescription("Freshens Redis database")
                 ->setHelp("<comment>\nDrops all data in all databases. Be careful when using this command!\n</comment>");
-        parent::configure();
     }
 
 
@@ -47,8 +45,6 @@ class FreshCommand extends Command
      *
      * @param  InputInterface   $input
      * @param  OutputInterface  $output
-     *
-     * @throws RuntimeException Throws runtime exception if it fails to set master key
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
@@ -56,7 +52,7 @@ class FreshCommand extends Command
         $redis->connect("127.0.0.1");
         $redis->flushAll();
         $output->writeln("");
-        $output->writeln("<info>>>> Redis database cleaned up!</info>");
+        $output->writeln("<info>>>> Redis database freshened up!</info>");
         $output->writeln("");
     }
 }
