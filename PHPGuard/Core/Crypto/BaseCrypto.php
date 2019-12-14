@@ -92,19 +92,6 @@ abstract class BaseCrypto extends KeySetup
 
 
     /**
-     * @param  string  $data
-     * @param  string  $key
-     *
-     * @return string
-     * @throws EncryptionException
-     */
-    protected function stringEncryption($data, $key)
-    {
-        return $this->encryption($data, $key, false);
-    }
-
-
-    /**
      * @param  string   $package
      * @param  string   $key
      * @param  boolean  $unserialize
@@ -125,19 +112,6 @@ abstract class BaseCrypto extends KeySetup
             throw new DecryptionException("Could not decrypt the data!");
         }
         return $unserialize ? unserialize(json_decode($decrypted)) : $decrypted;
-    }
-
-
-    /**
-     * @param  string  $cipher
-     * @param  string  $key
-     *
-     * @return false|string
-     * @throws DecryptionException
-     */
-    protected function stringDecryption($cipher, $key)
-    {
-        return $this->decryption($cipher, $key, false);
     }
 
 
