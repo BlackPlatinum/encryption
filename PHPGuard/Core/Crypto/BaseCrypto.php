@@ -34,7 +34,7 @@ abstract class BaseCrypto extends KeySetup
     protected function __construct($algorithm)
     {
         parent::__construct();
-        $this->algorithm = strtoupper($algorithm);
+        $this->algorithm = $algorithm;
     }
 
 

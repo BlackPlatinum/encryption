@@ -42,7 +42,7 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
      */
     public function __construct($algorithm = "AES-256-CBC")
     {
-        $this->algorithm = $algorithm;
+        $this->algorithm = strtoupper($algorithm);
         parent::__construct($this->algorithm);
     }
 
