@@ -11,13 +11,13 @@
 namespace PHPGuard\Core\Crypto;
 
 
-use PHPGuard\Core\CryptoSetup;
+use PHPGuard\Core\KeySetup;
 use PHPGuard\Core\Exceptions\EncryptionException;
 use PHPGuard\Core\Exceptions\DecryptionException;
 use PHPGuard\Core\Hashing\Hash;
 
 
-abstract class BaseCrypto extends CryptoSetup
+abstract class BaseCrypto extends KeySetup
 {
 
     /**
