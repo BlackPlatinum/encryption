@@ -25,7 +25,7 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
     /**
      * @var string Key
      */
-    private $Key;
+    private $key;
 
     /**
      * @var string Algorithm
@@ -64,9 +64,9 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
      * @return boolean Returns authenticity of Key
      * @throws CryptoException Throws exception if key remain null
      */
-    private function isKeyValid()
+    private function isKeySet()
     {
-        return isset($this->Key) ?? false;
+        return isset($this->key) ?? false;
     }
 
 
@@ -77,7 +77,7 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
      */
     public function setKey($key): void
     {
-        $this->Key = parent::setupKey($key);
+        $this->key = parent::setupKey($key);
     }
 
 
@@ -101,7 +101,7 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
      */
     public function getKey()
     {
-        return $this->Key;
+        return $this->key;
     }
 
 
@@ -131,10 +131,10 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
         if (!$this->validateCipherMethod()) {
             throw new EncryptionException("Cipher method not defined!");
         }
-        if (!$this->isKeyValid()) {
+        if (!$this->isKeySet()) {
             throw new CryptoException("Empty Key!");
         }
-        return parent::encryption($data, $this->Key, $serialize);
+        return parent::encryption($data, $this->key, $serialize);
     }
 
 
@@ -156,37 +156,37 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
     /**
      * Decrypts the given cipher
      *
-     * @param  string   $package      The package array that contains cipher and mac
+     * @param  string   $jsonPayload  The json payload that contains cipher and mac
      * @param  boolean  $unserialize  [Optional] If set to true, converts string types to mixed
      *
      * @return false|mixed|string Returns encrypted value, false on failure
      * @throws DecryptionException Throws exception if validate method returns false or can not decrypt the the $cipher
      * @throws CryptoException Throws exception if key remain null
      */
-    public function decrypt($package, $unserialize = true)
+    public function decrypt($jsonPayload, $unserialize = true)
     {
         if (!$this->validateCipherMethod()) {
-            throw new EncryptionException("Cipher method not defined!");
+            throw new DecryptionException("Cipher method not defined!");
         }
-        if (!$this->isKeyValid()) {
+        if (!$this->isKeySet()) {
             throw new CryptoException("Empty Key!");
         }
-        return parent::decryption($package, $this->Key, $unserialize);
+        return parent::decryption($jsonPayload, $this->key, $unserialize);
     }
 
 
     /**
      * Decrypts the given cipher
      *
-     * @param  string  $package  TThe package array that contains cipher and mac
+     * @param  string  $jsonPayload  The json payload that contains cipher and mac
      *
      * @return false|string Returns decrypted cipher, false on failure
      * @throws DecryptionException Throws exception if validate method returns false or can not decrypt the the $cipher
      * @throws CryptoException Throws exception if key remain null
      */
-    public function decryptString($package)
+    public function decryptString($jsonPayload)
     {
-        return $this->decrypt($package, false);
+        return $this->decrypt($jsonPayload, false);
     }
 
 

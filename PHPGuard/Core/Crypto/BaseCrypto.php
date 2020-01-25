@@ -39,28 +39,28 @@ abstract class BaseCrypto extends KeySetup
 
 
     /**
-     * @param  string  $package
+     * @param  string  $payload
      *
      * @return array
      */
-    private function getJsonPackage($package)
+    private function getJsonPayload($payload)
     {
-        $package = json_decode(base64_decode($package), true);
-        if (!$this->isValidPackage($package)) {
-            throw new DecryptionException("Invalid package!");
+        $payload = json_decode(base64_decode($payload), true);
+        if (!$this->isValidPayload($payload)) {
+            throw new DecryptionException("Invalid payload!");
         }
-        return $package;
+        return $payload;
     }
 
 
     /**
-     * @param  mixed  $package
+     * @param  mixed  $payload
      *
      * @return boolean
      */
-    private function isValidPackage($package)
+    private function isValidPayload($payload)
     {
-        return is_array($package) && isset($package["iv"], $package["cipher"], $package["mac"]) && (strlen(base64_decode($package["iv"],
+        return is_array($payload) && isset($payload["iv"], $payload["cipher"], $payload["mac"]) && (strlen(base64_decode($payload["iv"],
                                 true)) === openssl_cipher_iv_length($this->algorithm));
     }
 
@@ -83,31 +83,31 @@ abstract class BaseCrypto extends KeySetup
         }
         $mac = Hash::makeMAC($cipher, Hash::DEFAULT_SALT.$key.$iv);
         $iv = base64_encode($iv);
-        $package = json_encode(compact("iv", "cipher", "mac"));
-        if (!$package) {
+        $jsonPayload = json_encode(compact("iv", "cipher", "mac"));
+        if (!$jsonPayload) {
             throw new EncryptionException("Could not encrypt the data!");
         }
-        return base64_encode($package);
+        return base64_encode($jsonPayload);
     }
 
 
     /**
-     * @param  string   $package
+     * @param  string   $jsonPayload
      * @param  string   $key
      * @param  boolean  $unserialize
      *
      * @return false|mixed|string
      * @throws DecryptionException
      */
-    protected function decryption($package, $key, $unserialize)
+    protected function decryption($jsonPayload, $key, $unserialize)
     {
-        $package = $this->getJsonPackage($package);
-        $iv = base64_decode($package["iv"]);
-        $newMAC = Hash::makeMAC($package["cipher"], Hash::DEFAULT_SALT.$key.$iv);
-        if (!hash_equals($package["mac"], $newMAC)) {
+        $jsonPayload = $this->getJsonPayload($jsonPayload);
+        $iv = base64_decode($jsonPayload["iv"]);
+        $newMAC = Hash::makeMAC($jsonPayload["cipher"], Hash::DEFAULT_SALT.$key.$iv);
+        if (!hash_equals($jsonPayload["mac"], $newMAC)) {
             throw new DecryptionException("Invalid MAC!");
         }
-        $decrypted = openssl_decrypt(base64_decode($package["cipher"]), $this->algorithm, $key, 0, $iv);
+        $decrypted = openssl_decrypt(base64_decode($jsonPayload["cipher"]), $this->algorithm, $key, 0, $iv);
         if (!$decrypted) {
             throw new DecryptionException("Could not decrypt the data!");
         }
