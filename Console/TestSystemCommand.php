@@ -1,18 +1,18 @@
 <?php
 
 /**
- * @author  Baha2r
+ * @author  BlackPlatinum Developers
  * @license MIT
  * Date: 12/Dec/2019 00:01 AM
  *
  * TestSystemCommand class lets you test Guard cryptography system
  **/
 
-namespace PHPGuard\Console;
+namespace BlackPlatinum\Encryption\Console;
 
 
-use PHPGuard\Core\Key;
-use PHPGuard\Crypto\Crypto;
+use BlackPlatinum\Encryption\Core\Key;
+use BlackPlatinum\Encryption\Crypto\Crypto;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -37,9 +37,9 @@ class TestSystemCommand extends Command
     protected function configure(): void
     {
         $this->setName("test")
-                ->setDescription("Tests Guard cryptography system")
+                ->setDescription("Tests BlackPlatinum encryption system")
                 ->addArgument("inputData", InputArgument::REQUIRED, "input data to test system")
-                ->setHelp("<comment>\nTests Guard cryptography system. You have to set a admin key to test our system.\nIf you have more than one word to test use ''. For example: 'Hello Guard !'.\n</comment>");
+                ->setHelp("<comment>\nTests BlackPlatinum encryption system. You have to set a admin key to test the system.\nIf you have more than one word to test use ''. For example: 'Hello Guard !'.\n</comment>");
     }
 
 
@@ -48,8 +48,10 @@ class TestSystemCommand extends Command
      *
      * @param  InputInterface   $input
      * @param  OutputInterface  $output
+     *
+     * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $crypt = new Crypto();
         $crypt->setKey(Key::getKey());
@@ -59,5 +61,6 @@ class TestSystemCommand extends Command
         $output->writeln("\n");
         $output->writeln("Decrypted: ".$crypt->decryptString($encrypted));
         $output->writeln("");
+        return 0;
     }
 }

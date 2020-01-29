@@ -1,14 +1,14 @@
 <?php
 
 /**
- * @author  Baha2r
+ * @author  BlackPlatinum Developers
  * @license MIT
  * Date: 16/Oct/2019 02:39 AM
  *
  * Base encryption interface
  **/
 
-namespace PHPGuard\Core\Crypto;
+namespace BlackPlatinum\Encryption\Core\Crypto;
 
 
 interface Encryption

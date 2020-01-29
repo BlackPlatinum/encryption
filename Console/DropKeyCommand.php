@@ -1,14 +1,14 @@
 <?php
 
 /**
- * @author  Baha2r
+ * @author  BlackPlatinum Developers
  * @license MIT
  * Date: 12/Dec/2019 20:25 PM
  *
  * DropKeyCommand class let you to drop registered key
  **/
 
-namespace PHPGuard\Console;
+namespace BlackPlatinum\Encryption\Console;
 
 
 use Redis;
@@ -16,7 +16,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use PHPGuard\Core\Hashing\Hash;
+use BlackPlatinum\Encryption\Core\Hashing\Hash;
 
 
 class DropKeyCommand extends Command
@@ -48,9 +48,10 @@ class DropKeyCommand extends Command
      * @param  InputInterface   $input
      * @param  OutputInterface  $output
      *
+     * @return int
      * @throws RuntimeException Throws runtime exception if it fails to drop the key
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $redis = new Redis();
         $redis->connect("127.0.0.1");
@@ -61,5 +62,6 @@ class DropKeyCommand extends Command
         $redis->del($key);
         $output->writeln("");
         $output->writeln("<info>>>> The key dropped successfully!\n</info>");
+        return 0;
     }
 }

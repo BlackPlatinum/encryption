@@ -1,17 +1,17 @@
 <?php
 
 /**
- * @author  Baha2r
+ * @author  BlackPlatinum Developers
  * @license MIT
  * Date: 05/Nov/2019 02:22 AM
  *
  * KeySetup class setup key for each cryptography algorithm
  **/
 
-namespace PHPGuard\Core;
+namespace BlackPlatinum\Encryption\Core;
 
 
-use PHPGuard\Core\Hashing\Hash;
+use BlackPlatinum\Encryption\Core\Hashing\Hash;
 
 
 abstract class KeySetup

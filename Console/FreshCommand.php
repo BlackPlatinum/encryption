@@ -1,14 +1,14 @@
 <?php
 
 /**
- * @author  Baha2r
+ * @author  BlackPlatinum Developers
  * @license MIT
  * Date: 12/Dec/2019 20:25 PM
  *
  * FreshCommand class let you to fresh whole Redis database
  **/
 
-namespace PHPGuard\Console;
+namespace BlackPlatinum\Encryption\Console;
 
 
 use Redis;
@@ -45,8 +45,10 @@ class FreshCommand extends Command
      *
      * @param  InputInterface   $input
      * @param  OutputInterface  $output
+     *
+     * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $redis = new Redis();
         $redis->connect("127.0.0.1");
@@ -54,5 +56,6 @@ class FreshCommand extends Command
         $output->writeln("");
         $output->writeln("<info>>>> Redis database freshened up!</info>");
         $output->writeln("");
+        return 0;
     }
 }

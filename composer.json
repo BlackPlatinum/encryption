@@ -1,6 +1,6 @@
 {
-  "name": "baha2rmirzazadeh/phpguard",
-  "description": "A security cryptography library for PHP. It can be used by different frameworks or pure PHP",
+  "name": "blackplatinum/encryption",
+  "description": "The BlackPlatinum encryption package",
   "keywords": [
     "php",
     "security",
@@ -15,17 +15,16 @@
   "license": "MIT",
   "authors": [
     {
-      "name": "Bahador Mirzazadeh",
-      "email": "baha2r.mirzazadeh98@gmail.com",
-      "role": "Developer"
+      "name": "BlackPlatinum Developers",
+      "email": "blackplatinum2019@gmail.com"
     }
   ],
   "require": {
-    "php": "^7.2.25",
+    "php": "^7.2",
     "ext-openssl": "*",
     "ext-json": "*",
     "ext-redis": "*",
-    "symfony/console": "^4.3",
+    "symfony/console": "^5.0.0",
     "baha2rmirzazadeh/phpscanner": "^1.5"
   },
   "config": {
@@ -33,7 +32,7 @@
   },
   "autoload": {
     "psr-4": {
-      "PHPGuard\\": "PHPGuard/"
+      "BlackPlatinum\\Encryption\\": ""
     }
   },
   "minimum-stability": "dev",

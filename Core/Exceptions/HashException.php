@@ -1,14 +1,14 @@
 <?php
 
 /**
- * @author  Baha2r
+ * @author  BlackPlatinum Developers
  * @license MIT
  * Date: 19/Oct/2019 21:09 PM
  *
  * Main hash exception class
  **/
 
-namespace PHPGuard\Core\Exceptions;
+namespace BlackPlatinum\Encryption\Core\Exceptions;
 
 use RuntimeException;
 

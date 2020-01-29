@@ -1,20 +1,20 @@
 <?php
 
 /**
- * @author  Baha2r
+ * @author  BlackPlatinum Developers
  * @license MIT
  * Date: 08/Dec/2019 19:38 PM
  *
  * Base PHPGuard cryptography class
  **/
 
-namespace PHPGuard\Core\Crypto;
+namespace BlackPlatinum\Encryption\Core\Crypto;
 
 
-use PHPGuard\Core\KeySetup;
-use PHPGuard\Core\Exceptions\EncryptionException;
-use PHPGuard\Core\Exceptions\DecryptionException;
-use PHPGuard\Core\Hashing\Hash;
+use BlackPlatinum\Encryption\Core\KeySetup;
+use BlackPlatinum\Encryption\Core\Exceptions\EncryptionException;
+use BlackPlatinum\Encryption\Core\Exceptions\DecryptionException;
+use BlackPlatinum\Encryption\Core\Hashing\Hash;
 
 
 abstract class BaseCrypto extends KeySetup

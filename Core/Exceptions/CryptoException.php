@@ -1,14 +1,14 @@
 <?php
 
 /**
- * @author  Baha2r
+ * @author  BlackPlatinum Developers
  * @license MIT
  * Date: 08/Dec/2019 23:51 PM
  *
  * Main crypto exception class
  **/
 
-namespace PHPGuard\Core\Exceptions;
+namespace BlackPlatinum\Encryption\Core\Exceptions;
 
 use RuntimeException;
 

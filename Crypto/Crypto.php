@@ -1,22 +1,22 @@
 <?php
 
 /**
- * @author  Baha2r
+ * @author  BlackPlatinum Developers
  * @license MIT
  * Date: 02/Nov/2019 00:51 AM
  *
- * Main PHPGuard cryptography class
+ * Main cryptography class
  **/
 
-namespace PHPGuard\Crypto;
+namespace BlackPlatinum\Encryption\Crypto;
 
 
-use PHPGuard\Core\Crypto\BaseCrypto;
-use PHPGuard\Core\Crypto\Encryption;
-use PHPGuard\Core\Crypto\Decryption;
-use PHPGuard\Core\Exceptions\CryptoException;
-use PHPGuard\Core\Exceptions\EncryptionException;
-use PHPGuard\Core\Exceptions\DecryptionException;
+use BlackPlatinum\Encryption\Core\Crypto\BaseCrypto;
+use BlackPlatinum\Encryption\Core\Crypto\Encryption;
+use BlackPlatinum\Encryption\Core\Crypto\Decryption;
+use BlackPlatinum\Encryption\Core\Exceptions\CryptoException;
+use BlackPlatinum\Encryption\Core\Exceptions\EncryptionException;
+use BlackPlatinum\Encryption\Core\Exceptions\DecryptionException;
 
 
 class Crypto extends BaseCrypto implements Encryption, Decryption

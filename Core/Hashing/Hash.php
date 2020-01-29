@@ -1,17 +1,17 @@
 <?php
 
 /**
- * @author  Baha2r
+ * @author  BlackPlatinum Developers
  * @license MIT
  * Date: 16/Oct/2019 20:56 PM
  *
  * Main hash class to compute digest of all type data
  **/
 
-namespace PHPGuard\Core\Hashing;
+namespace BlackPlatinum\Encryption\Core\Hashing;
 
 
-use PHPGuard\Core\Exceptions\HashException;
+use BlackPlatinum\Encryption\Core\Exceptions\HashException;
 
 
 class Hash

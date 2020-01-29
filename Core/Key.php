@@ -1,18 +1,18 @@
 <?php
 
 /**
- * @author  Baha2r
+ * @author  BlackPlatinum Developers
  * @license MIT
  * Date: 14/Nov/2019 22:14 PM
  *
  * Managing key is done by this class
  **/
 
-namespace PHPGuard\Core;
+namespace BlackPlatinum\Encryption\Core;
 
 
-use PHPGuard\Core\Exceptions\KeyException;
-use PHPGuard\Core\Hashing\Hash;
+use BlackPlatinum\Encryption\Core\Exceptions\KeyException;
+use BlackPlatinum\Encryption\Core\Hashing\Hash;
 use Redis;
 
 

@@ -1,14 +1,14 @@
 <?php
 
 /**
- * @author  Baha2r
+ * @author  BlackPlatinum Developers
  * @license MIT
  * Date: 12/Nov/2019 23:14 PM
  *
  * SetKeyCommand class provides a system to set a encryption key on Redis database
  **/
 
-namespace PHPGuard\Console;
+namespace BlackPlatinum\Encryption\Console;
 
 
 use Redis;
@@ -17,7 +17,7 @@ use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use PHPScanner\Scanner\Scanner;
-use PHPGuard\Core\Hashing\Hash;
+use BlackPlatinum\Encryption\Core\Hashing\Hash;
 
 
 class SetKeyCommand extends Command
@@ -38,8 +38,8 @@ class SetKeyCommand extends Command
     protected function configure(): void
     {
         $this->setName("set:key")
-                ->setDescription("Set a key for Guard cryptography system")
-                ->setHelp("<comment>\nSet a key for Guard cryptography system. It passes a complex progress to save It in Redis database as key => value.\n</comment>");
+                ->setDescription("Set a key for BlackPlatinum encryption system")
+                ->setHelp("<comment>\nSet a key for BlackPlatinum encryption system. It passes a complex progress to save It in Redis database as key => value.\n</comment>");
     }
 
 
@@ -49,9 +49,10 @@ class SetKeyCommand extends Command
      * @param  InputInterface   $input
      * @param  OutputInterface  $output
      *
+     * @return int
      * @throws RuntimeException Throws runtime exception if it fails to set the key
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $scn = new Scanner();
         $redis = new Redis();
@@ -72,5 +73,6 @@ class SetKeyCommand extends Command
         }
         $output->writeln("");
         $output->writeln("<info>>>> The key generated successfully!\n</info>");
+        return 0;
     }
 }
