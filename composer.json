@@ -6,8 +6,6 @@
     "cipher",
     "encryption",
     "decryption",
-    "hash",
-    "hashing",
     "mac"
   ],
   "type": "library",
