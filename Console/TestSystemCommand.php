@@ -5,7 +5,7 @@
  * @license MIT
  * Date: 12/Dec/2019 00:01 AM
  *
- * TestSystemCommand class lets you test Guard cryptography system
+ * TestSystemCommand class lets you test BlackPlatinum encryption system
  **/
 
 namespace BlackPlatinum\Encryption\Console;

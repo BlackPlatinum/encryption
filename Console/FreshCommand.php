@@ -5,7 +5,7 @@
  * @license MIT
  * Date: 12/Dec/2019 20:25 PM
  *
- * FreshCommand class let you to fresh whole Redis database
+ * FreshCommand class lets you to fresh whole Redis database
  **/
 
 namespace BlackPlatinum\Encryption\Console;

@@ -5,7 +5,7 @@
  * @license MIT
  * Date: 08/Dec/2019 19:38 PM
  *
- * Base PHPGuard cryptography class
+ * Base BlackPlatinum encryption class
  **/
 
 namespace BlackPlatinum\Encryption\Core\Crypto;

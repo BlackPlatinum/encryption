@@ -5,7 +5,7 @@
  * @license MIT
  * Date: 14/Nov/2019 22:14 PM
  *
- * Managing key is done by this class
+ * Returns registered key in redis database
  **/
 
 namespace BlackPlatinum\Encryption\Core;

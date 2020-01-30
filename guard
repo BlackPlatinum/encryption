@@ -19,7 +19,7 @@ use Symfony\Component\Console\Application;
 
 $application = new Application("BlackPlatinum Encryption Console", "v1.0.0");
 
-// ... register commands
+// Registered commands
 $application->add(new SetKeyCommand());
 $application->add(new DropKeyCommand());
 $application->add(new FreshCommand());

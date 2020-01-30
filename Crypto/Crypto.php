@@ -5,7 +5,7 @@
  * @license MIT
  * Date: 02/Nov/2019 00:51 AM
  *
- * Main cryptography class
+ * Main BlackPlatinum encryption class
  **/
 
 namespace BlackPlatinum\Encryption\Crypto;

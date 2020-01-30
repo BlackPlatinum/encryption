@@ -5,7 +5,7 @@
  * @license MIT
  * Date: 16/Oct/2019 20:56 PM
  *
- * Main hash class to compute digest of all type data
+ * Main hash class to compute digest of all data types
  **/
 
 namespace BlackPlatinum\Encryption\Core\Hashing;

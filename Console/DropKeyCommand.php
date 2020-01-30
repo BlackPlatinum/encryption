@@ -5,7 +5,7 @@
  * @license MIT
  * Date: 12/Dec/2019 20:25 PM
  *
- * DropKeyCommand class let you to drop registered key
+ * DropKeyCommand class lets you to drop registered key
  **/
 
 namespace BlackPlatinum\Encryption\Console;
