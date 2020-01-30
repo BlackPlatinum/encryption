@@ -1,6 +1,6 @@
 {
   "name": "blackplatinum/encryption",
-  "description": "The BlackPlatinum encryption package",
+  "description": "The BlackPlatinum encryption component",
   "keywords": [
     "php",
     "security",
