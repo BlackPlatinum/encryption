@@ -8,7 +8,7 @@
  * Base BlackPlatinum encryption class
  **/
 
-namespace BlackPlatinum\Encryption\Core\Crypto;
+namespace BlackPlatinum\Encryption\Core\BaseCrypto;
 
 
 use BlackPlatinum\Encryption\Core\KeySetup;

@@ -8,7 +8,7 @@
  * Base encryption interface
  **/
 
-namespace BlackPlatinum\Encryption\Core\Crypto;
+namespace BlackPlatinum\Encryption\Core\BaseCrypto;
 
 
 interface Encryption
