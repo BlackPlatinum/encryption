@@ -8,7 +8,7 @@
  * Returns registered key in redis database
  **/
 
-namespace BlackPlatinum\Encryption\Core;
+namespace BlackPlatinum\Encryption\Crypto;
 
 
 use BlackPlatinum\Encryption\Core\Exceptions\KeyException;
