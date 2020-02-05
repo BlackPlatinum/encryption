@@ -4,8 +4,6 @@ Features
 --------
 Cryptography supports: AES-128-CBC, AES-192, AES-256-CBC, CAST5-CBC, BlowFish-CBC
 
-Hashing supports: SHA3-512, SHA512, WHIRLPOOL
-
 console app
 --------------------
 A command line interface designed for this component due to set a encryption key, test system etc.
@@ -62,12 +60,6 @@ print $c."\n";
 print_r($cr->decrypt($c));
 
 print_r(Crypto::supported());
-
-
-use BlackPlatinum\Encryption\Hashing\Hash;
-
-print Hash::makeHash([1, 2, 3, 4])
-print Hash::makeMAC("Hello BlackPlatinum!", "key");
 ```
 
 ### Classes and Methods description
