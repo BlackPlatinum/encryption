@@ -11,9 +11,9 @@
 namespace BlackPlatinum\Encryption\Crypto;
 
 
-use BlackPlatinum\Encryption\Core\Crypto\BaseCrypto;
-use BlackPlatinum\Encryption\Core\Crypto\Encryption;
-use BlackPlatinum\Encryption\Core\Crypto\Decryption;
+use BlackPlatinum\Encryption\Core\BaseCrypto\BaseCrypto;
+use BlackPlatinum\Encryption\Core\BaseCrypto\Encryption;
+use BlackPlatinum\Encryption\Core\BaseCrypto\Decryption;
 use BlackPlatinum\Encryption\Core\Exceptions\CryptoException;
 use BlackPlatinum\Encryption\Core\Exceptions\EncryptionException;
 use BlackPlatinum\Encryption\Core\Exceptions\DecryptionException;
