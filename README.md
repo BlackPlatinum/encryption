@@ -31,7 +31,7 @@ Examples
 -------
 
 ```php
-use BlackPlatinum\Encryption\Core\Key;
+use BlackPlatinum\Encryption\Crypto\Key;
 use BlackPlatinum\Encryption\Crypto\Crypto;
 
 $cr = new Crypto("CAST5-CBC");
