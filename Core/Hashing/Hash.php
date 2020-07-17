@@ -49,9 +49,9 @@ class Hash
      *<p>
      * It uses SHA3-512 as default
      *
-     * @param  mixed    $data       The data is being hashed
-     * @param  string   $salt       [Optional] The salt that will be append to the data
-     * @param  string   $algorithm  The hash algorithm
+     * @param  mixed  $data  The data is being hashed
+     * @param  string  $salt  [Optional] The salt that will be append to the data
+     * @param  string  $algorithm  The hash algorithm
      * @param  boolean  $rawOutput  [Optional] True returns raw hashed string, false returns base64 encoded hashed string
      *
      * @return string|false Returns the digested hash value on success or false on failure
@@ -70,8 +70,8 @@ class Hash
      * <p>
      * It uses SHA3-512 as default
      *
-     * @param  string  $data       The data is being hashed
-     * @param  string  $key        Shared secret key used for generating the HMAC variant of the message digest
+     * @param  string  $data  The data is being hashed
+     * @param  string  $key  Shared secret key used for generating the HMAC variant of the message digest
      * @param  string  $algorithm  The hash algorithm
      *
      * @return string Returns calculated message authentication code
@@ -93,9 +93,9 @@ class Hash
     public static function supported()
     {
         return [
-                "SHA3-512",
-                "SHA512",
-                "WHIRLPOOL"
+            "SHA3-512",
+            "SHA512",
+            "WHIRLPOOL"
         ];
     }
 }
