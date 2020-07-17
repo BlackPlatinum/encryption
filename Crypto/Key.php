@@ -28,9 +28,9 @@ class Key
     }
 
 
-    /** Returns registered key
+    /** Returns registered key in redis database
      *
-     * @return string Returns registered key
+     * @return string Returns registered key in redis database
      *
      * @throws KeyException Throws key exception if it fails to get key
      */
@@ -38,11 +38,12 @@ class Key
     {
         $redis = new Redis();
         $redis->connect("127.0.0.1");
-        $key = Hash::makeHash(["This", "Is", "Redis", "Key", "!"], Hash::DEFAULT_SALT);
-        $key = $redis->get($key);
+        $key = $redis->get(Hash::makeHash(["This", "Is", "Redis", "Key", "!"], Hash::DEFAULT_SALT));
         if (!$key) {
+            $redis->close();
             throw new KeyException("The key has not been set yet!");
         }
+        $redis->close();
         return $key;
     }
 }
