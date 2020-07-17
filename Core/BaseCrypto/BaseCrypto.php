@@ -60,14 +60,18 @@ abstract class BaseCrypto extends KeySetup
      */
     private function isValidPayload($payload)
     {
-        return is_array($payload) && isset($payload["iv"], $payload["cipher"], $payload["mac"]) && (strlen(base64_decode($payload["iv"],
-                                true)) === openssl_cipher_iv_length($this->algorithm));
+        return is_array($payload) && isset($payload["iv"], $payload["cipher"], $payload["mac"]) && (strlen(
+                    base64_decode(
+                        $payload["iv"],
+                        true
+                    )
+                ) === openssl_cipher_iv_length($this->algorithm));
     }
 
 
     /**
-     * @param  mixed    $data
-     * @param  string   $key
+     * @param  mixed  $data
+     * @param  string  $key
      * @param  boolean  $serialize
      *
      * @return string
@@ -76,8 +80,15 @@ abstract class BaseCrypto extends KeySetup
     protected function encryption($data, $key, $serialize)
     {
         $iv = random_bytes(openssl_cipher_iv_length($this->algorithm));
-        $cipher = base64_encode(openssl_encrypt($serialize ? json_encode(serialize($data)) : $data, $this->algorithm,
-                $key, 0, $iv));
+        $cipher = base64_encode(
+            openssl_encrypt(
+                $serialize ? json_encode(serialize($data)) : $data,
+                $this->algorithm,
+                $key,
+                0,
+                $iv
+            )
+        );
         if (!$cipher) {
             throw new EncryptionException("Could not encrypt the data!");
         }
@@ -92,8 +103,8 @@ abstract class BaseCrypto extends KeySetup
 
 
     /**
-     * @param  string   $jsonPayload
-     * @param  string   $key
+     * @param  string  $jsonPayload
+     * @param  string  $key
      * @param  boolean  $unserialize
      *
      * @return false|mixed|string
@@ -122,7 +133,7 @@ abstract class BaseCrypto extends KeySetup
      */
     protected static function byteRandom($length)
     {
-        return random_bytes($length);
+        return str_shuffle(random_bytes($length));
     }
 
 
@@ -133,6 +144,6 @@ abstract class BaseCrypto extends KeySetup
      */
     protected static function stringRandom($length)
     {
-        return bin2hex(random_bytes($length));
+        return str_shuffle(substr(bin2hex(random_bytes($length)), 0, $length));
     }
 }
