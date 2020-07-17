@@ -31,19 +31,21 @@ class FreshCommand extends Command
 
     /**
      * Configures requirements for this command
+     *
+     * @return void
      */
-    protected function configure(): void
+    protected function configure()
     {
         $this->setName("fresh")
-                ->setDescription("Freshens Redis database")
-                ->setHelp("<comment>\nDrops all data in all databases. Be careful when using this command!\n</comment>");
+            ->setDescription("Freshens Redis database")
+            ->setHelp("<comment>\nDrops all data in all databases. Be careful when using this command!\n</comment>");
     }
 
 
     /**
      * Executes this command
      *
-     * @param  InputInterface   $input
+     * @param  InputInterface  $input
      * @param  OutputInterface  $output
      *
      * @return int
@@ -56,6 +58,7 @@ class FreshCommand extends Command
         $output->writeln("");
         $output->writeln("<info>>>> Redis database freshened up!</info>");
         $output->writeln("");
+        $redis->close();
         return 0;
     }
 }

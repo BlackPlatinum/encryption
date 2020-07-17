@@ -33,19 +33,23 @@ class DropKeyCommand extends Command
 
     /**
      * Configures requirements for this command
+     *
+     * @return void
      */
-    protected function configure(): void
+    protected function configure()
     {
         $this->setName("drop:key")
-                ->setDescription("Drops registered key")
-                ->setHelp("<comment>\nDrops registered key. You can generate a new one with 'php guard set:key'\n</comment>");
+            ->setDescription("Drops registered key")
+            ->setHelp(
+                "<comment>\nDrops registered key. You can generate a new one with 'php guard set:key'\n</comment>"
+            );
     }
 
 
     /**
      * Executes this command
      *
-     * @param  InputInterface   $input
+     * @param  InputInterface  $input
      * @param  OutputInterface  $output
      *
      * @return int
@@ -55,13 +59,15 @@ class DropKeyCommand extends Command
     {
         $redis = new Redis();
         $redis->connect("127.0.0.1");
-        $key = Hash::makeHash(["This", "Is", "Redis", "Key", "!"], Hash::DEFAULT_SALT);
-        if (!$redis->exists($key)) {
+        $redisKey = Hash::makeHash(["This", "Is", "Redis", "Key", "!"], Hash::DEFAULT_SALT);
+        if (!$redis->exists($redisKey)) {
+            $redis->close();
             throw new RuntimeException("[RuntimeException]:\n\n>>> There is no key to drop!\n");
         }
-        $redis->del($key);
+        $redis->del($redisKey);
         $output->writeln("");
         $output->writeln("<info>>>> The key dropped successfully!\n</info>");
+        $redis->close();
         return 0;
     }
 }

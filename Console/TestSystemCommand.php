@@ -33,20 +33,24 @@ class TestSystemCommand extends Command
 
     /**
      * Configures requirements for this command
+     *
+     * @return void
      */
-    protected function configure(): void
+    protected function configure()
     {
         $this->setName("test")
-                ->setDescription("Tests BlackPlatinum encryption system")
-                ->addArgument("inputData", InputArgument::REQUIRED, "input data to test system")
-                ->setHelp("<comment>\nTests BlackPlatinum encryption system. You have to set a admin key to test the system.\nIf you have more than one word to test use ''. For example: 'Hello Guard !'.\n</comment>");
+            ->setDescription("Tests BlackPlatinum encryption system")
+            ->addArgument("inputData", InputArgument::REQUIRED, "input data to test system")
+            ->setHelp(
+                "<comment>\nTests BlackPlatinum encryption system. You have to set a admin key to test the system.\nIf you have more than one word to test use ''. For example: 'Hello Guard !'.\n</comment>"
+            );
     }
 
 
     /**
      * Executes this command
      *
-     * @param  InputInterface   $input
+     * @param  InputInterface  $input
      * @param  OutputInterface  $output
      *
      * @return int

@@ -34,19 +34,23 @@ class SetKeyCommand extends Command
 
     /**
      * Configures requirements for this command
+     *
+     * @return void
      */
-    protected function configure(): void
+    protected function configure()
     {
         $this->setName("set:key")
-                ->setDescription("Set a key for BlackPlatinum encryption system")
-                ->setHelp("<comment>\nSet a key for BlackPlatinum encryption system. It passes a complex progress to save It in Redis database as key => value.\n</comment>");
+            ->setDescription("Set a key for BlackPlatinum encryption system")
+            ->setHelp(
+                "<comment>\nSet a key for BlackPlatinum encryption system. It passes a complex progress to save It in Redis database as key => value.\n</comment>"
+            );
     }
 
 
     /**
      * Executes this command
      *
-     * @param  InputInterface   $input
+     * @param  InputInterface  $input
      * @param  OutputInterface  $output
      *
      * @return int
@@ -69,10 +73,12 @@ class SetKeyCommand extends Command
         }
         $isInserted = $redis->set(Hash::makeHash(["This", "Is", "Redis", "Key", "!"], Hash::DEFAULT_SALT), $key);
         if (!$isInserted) {
-            throw new RuntimeException("The key generated successfully, but we can not insert it in memory heap!");
+            $redis->close();
+            throw new RuntimeException("The key processed successfully, but we can not insert it in memory heap!");
         }
         $output->writeln("");
-        $output->writeln("<info>>>> The key generated successfully!\n</info>");
+        $output->writeln("<info>>>> The key saved in the memory successfully!\n</info>");
+        $redis->close();
         return 0;
     }
 }
