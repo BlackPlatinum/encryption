@@ -23,12 +23,12 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
 {
 
     /**
-     * @var string Key
+     * @var string The cryptography key
      */
     private $key;
 
     /**
-     * @var string Algorithm
+     * @var string The cryptography algorithm
      */
     private $algorithm;
 
@@ -59,9 +59,10 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
 
 
     /**
-     * Validates if Key is set or not
+     * Validates if cryptography key is set or not
      *
      * @return boolean Returns authenticity of Key
+     *
      * @throws CryptoException Throws exception if key remain null
      */
     private function isKeySet()
@@ -74,8 +75,10 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
      * Set key of cryptography system
      *
      * @param  string  $key  Key of cryptography system [recommended use user's password as key]
+     *
+     * @return void
      */
-    public function setKey($key): void
+    public function setKey($key)
     {
         $this->key = parent::setupKey($key);
     }
@@ -119,7 +122,7 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
     /**
      * Encrypts the given data
      *
-     * @param  mixed    $data       The data that will be encrypted
+     * @param  mixed  $data  The data that will be encrypted
      * @param  boolean  $serialize  [Optional] If set to true, converts mixed types to string
      *
      * @return string Returns encrypted value, false on failure
@@ -156,7 +159,7 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
     /**
      * Decrypts the given cipher
      *
-     * @param  string   $jsonPayload  The json payload that contains cipher and mac
+     * @param  string  $jsonPayload  The json payload that contains cipher and mac
      * @param  boolean  $unserialize  [Optional] If set to true, converts string types to mixed
      *
      * @return false|mixed|string Returns encrypted value, false on failure
@@ -197,7 +200,7 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
      *
      * @return string Returns generated key
      */
-    public static function generateKey($length = 56)
+    public static function generateKey($length = 128)
     {
         return self::randomBytes($length);
     }
@@ -237,11 +240,11 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
     public static function supported()
     {
         return [
-                "AES-128-CBC",
-                "AES-192-CBC",
-                "AES-256-CBC",
-                "BF-CBC",
-                "CAST5-CBC"
+            "AES-128-CBC",
+            "AES-192-CBC",
+            "AES-256-CBC",
+            "BF-CBC",
+            "CAST5-CBC"
         ];
     }
 }
