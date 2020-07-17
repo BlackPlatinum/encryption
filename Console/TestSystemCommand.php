@@ -11,7 +11,7 @@
 namespace BlackPlatinum\Encryption\Console;
 
 
-use BlackPlatinum\Encryption\Core\Key;
+use BlackPlatinum\Encryption\Crypto\Key;
 use BlackPlatinum\Encryption\Crypto\Crypto;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
