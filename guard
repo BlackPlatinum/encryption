@@ -11,16 +11,17 @@
 
 require __DIR__."/vendor/autoload.php";
 
+use BlackPlatinum\Encryption\Console\RandomKeyCommand;
 use BlackPlatinum\Encryption\Console\SetKeyCommand;
 use BlackPlatinum\Encryption\Console\DropKeyCommand;
 use BlackPlatinum\Encryption\Console\FreshCommand;
 use BlackPlatinum\Encryption\Console\TestSystemCommand;
 use Symfony\Component\Console\Application;
 
-$application = new Application("BlackPlatinum Encryption Console", "v1.0.0");
+$application = new Application("BlackPlatinum Encryption Console", "v1.0.1");
 
-// Registered commands
 $application->add(new SetKeyCommand());
+$application->add(new RandomKeyCommand());
 $application->add(new DropKeyCommand());
 $application->add(new FreshCommand());
 $application->add(new TestSystemCommand());
