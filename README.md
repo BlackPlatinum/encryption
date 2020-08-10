@@ -10,7 +10,8 @@ A command line interface designed for this component due to set a encryption key
 
 Some of commands:
 
-* [php guard set:key]
+* [php guard key:set]
+* [php guard key:generate]
 * [php guard fresh]
 
 `How to use console app?`
