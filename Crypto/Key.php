@@ -18,6 +18,7 @@ use Redis;
 
 class Key
 {
+    use Hash;
 
     /**
      * Constructor
@@ -38,7 +39,7 @@ class Key
     {
         $redis = new Redis();
         $redis->connect("127.0.0.1");
-        $key = $redis->get(Hash::makeHash(["This", "Is", "Redis", "Key", "!"], Hash::DEFAULT_SALT));
+        $key = $redis->get(self::makeHash(["This", "Is", "Redis", "Key", "!"], self::$defaultSalt));
         if (!$key) {
             $redis->close();
             throw new KeyException("The key has not been set yet!");

@@ -16,6 +16,7 @@ use BlackPlatinum\Encryption\Core\Hashing\Hash;
 
 abstract class KeySetup
 {
+    use Hash;
 
     /**
      * Constructor
@@ -48,6 +49,6 @@ abstract class KeySetup
      */
     protected function setupKey($key)
     {
-        return Hash::makeHash($this->chunk($key), Hash::DEFAULT_SALT);
+        return self::makeHash($this->chunk($key), self::$defaultSalt);
     }
 }

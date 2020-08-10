@@ -14,7 +14,6 @@ namespace BlackPlatinum\Encryption\Core\BaseCrypto;
 use BlackPlatinum\Encryption\Core\KeySetup;
 use BlackPlatinum\Encryption\Core\Exceptions\EncryptionException;
 use BlackPlatinum\Encryption\Core\Exceptions\DecryptionException;
-use BlackPlatinum\Encryption\Core\Hashing\Hash;
 
 
 abstract class BaseCrypto extends KeySetup
@@ -72,14 +71,14 @@ abstract class BaseCrypto extends KeySetup
     /**
      * @param  mixed  $data
      * @param  string  $key
-     * @param  boolean  $serialize
+     * @param  bool  $serialize
      *
      * @return string
      * @throws EncryptionException
      */
     protected function encryption($data, $key, $serialize)
     {
-        $iv = random_bytes(openssl_cipher_iv_length($this->algorithm));
+        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($this->algorithm));
         $cipher = base64_encode(
             openssl_encrypt(
                 $serialize ? json_encode(serialize($data)) : $data,
@@ -92,7 +91,7 @@ abstract class BaseCrypto extends KeySetup
         if (!$cipher) {
             throw new EncryptionException("Could not encrypt the data!");
         }
-        $mac = Hash::makeMAC($cipher, Hash::DEFAULT_SALT.$key.$iv);
+        $mac = self::makeMAC($cipher, self::$defaultSalt.$key.$iv);
         $iv = base64_encode($iv);
         $jsonPayload = json_encode(compact("iv", "cipher", "mac"));
         if (!$jsonPayload) {
@@ -105,7 +104,7 @@ abstract class BaseCrypto extends KeySetup
     /**
      * @param  string  $jsonPayload
      * @param  string  $key
-     * @param  boolean  $unserialize
+     * @param  bool  $unserialize
      *
      * @return false|mixed|string
      * @throws DecryptionException
@@ -114,7 +113,7 @@ abstract class BaseCrypto extends KeySetup
     {
         $jsonPayload = $this->getJsonPayload($jsonPayload);
         $iv = base64_decode($jsonPayload["iv"]);
-        $newMAC = Hash::makeMAC($jsonPayload["cipher"], Hash::DEFAULT_SALT.$key.$iv);
+        $newMAC = self::makeMAC($jsonPayload["cipher"], self::$defaultSalt.$key.$iv);
         if (!hash_equals($jsonPayload["mac"], $newMAC)) {
             throw new DecryptionException("Invalid MAC!");
         }
@@ -127,23 +126,23 @@ abstract class BaseCrypto extends KeySetup
 
 
     /**
-     * @param  integer  $length
+     * @param  int  $length
      *
      * @return string
      */
     protected static function byteRandom($length)
     {
-        return str_shuffle(random_bytes($length));
+        return str_shuffle(openssl_random_pseudo_bytes($length));
     }
 
 
     /**
-     * @param  integer  $length
+     * @param  int  $length
      *
      * @return string
      */
     protected static function stringRandom($length)
     {
-        return str_shuffle(substr(bin2hex(random_bytes($length)), 0, $length));
+        return str_shuffle(substr(bin2hex(openssl_random_pseudo_bytes($length)), 0, $length));
     }
 }
