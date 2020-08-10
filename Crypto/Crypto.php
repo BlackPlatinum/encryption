@@ -200,7 +200,7 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
      *
      * @return string Returns generated key
      */
-    public static function generateKey($length = 128)
+    public static function generateKey($length = 2048)
     {
         return self::randomBytes($length);
     }
