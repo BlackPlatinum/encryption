@@ -13,13 +13,12 @@ namespace BlackPlatinum\Encryption\Console;
 
 use BlackPlatinum\Encryption\Crypto\Key;
 use BlackPlatinum\Encryption\Crypto\Crypto;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 
-class TestSystemCommand extends Command
+class TestSystemCommand extends BlackplatinumCommand
 {
 
     /**

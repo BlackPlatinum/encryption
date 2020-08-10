@@ -12,15 +12,13 @@ namespace BlackPlatinum\Encryption\Console;
 
 
 use Redis;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use PHPScanner\Scanner\Scanner;
-use BlackPlatinum\Encryption\Core\Hashing\Hash;
 
 
-class SetKeyCommand extends Command
+class SetKeyCommand extends BlackplatinumCommand
 {
 
     /**
@@ -39,7 +37,7 @@ class SetKeyCommand extends Command
      */
     protected function configure()
     {
-        $this->setName("set:key")
+        $this->setName('key:set')
             ->setDescription("Set a key for BlackPlatinum encryption system")
             ->setHelp(
                 "<comment>\nSet a key for BlackPlatinum encryption system. It passes a complex progress to save It in Redis database as key => value.\n</comment>"
@@ -71,7 +69,7 @@ class SetKeyCommand extends Command
         if (!$key) {
             throw new RuntimeException("[RuntimeException]:\n\nFailed to set the key!\n");
         }
-        $isInserted = $redis->set(Hash::makeHash(["This", "Is", "Redis", "Key", "!"], Hash::DEFAULT_SALT), $key);
+        $isInserted = $redis->set(self::makeHash(["This", "Is", "Redis", "Key", "!"], self::$defaultSalt), $key);
         if (!$isInserted) {
             $redis->close();
             throw new RuntimeException("The key processed successfully, but we can not insert it in memory heap!");

@@ -10,15 +10,14 @@ namespace BlackPlatinum\Encryption\Console;
 
 
 use Redis;
-use BlackPlatinum\Encryption\Core\Hashing\Hash;
 use BlackPlatinum\Encryption\Crypto\Crypto;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class RandomKeyCommand extends Command
+class RandomKeyCommand extends BlackplatinumCommand
 {
+
     /**
      * @param  string|null  $name  The name of the command. The default name is null, it means it must be set in configure()
      */
@@ -35,7 +34,7 @@ class RandomKeyCommand extends Command
      */
     protected function configure()
     {
-        $this->setName("generate:key")
+        $this->setName('key:generate')
             ->setDescription("Generates a key for BlackPlatinum encryption system")
             ->setHelp(
                 "<comment>\nGenerates a key for BlackPlatinum encryption system. It passes a complex progress to save It in Redis database as key => value.\n</comment>"
@@ -56,7 +55,7 @@ class RandomKeyCommand extends Command
     {
         $redis = new Redis();
         $redis->connect("127.0.0.1");
-        $redisKey = Hash::makeHash(["This", "Is", "Redis", "Key", "!"], Hash::DEFAULT_SALT);
+        $redisKey = self::makeHash(["This", "Is", "Redis", "Key", "!"], self::$defaultSalt);
         if ($redis->exists($redisKey)) {
             $redis->del($redisKey);
         }

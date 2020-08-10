@@ -12,14 +12,12 @@ namespace BlackPlatinum\Encryption\Console;
 
 
 use Redis;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use BlackPlatinum\Encryption\Core\Hashing\Hash;
 
 
-class DropKeyCommand extends Command
+class DropKeyCommand extends BlackplatinumCommand
 {
 
     /**
@@ -38,7 +36,7 @@ class DropKeyCommand extends Command
      */
     protected function configure()
     {
-        $this->setName("drop:key")
+        $this->setName('key:drop')
             ->setDescription("Drops registered key")
             ->setHelp(
                 "<comment>\nDrops registered key. You can generate a new one with 'php guard set:key'\n</comment>"
@@ -59,7 +57,7 @@ class DropKeyCommand extends Command
     {
         $redis = new Redis();
         $redis->connect("127.0.0.1");
-        $redisKey = Hash::makeHash(["This", "Is", "Redis", "Key", "!"], Hash::DEFAULT_SALT);
+        $redisKey = self::makeHash(["This", "Is", "Redis", "Key", "!"], self::$defaultSalt);
         if (!$redis->exists($redisKey)) {
             $redis->close();
             throw new RuntimeException("[RuntimeException]:\n\n>>> There is no key to drop!\n");
