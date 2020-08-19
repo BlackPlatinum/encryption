@@ -38,7 +38,7 @@ class RandomKeyCommand extends Command
         $this->setName('key:generate')
             ->setDescription('Generates a key for BlackPlatinum encryption system')
             ->setHelp("<comment>\nGenerates a key for BlackPlatinum encryption system.\n</comment>")
-            ->addOption('storage', null, InputOption::VALUE_REQUIRED, 'Specify the storage of key to save ', 'file');
+            ->addOption('storage', null, InputOption::VALUE_REQUIRED, 'Specify the storage of key to save', 'file');
     }
 
     /**
@@ -53,7 +53,7 @@ class RandomKeyCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if ($input->getOption('storage') === 'redis') {
-            $this->onRedisOption();
+            $this->writeKeyOnRedis();
             $output->writeln('');
             $output->writeln("<info>>>> The key generated successfully!\n</info>");
             return 0;
@@ -74,7 +74,7 @@ class RandomKeyCommand extends Command
      *
      * @return void
      */
-    private function onRedisOption()
+    private function writeKeyOnRedis()
     {
         $redis = new Redis();
         $redis->connect('127.0.0.1');

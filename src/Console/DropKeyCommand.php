@@ -9,8 +9,11 @@
 namespace BlackPlatinum\Encryption\Console;
 
 use Redis;
+use BlackPlatinum\Encryption\Core\Exception\KeyException;
+use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class DropKeyCommand extends Command
@@ -34,9 +37,8 @@ class DropKeyCommand extends Command
     {
         $this->setName('key:drop')
             ->setDescription('Drops registered key')
-            ->setHelp(
-                "<comment>\nDrops registered key. You can generate a new one with 'php guard set:key'\n</comment>"
-            );
+            ->setHelp("<comment>\nDrops registered key.\n</comment>")
+            ->addOption('storage', null, InputOption::VALUE_REQUIRED, 'Specify the storage of the key to delete', 'file');
     }
 
     /**
@@ -50,19 +52,40 @@ class DropKeyCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if ($input->getOption('storage') === 'redis') {
+            $this->deleteKeyFromRedis();
+            $output->writeln('');
+            $output->writeln("<info>>>> The key dropped successfully!\n</info>");
+            return 0;
+        }
+
+        if ($input->getOption('storage') === 'file') {
+            $this->deleteKey();
+            $output->writeln('');
+            $output->writeln("<info>>>> The key dropped successfully!\n</info>");
+            return 0;
+        }
+
+        throw new InvalidOptionException("Invalid option: {$input->getOption('storage')}\n\nSupported options are: file, redis");
+    }
+
+    /**
+     * Delete generated key in redis database.
+     *
+     * @return void
+     */
+    private function deleteKeyFromRedis()
+    {
         $redis = new Redis();
         $redis->connect('127.0.0.1');
 
         $redisKey = self::makeHash(['This', 'Is', 'Redis', 'Key', '!'], self::$defaultSalt);
         if (!$redis->exists($redisKey)) {
             $redis->close();
-            throw new RuntimeException("[RuntimeException]:\n\n>>> There is no key to drop!\n");
+            throw new KeyException("[KeyException]:\n\n>>> There is no key to drop!\n");
         }
 
         $redis->del($redisKey);
-        $output->writeln('');
-        $output->writeln("<info>>>> The key dropped successfully!\n</info>");
         $redis->close();
-        return 0;
     }
 }

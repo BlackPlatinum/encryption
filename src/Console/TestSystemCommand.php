@@ -48,7 +48,8 @@ class TestSystemCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $crypto = (new Crypto())->setKey(KeyManager::getKey());
+        $key = KeyManager::getKey();
+        $crypto = (new Crypto())->setKey(!is_null($key) ? $key : KeyManager::getRedisKey());
 
         $cipher = $crypto->encryptString($input->getArgument('inputData'));
         $output->writeln('');
