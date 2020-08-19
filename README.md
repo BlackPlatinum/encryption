@@ -32,35 +32,22 @@ Examples
 -------
 
 ```php
-use BlackPlatinum\Encryption\Crypto\Key;
-use BlackPlatinum\Encryption\Crypto\Crypto;
+use BlackPlatinum\Encryption\Crypto\Symmetric\Crypto;
+use BlackPlatinum\Encryption\KeyManager\KeyManager;
 
-$cr = new Crypto("CAST5-CBC");
-$cr->setKey(Key::getKey());
-$c = $cr->encrypt([
-        "Name"      => "John",
-        "LastName"  => "White",
-        "Age"       => 22,
-        "IsStudent" => true,
-        "Courses"   => ["Math", "Ecocnomy", "Chemistry"]
-]);
-print $c."\n";
-print_r($cr->decrypt($c));
+$cipher = (new Crypto('CAST5-CBC'))->setKey(KeyManager::getKey())->encrypt(
+    [
+        'Name' => 'John',
+        'LastName' => 'LastName',
+        'Age' => 22,
+        'IsStudent' => true,
+        'Courses' => ['Math', 'Economy', 'Chemistry']
+    ]
+);
+print $cipher;
 
-
-$cr = $cr->setCipher("AES-192-CBC");
-$cr->setKey(Crypto::generateKey());
-$c = $cr->encrypt([
-        "Name"      => "John",
-        "LastName"  => "White",
-        "Age"       => 22,
-        "IsStudent" => true,
-        "Courses"   => ["Math", "Ecocnomy", "Chemistry"]
-]);
-print $c."\n";
-print_r($cr->decrypt($c));
-
-print_r(Crypto::supported());
+$plainText = (new Crypto('BF-CBC'))->setKey(KeyManager::getKey())->decrypt('eyJpdiI6Ik05RE9...');
+print_r($plainText);
 ```
 
 ### Classes and Methods description
