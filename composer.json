@@ -28,8 +28,11 @@
     "sort-packages": true
   },
   "autoload": {
+    "files": [
+      "src/Support/helper.php"
+    ],
     "psr-4": {
-      "BlackPlatinum\\Encryption\\": ""
+      "BlackPlatinum\\Encryption\\": "src/"
     }
   },
   "minimum-stability": "dev",
