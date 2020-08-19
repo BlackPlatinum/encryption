@@ -5,24 +5,14 @@
  * @author  BlackPlatinum Developers
  * @license MIT
  * Date: 21/Oct/2019 23:27 PM
- *
- * Executes Guard commands
  **/
 
-require __DIR__."/vendor/autoload.php";
+require __DIR__ . '/vendor/autoload.php';
 
-use BlackPlatinum\Encryption\Console\RandomKeyCommand;
-use BlackPlatinum\Encryption\Console\SetKeyCommand;
-use BlackPlatinum\Encryption\Console\DropKeyCommand;
-use BlackPlatinum\Encryption\Console\FreshCommand;
-use BlackPlatinum\Encryption\Console\TestSystemCommand;
-use Symfony\Component\Console\Application;
-
-$application = new Application("BlackPlatinum Encryption Console", "v1.0.1");
-
-$application->add(new SetKeyCommand());
-$application->add(new RandomKeyCommand());
-$application->add(new DropKeyCommand());
-$application->add(new FreshCommand());
-$application->add(new TestSystemCommand());
+$application = new \Symfony\Component\Console\Application('BlackPlatinum Encryption Console', 'v1.0.0');
+$application->add(new \BlackPlatinum\Encryption\Console\SetKeyCommand);
+$application->add(new \BlackPlatinum\Encryption\Console\RandomKeyCommand());
+$application->add(new \BlackPlatinum\Encryption\Console\DropKeyCommand);
+$application->add(new \BlackPlatinum\Encryption\Console\FreshCommand);
+$application->add(new \BlackPlatinum\Encryption\Console\TestSystemCommand);
 $application->run();
