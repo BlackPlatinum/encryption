@@ -27,6 +27,7 @@ class KeyManager
     /** Get registered encryption key in redis database.
      *
      * @return string
+     *
      * @throws KeyException
      */
     public static function getRedisKey()
@@ -47,11 +48,46 @@ class KeyManager
     /** Get encryption key stored in file.
      *
      * @return string
+     *
      * @throws KeyException
      */
     public static function getKey()
     {
         $key = keys_path() . 'key.key';
+
+        if (!file_exists($key)) {
+            throw new KeyException('The key has not been set yet!');
+        }
+
+        return file_get_contents($key);
+    }
+
+    /** Get RSA public key stored in file.
+     *
+     * @return string
+     *
+     * @throws KeyException
+     */
+    public static function getRSAPublicKey()
+    {
+        $key = keys_path() . 'rsa-public-key.key';
+
+        if (!file_exists($key)) {
+            throw new KeyException('The key has not been set yet!');
+        }
+
+        return file_get_contents($key);
+    }
+
+    /** Get RSA private key stored in file.
+     *
+     * @return string
+     *
+     * @throws KeyException
+     */
+    public static function getRSAPrivateKey()
+    {
+        $key = keys_path() . 'rsa-private-key.key';
 
         if (!file_exists($key)) {
             throw new KeyException('The key has not been set yet!');

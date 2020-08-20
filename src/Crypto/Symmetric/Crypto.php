@@ -28,7 +28,7 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
     private $algorithm;
 
     /**
-     * Create an instance of SymmetricKeyCrypto.
+     * Create an instance of Crypto.
      *
      * @param string $algorithm
      * @return void

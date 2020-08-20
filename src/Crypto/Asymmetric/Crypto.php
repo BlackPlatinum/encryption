@@ -17,6 +17,16 @@ use BlackPlatinum\Encryption\Core\Exception\EncryptionException;
 class Crypto extends BaseCrypto implements Encryption, Decryption
 {
     /**
+     * Create an instance of Crypto.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
      * @param string $cipher
      * @param string $key
      * @return mixed
@@ -25,6 +35,7 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
      */
     public function publicKeyDecrypt($cipher, $key)
     {
+        return parent::decryptWithPublicKey($cipher, $key);
     }
 
     /**
@@ -36,6 +47,7 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
      */
     public function privateKeyDecrypt($cipher, $key)
     {
+        return parent::decryptWithPrivateKey($cipher, $key);
     }
 
     /**
@@ -47,6 +59,7 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
      */
     public function publicKeyEncrypt($data, $key)
     {
+        return parent::encryptWithPublicKey($data, $key);
     }
 
     /**
@@ -58,5 +71,6 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
      */
     public function privateKeyEncrypt($data, $key)
     {
+        return parent::encryptWithPrivateKey($data, $key);
     }
 }

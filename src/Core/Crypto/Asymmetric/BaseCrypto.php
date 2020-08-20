@@ -74,7 +74,7 @@ abstract class BaseCrypto
             throw new DecryptionException('Could not decrypt the data!');
         }
 
-        return json_decode($plain);
+        return json_decode($plain, true);
     }
 
     /**
@@ -92,6 +92,6 @@ abstract class BaseCrypto
             throw new DecryptionException('Could not decrypt the data!');
         }
 
-        return json_decode($plain);
+        return json_decode($plain, true);
     }
 }
