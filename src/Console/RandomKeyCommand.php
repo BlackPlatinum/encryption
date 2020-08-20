@@ -49,6 +49,7 @@ class RandomKeyCommand extends Command
      * @return int
      *
      * @throws RuntimeException
+     * @throws InvalidOptionException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

@@ -10,9 +10,11 @@
 require __DIR__ . '/vendor/autoload.php';
 
 $application = new \Symfony\Component\Console\Application('BlackPlatinum Encryption Console', 'v1.0.0');
-$application->add(new \BlackPlatinum\Encryption\Console\SetKeyCommand);
+$application->add(new \BlackPlatinum\Encryption\Console\SetKeyCommand());
 $application->add(new \BlackPlatinum\Encryption\Console\RandomKeyCommand());
-$application->add(new \BlackPlatinum\Encryption\Console\DropKeyCommand);
-$application->add(new \BlackPlatinum\Encryption\Console\FreshCommand);
-$application->add(new \BlackPlatinum\Encryption\Console\TestSystemCommand);
+$application->add(new \BlackPlatinum\Encryption\Console\DropKeyCommand());
+$application->add(new \BlackPlatinum\Encryption\Console\FreshCommand());
+$application->add(new \BlackPlatinum\Encryption\Console\GeneratePairKeyCommand());
+$application->add(new \BlackPlatinum\Encryption\Console\DropPairKeyCommand());
+$application->add(new \BlackPlatinum\Encryption\Console\TestSystemCommand());
 $application->run();

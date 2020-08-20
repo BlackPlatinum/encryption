@@ -77,7 +77,7 @@ class SetKeyCommand extends Command
             $output->writeln('');
             $this->writeKey($scanner->nextString());
             $output->writeln('');
-            $output->writeln("<info>>>> The key saved in the memory successfully!\n</info>");
+            $output->writeln("<info>>>> The key saved in the file successfully!\n</info>");
             return 0;
         }
 

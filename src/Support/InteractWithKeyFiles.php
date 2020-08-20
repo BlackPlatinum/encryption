@@ -33,11 +33,33 @@ trait InteractWithKeyFiles
     }
 
     /**
+     * Write content of generated public and private keys to files.
+     *
+     * @param array $keysContent
+     * @return void
+     */
+    protected function writeRSAPairKeys(array $keysContent)
+    {
+        $basePath = keys_path();
+
+        if (file_exists($basePath . 'rsa-private-key.key') || file_exists($basePath . 'rsa-public-key.key')) {
+            $this->deleteRSAPairKeys();
+            $this->write($basePath . 'rsa-private-key.key', $keysContent[0]);
+            $this->write($basePath . 'rsa-public-key.key', $keysContent[1]);
+            return;
+        }
+
+        $this->write($basePath . 'rsa-private-key.key', $keysContent[0]);
+        $this->write($basePath . 'rsa-public-key.key', $keysContent[1]);
+    }
+
+    /**
      * Delete generated key.
      *
      * @param string $fileName
      * @return void
      *
+     * @throws KeyException
      */
     protected function deleteKey($fileName = null)
     {
@@ -49,6 +71,26 @@ trait InteractWithKeyFiles
         }
 
         throw new KeyException("[KeyException]:\n\n>>> There is no key to drop!\n");
+    }
+
+    /**
+     * Delete generated public and private keys.
+     *
+     * @return void
+     *
+     * @throws KeyException
+     */
+    protected function deleteRSAPairKeys()
+    {
+        $basePath = keys_path();
+        $keys = [$basePath . 'rsa-private-key.key', $basePath . 'rsa-public-key.key'];
+
+        foreach ($keys as $key) {
+            if (!file_exists($key)) {
+                throw new KeyException("[KeyException]:\n\n>>> There is no key to drop!\n");
+            }
+            @unlink($key);
+        }
     }
 
     /**

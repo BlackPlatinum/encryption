@@ -147,7 +147,7 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
      * Decrypt the given cipher.
      *
      * @param string $jsonPayload
-     * @param boolean $unserialize
+     * @param bool $unserialize
      * @return false|mixed|string
      *
      * @throws DecryptionException

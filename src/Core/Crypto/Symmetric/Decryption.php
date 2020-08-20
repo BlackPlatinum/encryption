@@ -3,7 +3,7 @@
 /**
  * @author  BlackPlatinum Developers
  * @license MIT
- * Date: 16/Oct/2019 02:39 AM
+ * Date: 16/Oct/2019 02:39
  **/
 
 namespace BlackPlatinum\Encryption\Core\Crypto\Symmetric;
@@ -17,7 +17,7 @@ interface Decryption
      * Decrypt the given cipher.
      *
      * @param string $jsonPayload
-     * @param boolean $unserialize
+     * @param bool $unserialize
      * @return false|mixed|string
      *
      * @throws DecryptionException
