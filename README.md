@@ -48,6 +48,23 @@ print $cipher;
 
 $plainText = (new Crypto('BF-CBC'))->setKey(KeyManager::getKey())->decrypt('eyJpdiI6Ik05RE9...');
 print_r($plainText);
+
+
+use BlackPlatinum\Encryption\Crypto\Asymmetric\Crypto;
+$crypto = new Crypto();
+
+$cipher = $crypto->publicKeyEncrypt(
+    [
+        'Name' => 'John',
+        'LastName' => 'LastName',
+        'Age' => 22,
+        'IsStudent' => true,
+        'Courses' => ['Math', 'Economy', 'Chemistry']
+    ], KeyManager::getRSAPublicKey()
+);
+print $cipher . "\n";
+
+print_r($crypto->privateKeyDecrypt($cipher, KeyManager::getRSAPrivateKey()));
 ```
 
 ### Classes and Methods description
