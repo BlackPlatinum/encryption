@@ -27,6 +27,8 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
     }
 
     /**
+     * Decrypt the cipher with the public key.
+     *
      * @param string $cipher
      * @param string $key
      * @return mixed
@@ -39,6 +41,8 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
     }
 
     /**
+     * Decrypt the cipher with the private key.
+     *
      * @param $cipher
      * @param $key
      * @return mixed
@@ -51,6 +55,8 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
     }
 
     /**
+     * Encrypt the data with the public key.
+     *
      * @param mixed $data
      * @param string $key
      * @return string
@@ -63,6 +69,8 @@ class Crypto extends BaseCrypto implements Encryption, Decryption
     }
 
     /**
+     * Encrypt the data with the private key.
+     *
      * @param $data
      * @param $key
      * @return string
