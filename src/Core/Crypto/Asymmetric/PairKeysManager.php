@@ -41,11 +41,16 @@ trait PairKeysManager
     {
         if (!$this->isRSAConfigValid($config)) {
             throw new KeyException(
-                "Invalid key config: private key length is too short; it needs to be at least 384 bits, but {$config['private_key_bits']} provided."
+                "Invalid key config: private key length is too short; it needs to be at least 1024 bits, but {$config['private_key_bits']} provided."
             );
         }
 
         $resource = openssl_pkey_new($config);
+        $error = openssl_error_string();
+        if ($error) {
+            throw new KeyException($error);
+        }
+
         openssl_pkey_export($resource, $privateKey);
         $publicKey = openssl_pkey_get_details($resource)['key'];
         openssl_pkey_free($resource);
@@ -63,6 +68,6 @@ trait PairKeysManager
      */
     private function isRSAConfigValid(array $config)
     {
-        return $config['private_key_bits'] >= 384;
+        return $config['private_key_bits'] >= 1024;
     }
 }
