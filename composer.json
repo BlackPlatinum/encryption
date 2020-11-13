@@ -27,6 +27,11 @@
   "config": {
     "sort-packages": true
   },
+  "scripts": {
+    "launch-guard": [
+      "@php -r \"if(file_exists(__DIR__.'/guard')){echo'Guard script has been already launched!';return;}else{copy(__DIR__.'/vendor/blackplatinum/encryption/guard',__DIR__.'/guard');echo'Guard script launched successfully!';}\""
+    ]
+  },
   "autoload": {
     "files": [
       "src/Support/helper.php"
