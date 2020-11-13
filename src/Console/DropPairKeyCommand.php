@@ -51,6 +51,5 @@ class DropPairKeyCommand extends Command
         $output->writeln('');
         $output->writeln("<info>>>> The RSA keys dropped successfully!\n</info>");
         return 0;
-
     }
 }

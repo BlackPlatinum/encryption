@@ -34,7 +34,7 @@ class TestSystemCommand extends Command
     protected function configure()
     {
         $this->setName('test')
-            ->setDescription('Tests BlackPlatinum encryption system')
+            ->setDescription('Tests BlackPlatinum encryption system (symmetric algorithms only)')
             ->setHelp("<comment>\nTests BlackPlatinum encryption system.\nIf you have more than one word to test use ''. For example: 'Hello Guard !'.\n</comment>")
             ->addArgument('inputData', InputArgument::REQUIRED, 'Input data to test system');
     }
