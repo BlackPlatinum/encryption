@@ -17,11 +17,11 @@
     }
   ],
   "require": {
-    "php": "^7.3 || ^8.0.0RC3",
+    "php": "^7.3 || ^8.0",
     "ext-openssl": "*",
     "ext-json": "*",
     "ext-redis": "*",
-    "symfony/console": "^5.0.0",
+    "symfony/console": "^5.0",
     "baha2rmirzazadeh/phpscanner": "^1.5"
   },
   "config": {
